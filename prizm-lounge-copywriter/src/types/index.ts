@@ -1,6 +1,44 @@
 // Player Types
 export type PlayerCategory = 'Current' | 'Legend' | 'Prospect';
 
+// Station Types - Physical locations in the Prizm Lounge
+export type Station =
+  | 'Tunnel'           // Player entrance/walkthrough tunnel
+  | 'Card Breaks'      // Live card breaking station
+  | 'Signing Table 1'  // Primary autograph station
+  | 'Signing Table 2'  // Secondary autograph station
+  | 'Media Stage'      // Interview/content capture area
+  | 'Product Display'; // Product signing/photo op area
+
+export const STATIONS: Station[] = [
+  'Tunnel',
+  'Card Breaks',
+  'Signing Table 1',
+  'Signing Table 2',
+  'Media Stage',
+  'Product Display'
+];
+
+// Commitment Types - What the player is doing
+export type CommitmentType =
+  | 'Autograph Session'    // Fan signing
+  | 'Product Signing'      // Signing Panini product for inventory
+  | 'Media Interview'      // Press/content interviews
+  | 'Content Capture'      // Photo/video shoots
+  | 'Card Break Guest'     // Appearing on card break stream
+  | 'Meet & Greet'         // Fan interaction without signing
+  | 'Tunnel Walk';         // Walking through tunnel for content
+
+export const COMMITMENT_TYPES: CommitmentType[] = [
+  'Autograph Session',
+  'Product Signing',
+  'Media Interview',
+  'Content Capture',
+  'Card Break Guest',
+  'Meet & Greet',
+  'Tunnel Walk'
+];
+
 export type ContentMode =
   | 'Player Spotlight'
   | 'Pack Reveal / Hit'
@@ -9,7 +47,10 @@ export type ContentMode =
   | 'Current Star Hype'
   | 'Event Promo'
   | 'Behind the Scenes'
-  | 'Day Recap';
+  | 'Day Recap'
+  | 'Media Moment'      // New: for media interviews
+  | 'Product Drop'      // New: for product signing announcements
+  | 'Card Break Hype';  // New: for card break content
 
 export type Platform = 'Instagram' | 'X' | 'TikTok' | 'Facebook';
 
@@ -64,11 +105,22 @@ export type Product =
 
 export type ScheduleStatus = 'live' | 'upcoming' | 'completed' | 'scheduled';
 
+// Individual commitment block within a schedule
+export interface Commitment {
+  id: string;
+  type: CommitmentType;
+  station: Station;
+  startTime: string; // "14:00"
+  endTime: string;   // "14:30"
+  notes?: string;    // "200 autos" or "ESPN interview"
+}
+
 export interface AppearanceSchedule {
   day: 'Thursday' | 'Friday' | 'Saturday';
   date: string; // "Feb 6", "Feb 7", "Feb 8"
-  startTime: string; // "14:00"
-  endTime: string; // "15:00"
+  startTime: string; // "14:00" - overall start
+  endTime: string; // "15:00" - overall end
+  commitments?: Commitment[]; // Detailed breakdown
 }
 
 export interface Player {
@@ -83,6 +135,16 @@ export interface Player {
   personalDetails: string[];
   schedule: AppearanceSchedule | null;
   imageUrl?: string;
+}
+
+// Station status tracking
+export interface StationStatus {
+  station: Station;
+  currentPlayer: string | null; // player ID
+  currentCommitment: CommitmentType | null;
+  status: 'active' | 'idle' | 'setup';
+  nextPlayer?: string; // player ID
+  nextTime?: string;
 }
 
 export interface PlayerNote {

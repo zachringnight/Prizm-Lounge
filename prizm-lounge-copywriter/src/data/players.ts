@@ -385,6 +385,44 @@ export const players: Player[] = [
       startTime: '11:30',
       endTime: '13:00'
     }
+  },
+  {
+    id: 'matt-leinart',
+    name: 'Matt Leinart',
+    category: 'Legend',
+    team: 'Arizona Cardinals',
+    position: 'QB',
+    keyStats: [
+      '2004 Heisman Trophy winner',
+      '2x National Champion at USC (2003, 2004)',
+      '#10 overall pick, 2006 NFL Draft',
+      '34-game college winning streak'
+    ],
+    definingMoments: [
+      'Led USC to back-to-back National Championships',
+      'Part of one of college football\'s greatest dynasties',
+      'The Bush Push game vs Notre Dame',
+      'Heisman winner in loaded 2004 class'
+    ],
+    cardHistory: [
+      '2006 Donruss rookie cards',
+      'USC college cards highly collectible',
+      'Heisman Trophy parallels premium',
+      'Panini Contenders Draft Picks autos'
+    ],
+    personalDetails: [
+      'USC Trojans legend',
+      'Heisman Trophy winner 2004',
+      'Now college football analyst',
+      'Santa Ana, California native',
+      'Part of legendary Pete Carroll era'
+    ],
+    schedule: {
+      day: 'Friday',
+      date: 'Feb 7',
+      startTime: '13:00',
+      endTime: '14:30'
+    }
   }
 ];
 

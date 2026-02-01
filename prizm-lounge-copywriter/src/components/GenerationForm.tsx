@@ -23,6 +23,9 @@ const CONTENT_MODES: ContentMode[] = [
   'Current Star Hype',
   'Event Promo',
   'Behind the Scenes',
+  'Media Moment',
+  'Product Drop',
+  'Card Break Hype',
   'Day Recap'
 ];
 

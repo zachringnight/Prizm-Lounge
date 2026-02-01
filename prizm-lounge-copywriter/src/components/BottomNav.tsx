@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { GridIcon, UsersIcon, CalendarIcon, PenIcon, SettingsIcon } from './Icons';
+import { GridIcon, UsersIcon, CalendarIcon, PenIcon, LayersIcon } from './Icons';
 
 interface NavItem {
   href: string;
@@ -11,10 +11,10 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { href: '/', label: 'Generate', icon: PenIcon },
+  { href: '/stations', label: 'Stations', icon: LayersIcon },
   { href: '/players', label: 'Players', icon: UsersIcon },
   { href: '/schedule', label: 'Schedule', icon: CalendarIcon },
   { href: '/tracking', label: 'Tracking', icon: GridIcon },
-  { href: '/admin', label: 'Admin', icon: SettingsIcon },
 ];
 
 export default function BottomNav() {

@@ -170,7 +170,13 @@ ${serialNumber ? `- Serial Number: ${serialNumber}` : ''}
 
     'Behind the Scenes': `Create exclusive access content from behind the scenes with ${player.name} at the Prizm Lounge. The moments you don't see elsewhere. Make followers feel like insiders.`,
 
-    'Day Recap': `Create an end-of-day wrap-up post. This isn't about one player—it's about the whole day at the Prizm Lounge.`
+    'Day Recap': `Create an end-of-day wrap-up post. This isn't about one player—it's about the whole day at the Prizm Lounge.`,
+
+    'Media Moment': `Create content promoting ${player.name}'s media appearance at the Prizm Lounge. Interview clips, behind-the-camera moments, exclusive access. Make fans feel like they're getting insider content.`,
+
+    'Product Drop': `Create hype for ${player.name} signing Panini product. Fresh ink, sticker autos, on-card signatures going into future products. This is hobby gold being created in real time.`,
+
+    'Card Break Hype': `Create excitement for ${player.name}'s appearance on the card break stream. Live reactions, live pulls, live energy. The intersection of the player and the hobby in real time.`
   };
 
   // Platform-specific instructions
