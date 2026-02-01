@@ -5,8 +5,12 @@ This repository contains the Prizm Lounge Production Hub application.
 ## Project Structure
 
 ```
-ZNew/
+.
 ├── prizm-lounge-copywriter/    # Next.js application for Super Bowl LIX content generation
+│   ├── src/                    # Application source code
+│   ├── public/                 # Static assets
+│   ├── package.json            # Dependencies
+│   └── vercel.json             # Vercel config with app-specific headers
 └── README.md                   # This file
 ```
 
