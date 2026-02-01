@@ -1,0 +1,301 @@
+import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { v4 as uuidv4 } from 'uuid';
+import {
+  Player,
+  PlayerNote,
+  ContentTracking,
+  GeneratedContent,
+  SavedTemplate,
+  ContentMode,
+  Platform,
+  CardType,
+  Product,
+  AppearanceSchedule
+} from '@/types';
+import { players as initialPlayers } from '@/data/players';
+
+interface AppState {
+  // Players (editable copy)
+  players: Player[];
+  updatePlayer: (id: string, updates: Partial<Player>) => void;
+  updatePlayerSchedule: (id: string, schedule: AppearanceSchedule | null) => void;
+
+  // Notes
+  notes: PlayerNote[];
+  addNote: (playerId: string, content: string, isQuote?: boolean) => void;
+  deleteNote: (noteId: string) => void;
+  getNotesForPlayer: (playerId: string) => PlayerNote[];
+
+  // Content Tracking
+  contentTracking: ContentTracking[];
+  trackContent: (playerId: string, mode: ContentMode, platform: Platform) => void;
+  getTrackingForPlayer: (playerId: string) => ContentTracking[];
+  hasUsedMode: (playerId: string, mode: ContentMode) => boolean;
+  getUnusedModes: (playerId: string) => ContentMode[];
+
+  // Generated Content History
+  generatedContent: GeneratedContent[];
+  addGeneratedContent: (content: Omit<GeneratedContent, 'id' | 'createdAt'>) => string;
+  markVariationUsed: (contentId: string, variationId: string) => void;
+  markVariationAsSavedTemplate: (contentId: string, variationId: string) => void;
+  getContentHistory: () => GeneratedContent[];
+
+  // Saved Templates
+  templates: SavedTemplate[];
+  saveTemplate: (mode: ContentMode, platform: Platform, content: string, playerName: string) => void;
+  deleteTemplate: (id: string) => void;
+  getTemplatesForModeAndPlatform: (mode: ContentMode, platform: Platform) => SavedTemplate[];
+
+  // UI State
+  selectedPlayerId: string | null;
+  selectedMode: ContentMode;
+  selectedPlatform: Platform;
+  selectedCardType: CardType | null;
+  selectedProduct: Product | null;
+  serialNumber: string;
+  contextInput: string;
+  isGenerating: boolean;
+  isOffline: boolean;
+
+  // UI Actions
+  setSelectedPlayer: (id: string | null) => void;
+  setSelectedMode: (mode: ContentMode) => void;
+  setSelectedPlatform: (platform: Platform) => void;
+  setSelectedCardType: (cardType: CardType | null) => void;
+  setSelectedProduct: (product: Product | null) => void;
+  setSerialNumber: (serial: string) => void;
+  setContextInput: (context: string) => void;
+  setIsGenerating: (generating: boolean) => void;
+  setIsOffline: (offline: boolean) => void;
+
+  // Day Recap
+  dayRecapHighlights: string;
+  dayRecapAutosSigned: string;
+  dayRecapBestPull: string;
+  dayRecapCrowdNotes: string;
+  setDayRecapField: (field: 'highlights' | 'autosSigned' | 'bestPull' | 'crowdNotes', value: string) => void;
+
+  // Reset
+  resetUIState: () => void;
+}
+
+const ALL_MODES: ContentMode[] = [
+  'Player Spotlight',
+  'Pack Reveal / Hit',
+  'Signing Session',
+  'Legend Tribute',
+  'Current Star Hype',
+  'Event Promo',
+  'Behind the Scenes',
+  'Day Recap'
+];
+
+export const useAppStore = create<AppState>()(
+  persist(
+    (set, get) => ({
+      // Players
+      players: initialPlayers,
+      updatePlayer: (id, updates) => set(state => ({
+        players: state.players.map(p => p.id === id ? { ...p, ...updates } : p)
+      })),
+      updatePlayerSchedule: (id, schedule) => set(state => ({
+        players: state.players.map(p => p.id === id ? { ...p, schedule } : p)
+      })),
+
+      // Notes
+      notes: [],
+      addNote: (playerId, content, isQuote = false) => set(state => ({
+        notes: [...state.notes, {
+          id: uuidv4(),
+          playerId,
+          content,
+          isQuote,
+          timestamp: Date.now()
+        }]
+      })),
+      deleteNote: (noteId) => set(state => ({
+        notes: state.notes.filter(n => n.id !== noteId)
+      })),
+      getNotesForPlayer: (playerId) => get().notes.filter(n => n.playerId === playerId),
+
+      // Content Tracking
+      contentTracking: [],
+      trackContent: (playerId, mode, platform) => set(state => ({
+        contentTracking: [...state.contentTracking, {
+          playerId,
+          mode,
+          platform,
+          usedAt: Date.now()
+        }]
+      })),
+      getTrackingForPlayer: (playerId) => get().contentTracking.filter(t => t.playerId === playerId),
+      hasUsedMode: (playerId, mode) => get().contentTracking.some(t => t.playerId === playerId && t.mode === mode),
+      getUnusedModes: (playerId) => {
+        const usedModes = get().contentTracking
+          .filter(t => t.playerId === playerId)
+          .map(t => t.mode);
+        return ALL_MODES.filter(m => !usedModes.includes(m));
+      },
+
+      // Generated Content
+      generatedContent: [],
+      addGeneratedContent: (content) => {
+        const id = uuidv4();
+        set(state => ({
+          generatedContent: [...state.generatedContent, {
+            ...content,
+            id,
+            createdAt: Date.now()
+          }]
+        }));
+        return id;
+      },
+      markVariationUsed: (contentId, variationId) => set(state => ({
+        generatedContent: state.generatedContent.map(gc =>
+          gc.id === contentId
+            ? {
+                ...gc,
+                variations: gc.variations.map(v =>
+                  v.id === variationId ? { ...v, used: true } : v
+                )
+              }
+            : gc
+        )
+      })),
+      markVariationAsSavedTemplate: (contentId, variationId) => set(state => ({
+        generatedContent: state.generatedContent.map(gc =>
+          gc.id === contentId
+            ? {
+                ...gc,
+                variations: gc.variations.map(v =>
+                  v.id === variationId ? { ...v, savedAsTemplate: true } : v
+                )
+              }
+            : gc
+        )
+      })),
+      getContentHistory: () => get().generatedContent.sort((a, b) => b.createdAt - a.createdAt),
+
+      // Templates
+      templates: [],
+      saveTemplate: (mode, platform, content, playerName) => set(state => ({
+        templates: [...state.templates, {
+          id: uuidv4(),
+          mode,
+          platform,
+          content,
+          playerName,
+          createdAt: Date.now()
+        }]
+      })),
+      deleteTemplate: (id) => set(state => ({
+        templates: state.templates.filter(t => t.id !== id)
+      })),
+      getTemplatesForModeAndPlatform: (mode, platform) =>
+        get().templates.filter(t => t.mode === mode && t.platform === platform),
+
+      // UI State
+      selectedPlayerId: null,
+      selectedMode: 'Player Spotlight',
+      selectedPlatform: 'Instagram',
+      selectedCardType: null,
+      selectedProduct: null,
+      serialNumber: '',
+      contextInput: '',
+      isGenerating: false,
+      isOffline: false,
+
+      setSelectedPlayer: (id) => set({ selectedPlayerId: id }),
+      setSelectedMode: (mode) => set({ selectedMode: mode }),
+      setSelectedPlatform: (platform) => set({ selectedPlatform: platform }),
+      setSelectedCardType: (cardType) => set({ selectedCardType: cardType }),
+      setSelectedProduct: (product) => set({ selectedProduct: product }),
+      setSerialNumber: (serial) => set({ serialNumber: serial }),
+      setContextInput: (context) => set({ contextInput: context }),
+      setIsGenerating: (generating) => set({ isGenerating: generating }),
+      setIsOffline: (offline) => set({ isOffline: offline }),
+
+      // Day Recap
+      dayRecapHighlights: '',
+      dayRecapAutosSigned: '',
+      dayRecapBestPull: '',
+      dayRecapCrowdNotes: '',
+      setDayRecapField: (field, value) => {
+        const fieldMap = {
+          highlights: 'dayRecapHighlights',
+          autosSigned: 'dayRecapAutosSigned',
+          bestPull: 'dayRecapBestPull',
+          crowdNotes: 'dayRecapCrowdNotes'
+        } as const;
+        set({ [fieldMap[field]]: value });
+      },
+
+      // Reset
+      resetUIState: () => set({
+        selectedPlayerId: null,
+        selectedMode: 'Player Spotlight',
+        selectedPlatform: 'Instagram',
+        selectedCardType: null,
+        selectedProduct: null,
+        serialNumber: '',
+        contextInput: ''
+      })
+    }),
+    {
+      name: 'prizm-lounge-storage',
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        // Persist everything except transient UI state
+        players: state.players,
+        notes: state.notes,
+        contentTracking: state.contentTracking,
+        generatedContent: state.generatedContent,
+        templates: state.templates,
+        dayRecapHighlights: state.dayRecapHighlights,
+        dayRecapAutosSigned: state.dayRecapAutosSigned,
+        dayRecapBestPull: state.dayRecapBestPull,
+        dayRecapCrowdNotes: state.dayRecapCrowdNotes
+      })
+    }
+  )
+);
+
+// Selector hooks for common patterns
+export const useSelectedPlayer = () => {
+  const { selectedPlayerId, players } = useAppStore();
+  return players.find(p => p.id === selectedPlayerId);
+};
+
+export const usePlayerNotes = (playerId: string) => {
+  const notes = useAppStore(state => state.notes);
+  return notes.filter(n => n.playerId === playerId).sort((a, b) => b.timestamp - a.timestamp);
+};
+
+export const useContentGaps = () => {
+  const { players, contentTracking } = useAppStore();
+  const gaps: { player: Player; unusedModes: ContentMode[] }[] = [];
+
+  players.forEach(player => {
+    const usedModes = contentTracking
+      .filter(t => t.playerId === player.id)
+      .map(t => t.mode);
+
+    // Filter modes based on player category
+    let relevantModes = [...ALL_MODES];
+    if (player.category !== 'Legend') {
+      relevantModes = relevantModes.filter(m => m !== 'Legend Tribute');
+    }
+    if (player.category !== 'Current') {
+      relevantModes = relevantModes.filter(m => m !== 'Current Star Hype');
+    }
+
+    const unusedModes = relevantModes.filter(m => !usedModes.includes(m) && m !== 'Day Recap');
+
+    if (unusedModes.length > 0) {
+      gaps.push({ player, unusedModes });
+    }
+  });
+
+  return gaps;
+};
