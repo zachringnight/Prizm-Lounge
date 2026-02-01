@@ -215,9 +215,9 @@ export const players: Player[] = [
       'Locked down the best WRs of his era'
     ],
     cardHistory: [
-      'Late 90s/early 2000s inserts are the chase',
+      'Late 90s/early 2000s Panini inserts are the chase',
       'HOF induction gave cards a bump',
-      'Topps Chrome and Bowman from that era',
+      'Donruss and Score from the dynasty era',
       'Patriots dynasty cards always in demand'
     ],
     personalDetails: [
@@ -367,10 +367,10 @@ export const players: Player[] = [
       'Greatest cover corner of his generation'
     ],
     cardHistory: [
-      'Early 2000s Bowman/Topps Chrome',
+      'Early 2000s Donruss and Playoff inserts',
       'Hall of Fame spike in 2019',
       'Broncos and Redskins cards both collectible',
-      'Georgia Bulldogs college cards'
+      'Prizm legacy cards highly valued'
     ],
     personalDetails: [
       'Georgia Bulldogs legend',

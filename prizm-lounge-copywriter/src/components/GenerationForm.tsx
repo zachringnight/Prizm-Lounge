@@ -42,19 +42,40 @@ const CARD_TYPES: CardType[] = [
   'Legacy Insert'
 ];
 
+// PANINI PRODUCTS ONLY
 const PRODUCTS: Product[] = [
+  // Flagship
   'Prizm',
   'Select',
-  'Obsidian',
-  'Spectra',
-  'Immaculate',
-  'National Treasures',
-  'Flawless',
   'Optic',
   'Mosaic',
+  // Ultra Premium
+  'National Treasures',
+  'Flawless',
+  'Immaculate',
+  'One',
+  'Noir',
+  'Eminence',
+  // Premium
+  'Spectra',
+  'Obsidian',
+  'Gold Standard',
+  'Limited',
+  'Encased',
+  'Origins',
+  // Mid-Tier
   'Donruss',
   'Contenders',
-  'Plates & Patches'
+  'Plates & Patches',
+  'Certified',
+  'Absolute',
+  'Playbook',
+  'Phoenix',
+  // Draft
+  'Prizm Draft Picks',
+  'Contenders Draft Picks',
+  'Chronicles Draft',
+  'Chronicles'
 ];
 
 interface GeneratedVariation extends ContentVariation {

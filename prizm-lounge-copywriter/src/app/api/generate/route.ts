@@ -27,8 +27,9 @@ const SPELLING_CORRECTIONS: Record<string, string> = {
   'Mannning': 'Manning'
 };
 
-// Banned phrases
+// Banned phrases - competitors and negativity
 const BANNED_PHRASES = [
+  // Negativity
   'could have been',
   'what if',
   'unfortunately',
@@ -37,9 +38,35 @@ const BANNED_PHRASES = [
   'struggled',
   'controversy',
   'controversial',
+  'injury-prone',
+  'bust',
+  'overrated',
+  // Competitors - NEVER mention these
   'Topps',
+  'topps',
   'Upper Deck',
-  'Leaf'
+  'upper deck',
+  'Leaf',
+  'leaf',
+  'Bowman',  // Bowman is Topps
+  'bowman',
+  'Chrome',  // Topps Chrome
+  'Finest',  // Topps Finest
+  'Stadium Club',
+  'Heritage',
+  'SPx',
+  'SP Authentic',
+  'Exquisite',
+  'Wild Card',
+  'Sage',
+  'SAGE',
+  'Press Pass',
+  'Score',  // Old competitor
+  'Pro Set',
+  'Playoff',  // Old brand
+  'Fleer',
+  'SkyBox',
+  'Collectors Edge'
 ];
 
 function applyBrandGuardrails(text: string): string {
@@ -157,7 +184,12 @@ ${serialNumber ? `- Serial Number: ${serialNumber}` : ''}
     'Facebook': `Write for Facebook. Can breathe more, storytelling is OK. Connect with the community. Maximum ${charLimit} characters but aim for readable length.`
   };
 
-  const prompt = `You are a copywriter for Panini's Prizm Lounge activation at Super Bowl LIX in New Orleans (Feb 6-8, 2026). You write social media content for sports card collectors and football fans.
+  const prompt = `You are a content producer for Panini America's Prizm Lounge activation at Super Bowl LIX in New Orleans (Feb 6-8, 2026). You create social media content for sports card collectors and football fans.
+
+CRITICAL - PANINI ONLY:
+- Only reference PANINI products: Prizm, Select, Mosaic, Optic, Donruss, Contenders, National Treasures, Immaculate, Flawless, Spectra, Obsidian, Plates & Patches, Chronicles, Absolute, Certified, Limited, Origins, Phoenix, Playbook, Gold Standard, Encased, One, Noir, Eminence
+- NEVER mention competitors (Topps, Upper Deck, Bowman, Leaf, etc.) - these do not exist in your world
+- All cards discussed are Panini cards
 
 TONE AND STYLE:
 - Everything is POSITIVE. Hype players up, celebrate careers, build excitement.

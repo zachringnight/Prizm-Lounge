@@ -1,17 +1,22 @@
-# Prizm Lounge Copywriter
+# Prizm Lounge Production Hub
 
-Social media copywriting tool for the Panini Prizm Lounge activation at Super Bowl LIX in New Orleans.
+Full content production tool for Panini America's Prizm Lounge activation at Super Bowl LIX in New Orleans.
 
 **Event Dates:** Thursday Feb 6 - Saturday Feb 8, 2026
 
 ## Features
 
 ### Core Functionality
-- **AI-Powered Copy Generation** - Generate 3 variations for any player/mode/platform combination
-- **10 Confirmed Players** - Complete database with stats, moments, and card history
+- **AI-Powered Content Generation** - Generate 3 variations for any player/mode/platform combination
+- **10 Confirmed Players** - Complete database with stats, moments, and Panini card history
 - **8 Content Modes** - Player Spotlight, Pack Reveal, Signing Session, and more
 - **4 Platforms** - Instagram, X (280 char), TikTok (150 char), Facebook
-- **Card Type Integration** - Auto-generates pull language for pack reveals
+- **Panini Product Integration** - All card references are Panini products only (Prizm, Select, National Treasures, etc.)
+
+### Brand Guardrails
+- **Panini-Only References** - System enforces only Panini products in all generated content
+- **Competitor Blocking** - Auto-detects and flags any non-Panini card brand mentions
+- **Spelling Protection** - Auto-corrects common misspellings (Prism→Prizm, etc.)
 
 ### Player Database
 - Full bio, stats, and defining moments for each player
