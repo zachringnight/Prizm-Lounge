@@ -19,7 +19,7 @@ This project is ready to deploy to Vercel. Follow these steps:
 1. **Import Project**
    - Go to [Vercel Dashboard](https://vercel.com/new)
    - Click "Import Project" or "Add New Project"
-   - Import your GitHub repository: `zachringnight/ZNew`
+   - Import your GitHub repository (for example: `<org>/<repo>`)
 
 2. **Configure Project Settings**
    - **Root Directory**: `prizm-lounge-copywriter` (important!)
