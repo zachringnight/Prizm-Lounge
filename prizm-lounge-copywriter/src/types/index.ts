@@ -133,6 +133,7 @@ export interface Player {
   definingMoments: string[];
   cardHistory: string[];
   personalDetails: string[];
+  paniniContentBeats?: string[]; // Content/interview talking points
   schedule: AppearanceSchedule | null;
   imageUrl?: string;
 }

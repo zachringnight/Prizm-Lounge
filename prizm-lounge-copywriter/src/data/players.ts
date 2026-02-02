@@ -9,16 +9,16 @@ export const players: Player[] = [
     team: 'Detroit Lions',
     position: 'RB',
     keyStats: [
-      '2024: 1,400+ scrimmage yards',
-      '16 total touchdowns',
-      'Dynamic dual-threat back',
+      '2025 Pro Bowl selection',
+      'Dynamic, big-play running back',
+      'Explosive burst and instant scoring upside',
       '#12 overall pick, 2023 NFL Draft'
     ],
     definingMoments: [
-      'Key piece of Lions historic 2024 offense',
-      'Multiple 100+ yard rushing games as rookie',
+      'Key piece of Lions historic offense',
+      'Multiple 100+ yard rushing games',
       'Elite pass-catching ability out of backfield',
-      'Part of best RB duo in NFL with Montgomery'
+      '"Lightning" role in Lions offense'
     ],
     cardHistory: [
       '2023 Prizm rookie card highly sought after',
@@ -30,8 +30,13 @@ export const players: Player[] = [
       'Alabama Crimson Tide standout',
       '#12 overall pick 2023',
       'Dalton, Georgia native',
-      'Elite speed and agility',
+      'Elite speed and separation',
       'Built for modern NFL offense'
+    ],
+    paniniContentBeats: [
+      'Speed and separation',
+      '"Lightning" role in Lions offense',
+      'What a "big moment" feels like on-field versus pulling a big card'
     ],
     schedule: {
       day: 'Thursday',
@@ -47,16 +52,16 @@ export const players: Player[] = [
     team: 'Detroit Lions',
     position: 'OT',
     keyStats: [
-      '2x Pro Bowl selection',
-      'Started every game since rookie year',
-      'Anchor of Lions elite offensive line',
+      'Multiple Pro Bowl selections',
+      'Anchor right tackle for the Lions',
+      'Tone-setter who defines Detroit identity',
       '#7 overall pick, 2021 NFL Draft'
     ],
     definingMoments: [
       'Moved from left to right tackle seamlessly as rookie',
       'Key blocker for Lions record-setting offense',
       'Youngest starting OT in NFL at draft',
-      'Shutdown protector for Goff and run game'
+      'Face of league\'s new-school OL dominance'
     ],
     cardHistory: [
       '2021 Prizm rookie card',
@@ -70,6 +75,11 @@ export const players: Player[] = [
       '#7 overall pick 2021',
       'American Samoa native',
       'Youngest first-round OT in draft history'
+    ],
+    paniniContentBeats: [
+      'Protector mentality',
+      'Leadership without the spotlight',
+      'What collectors miss when they only chase skill positions'
     ],
     schedule: {
       day: 'Thursday',
@@ -85,16 +95,16 @@ export const players: Player[] = [
     team: 'Jacksonville Jaguars',
     position: 'QB',
     keyStats: [
-      '2025: MVP finalist, Comeback POY finalist',
-      '13-4 record, AFC South champs',
-      '38 total TDs (franchise record)',
+      'Franchise quarterback for Jacksonville',
+      '2025 season: Top-tier production',
+      'Defining passer of his era',
       '#1 overall pick, 2021 NFL Draft'
     ],
     definingMoments: [
       'Game-winning drive vs Chiefs on Monday Night Football',
       '5 TD / 300 yard game vs Jets',
       'First QB to lead JAX to back-to-back playoffs since Mark Brunell',
-      'Led Jaguars to AFC South title in 2025'
+      'Led Jaguars to AFC South title'
     ],
     cardHistory: [
       '2021 Prizm rookie is a cornerstone card',
@@ -108,6 +118,11 @@ export const players: Player[] = [
       'Married to Marissa',
       'Known for the legendary hair',
       'Cartersville, Georgia native'
+    ],
+    paniniContentBeats: [
+      'Consistency and leadership',
+      'What "elite" looks like week-to-week',
+      'How he approaches highs and criticism'
     ],
     schedule: {
       day: 'Friday',
@@ -123,9 +138,9 @@ export const players: Player[] = [
     team: 'Detroit Lions',
     position: 'DE',
     keyStats: [
-      '2025: 14.5 sacks (4th in NFL)',
-      '$180M contract extension',
-      'Played all 17 games after devastating 2024 leg injury',
+      'NFL headline defensive personality',
+      'Top-tier edge rusher conversation',
+      'Centerpiece of Detroit\'s identity',
       '#2 overall pick, 2022 NFL Draft'
     ],
     definingMoments: [
@@ -138,14 +153,20 @@ export const players: Player[] = [
       '2022 Prizm rookie card',
       'Detroit hometown hero premium on all cards',
       'Michigan Wolverines college cards valuable',
-      'Auto cards consistently strong sellers'
+      'Panini-exclusive autograph partner'
     ],
     personalDetails: [
       'Michigan Man through and through',
       '#2 overall pick 2022',
       'House of Hutch charity foundation',
       'Dad Chris played in the NFL',
-      'Plymouth, Michigan native'
+      'First defensive player signed to Panini exclusive deal'
+    ],
+    paniniContentBeats: [
+      'Motor and mindset',
+      '"City matches the player"',
+      'Defense as culture',
+      'What he wants collectors to feel when they pull his auto'
     ],
     schedule: {
       day: 'Friday',
@@ -161,9 +182,9 @@ export const players: Player[] = [
     team: 'Chicago Bears',
     position: 'WR',
     keyStats: [
-      '2024: Strong rookie campaign',
-      'Part of Bears young offensive core',
-      'Elite route-running ability',
+      'High-profile young star',
+      'Polished, physical game',
+      '"Future centerpiece" trajectory',
       '#9 overall pick, 2024 NFL Draft'
     ],
     definingMoments: [
@@ -174,7 +195,7 @@ export const players: Player[] = [
     ],
     cardHistory: [
       '2024 Prizm rookie card in demand',
-      'Washington Huskies cards from CFP run',
+      'Panini-exclusive, multi-year trading card partner',
       'Part of loaded 2024 WR class',
       'Bears rebuild cards gaining momentum'
     ],
@@ -182,8 +203,13 @@ export const players: Player[] = [
       'Washington Huskies standout',
       '#9 overall pick 2024',
       'Born in Nigeria, raised in Las Vegas',
-      'Elite size and athleticism',
+      'Panini family since Washington days',
       'Part of Bears young core'
+    ],
+    paniniContentBeats: [
+      'The moment he realized he was "that guy"',
+      'Rookie-to-vet mindset shift',
+      'What he wants his card photo to communicate'
     ],
     schedule: {
       day: 'Friday',
@@ -199,8 +225,8 @@ export const players: Player[] = [
     team: 'Houston Texans',
     position: 'EDGE',
     keyStats: [
-      '2024: Defensive Rookie of the Year finalist',
-      'Multiple sacks as rookie',
+      '2025 season: Elite impact stats',
+      'Premier league disruptor',
       'Anchor of Texans defense',
       '#3 overall pick, 2023 NFL Draft'
     ],
@@ -221,42 +247,53 @@ export const players: Player[] = [
       '#3 overall pick 2023',
       'Hampton, Georgia native',
       '2x SEC Defensive Player of the Year',
-      'Built for dominance'
+      'Building something special in Houston'
+    ],
+    paniniContentBeats: [
+      'Pass rush craft',
+      '"How sacks really happen"',
+      'Leadership on defense',
+      'What he\'s building in Houston'
     ],
     schedule: null
   },
 
-  // PROSPECTS
+  // CURRENT NFL STARS (ROOKIES)
   {
     id: 'quinn-ewers',
     name: 'Quinn Ewers',
-    category: 'Prospect',
-    team: 'Texas Longhorns',
+    category: 'Current',
+    team: 'Miami Dolphins',
     position: 'QB',
     keyStats: [
-      '2024: Led Texas to CFP semifinals',
-      '3,400+ passing yards',
-      '28 touchdowns',
-      'Projected top-5 pick in 2025 Draft'
+      'Round 7, 2025 NFL Draft',
+      'Already getting real reps and real headlines',
+      'Panini-exclusive autograph partner',
+      'From Texas spotlight to NFL pressure'
     ],
     definingMoments: [
       'Led Texas to back-to-back CFP appearances',
       'Beat Oklahoma in Red River Rivalry',
       'Clutch performances in SEC play',
-      'Former #1 overall recruit returning to glory'
+      'Making the jump from college to NFL'
     ],
     cardHistory: [
-      'Bowman University cards available',
+      'Panini-exclusive autograph partner',
       'Texas Longhorns cards always premium',
-      'First-round QB cards historically strong',
-      'Get in before NFL Draft hype'
+      'Part of Panini story from Texas days into NFL',
+      'College parallels still strong'
     ],
     personalDetails: [
-      'Texas Longhorns quarterback',
+      'Miami Dolphins quarterback',
+      'Former Texas Longhorns star',
       'Former #1 overall recruit',
       'Southlake, Texas native',
-      'Reclassified to graduate early for college',
-      'NFL-ready arm talent'
+      'Panini family from college days'
+    ],
+    paniniContentBeats: [
+      'The jump from college spotlight to NFL pressure',
+      '"First NFL card" moment',
+      'How he wants his story told'
     ],
     schedule: {
       day: 'Thursday',
@@ -268,33 +305,38 @@ export const players: Player[] = [
   {
     id: 'tyler-shough',
     name: 'Tyler Shough',
-    category: 'Prospect',
-    team: 'Louisville Cardinals',
+    category: 'Current',
+    team: 'New Orleans Saints',
     position: 'QB',
     keyStats: [
-      '2024: Breakout season at Louisville',
-      'Elite arm talent and mobility',
-      'Experienced college quarterback',
-      'Draft stock rising'
+      'New Orleans Saints quarterback',
+      'Major college program experience',
+      'Big-game experience translating to NFL',
+      'Earning his NFL opportunity and identity'
     ],
     definingMoments: [
-      'Led Louisville to strong 2024 season',
-      'Oregon transfer found his home',
+      'College journey through major programs',
+      'Oregon and Louisville experience',
       'Showed NFL-caliber arm strength',
-      'Emerged as draft prospect late in career'
+      'Reinvention at every stop'
     ],
     cardHistory: [
       'Bowman University cards',
       'Louisville and Oregon cards available',
       'Late-riser QB prospects can spike',
-      'Value play before draft'
+      'Value play with NFL experience'
     ],
     personalDetails: [
-      'Louisville Cardinals quarterback',
+      'New Orleans Saints quarterback',
       'Started career at Oregon',
       'Chandler, Arizona native',
       'Son of former NFL player',
-      'Journeyman turned prospect'
+      'Journeyman turned NFL opportunity'
+    ],
+    paniniContentBeats: [
+      'Reinvention',
+      'Earning the next shot',
+      'What he wants collectors to know beyond the stat line'
     ],
     schedule: {
       day: 'Friday',
@@ -303,6 +345,7 @@ export const players: Player[] = [
       endTime: '11:30'
     }
   },
+  // PROSPECTS
   {
     id: 'dante-moore',
     name: 'Dante Moore',
@@ -310,10 +353,10 @@ export const players: Player[] = [
     team: 'Oregon Ducks',
     position: 'QB',
     keyStats: [
-      '2025: Led Ducks to CFP run (10-1)',
-      '72% completion percentage',
-      '30 touchdowns',
-      'Returning to school for 2026 season'
+      '2025: Major production',
+      'Oregon Ducks starting quarterback',
+      'Next-up QB spotlight',
+      'Officially on the roster and producing'
     ],
     definingMoments: [
       'Beat Penn State in the whiteout game',
@@ -325,14 +368,20 @@ export const players: Player[] = [
       'Bowman University cards available now',
       'Early Prizm Draft Picks—get in before the NFL hype',
       'College parallels still affordable',
-      'Smart money is moving now before 2027 Draft'
+      'Smart money is moving now before Draft'
     ],
     personalDetails: [
       'Detroit native (MLK High School)',
-      'Projected 2027 #1 overall pick',
       'Pure passer with quiet confidence',
       'Five-star recruit out of high school',
+      'Oregon\'s identity under his leadership',
       'The next franchise QB'
+    ],
+    paniniContentBeats: [
+      'Next-up QB spotlight',
+      'Oregon\'s identity',
+      'How he handles the attention',
+      'What he wants his "era" to stand for'
     ],
     schedule: {
       day: 'Friday',
@@ -353,13 +402,13 @@ export const players: Player[] = [
       '3x Super Bowl Champion',
       'Super Bowl LIII MVP',
       '620 career receptions',
-      '6,822 career receiving yards'
+      'Definition of postseason reliability'
     ],
     definingMoments: [
       'THE CATCH vs Falcons in Super Bowl LI (28-3 comeback)',
       'Super Bowl LIII MVP performance vs Rams',
       'Most clutch postseason receiver of his generation',
-      'Converted from college QB to Super Bowl MVP WR'
+      '"Earned everything" career arc'
     ],
     cardHistory: [
       'Undervalued for years—market is correcting',
@@ -372,7 +421,13 @@ export const players: Player[] = [
       'Playoff legend, built for January',
       'Now media personality and analyst',
       'Redwood City, California native',
-      'Undrafted in 2009, became a champion'
+      'Undrafted to icon'
+    ],
+    paniniContentBeats: [
+      'Underdog to icon',
+      'Clutch moments',
+      'Grit as a brand',
+      'What "winning football" actually demands'
     ],
     schedule: {
       day: 'Saturday',
@@ -396,8 +451,8 @@ export const players: Player[] = [
     definingMoments: [
       '3 INTs vs Peyton Manning in 2003 AFC Championship',
       'Defined the early Patriots dynasty defense',
-      'Changed the way receivers were defended',
-      'Locked down the best WRs of his era'
+      'Known for swagger, physicality, championship details',
+      'Big-moment playoff performer'
     ],
     cardHistory: [
       'Late 90s/early 2000s Panini inserts are the chase',
@@ -411,6 +466,12 @@ export const players: Player[] = [
       'Lockdown corner who changed the game',
       'Michigan Wolverine',
       '#23 overall pick, 1995'
+    ],
+    paniniContentBeats: [
+      'Mentality',
+      'Clutch DNA',
+      'Rivalries',
+      'What separates "good" from "championship"'
     ],
     schedule: {
       day: 'Friday',
@@ -434,7 +495,7 @@ export const players: Player[] = [
     definingMoments: [
       '100-yard INT return vs Tom Brady in 2005 AFC Championship (called back but iconic)',
       'Shutdown corner for a decade',
-      'Matched up against the best and won',
+      'Elite technique and consistency',
       'Greatest cover corner of his generation'
     ],
     cardHistory: [
@@ -447,8 +508,13 @@ export const players: Player[] = [
       'Georgia Bulldogs legend',
       '#7 overall pick, 1999',
       'Greatest cover corner of his generation',
-      'Smooth and cerebral player',
+      'Universally respected for elite technique',
       'Folkston, Georgia native'
+    ],
+    paniniContentBeats: [
+      'The art of defense',
+      '"Eras" in football',
+      'What young DBs still get wrong'
     ],
     schedule: {
       day: 'Friday',
@@ -473,20 +539,25 @@ export const players: Player[] = [
       'The Comeback Game - 8 catches, 152 yards vs Houston',
       '4 Super Bowl appearances with Bills',
       'Jim Kelly\'s favorite target',
-      'Defined Bills K-Gun offense'
+      'Staple name in football history and collectibles'
     ],
     cardHistory: [
       'Late 80s/90s cards from Bills dynasty',
-      'Hall of Fame induction boosted values',
-      'Score and Topps cards from the era',
-      'Bills dynasty cards always sought after'
+      'Long-running Panini legend presence',
+      'Panini Super Bowl-era activations',
+      'Private signing moments with Panini'
     ],
     personalDetails: [
       'Kutztown University standout',
       'Hall of Fame Class of 2014',
       'Allentown, Pennsylvania native',
       'Part of greatest Bills teams ever',
-      'Blue-collar receiver with elite hands'
+      'Panini family relationship'
+    ],
+    paniniContentBeats: [
+      '"Old-school tough" versus today\'s game',
+      'Playoff moments',
+      'What makes a card feel iconic'
     ],
     schedule: {
       day: 'Friday',
@@ -505,13 +576,13 @@ export const players: Player[] = [
       '2004 Heisman Trophy winner',
       '2x National Champion at USC (2003, 2004)',
       '#10 overall pick, 2006 NFL Draft',
-      '34-game college winning streak'
+      'Most recognizable college-to-pro name of 2000s'
     ],
     definingMoments: [
       'Led USC to back-to-back National Championships',
       'Part of one of college football\'s greatest dynasties',
       'The Bush Push game vs Notre Dame',
-      'Heisman winner in loaded 2004 class'
+      'Instant credibility on legacy and big games'
     ],
     cardHistory: [
       '2006 Donruss rookie cards',
@@ -526,6 +597,11 @@ export const players: Player[] = [
       'Santa Ana, California native',
       'Part of legendary Pete Carroll era'
     ],
+    paniniContentBeats: [
+      'Legacy and collectibles',
+      'What he\'d tell today\'s young QBs about expectations',
+      '"Iconic college card" versus "pro card" identity'
+    ],
     schedule: null
   },
   {
@@ -535,10 +611,10 @@ export const players: Player[] = [
     team: 'Miami Dolphins',
     position: 'RB',
     keyStats: [
-      'Heisman Trophy winner (Texas)',
+      'Heisman Trophy winner 1998 (Texas)',
       '10,009 career rushing yards',
-      '66 career rushing touchdowns',
-      'Broke Tony Dorsett\'s NCAA rushing record'
+      'Former NFL rushing champion',
+      'One of the most unique careers in football history'
     ],
     definingMoments: [
       'Broke Tony Dorsett\'s NCAA rushing record at Texas',
@@ -547,17 +623,22 @@ export const players: Player[] = [
       'Saints traded entire 1999 draft to get him'
     ],
     cardHistory: [
-      '1999 rookie class cards',
-      'Heisman Trophy premium',
-      'Cult following in the hobby',
+      'Longtime Panini relationship',
+      '"Old friend" energy with Panini',
+      'Panini HQ appearances and autograph sessions',
       'Texas Longhorns cards highly collectible'
     ],
     personalDetails: [
       'New Orleans Draft Day trade (entire draft for one pick)',
       'Outspoken, unique personality',
-      'Heisman Trophy winner with iconic NFL career',
+      'One of the most unique careers in football',
       'San Diego, California native',
-      'Texas Longhorns legend'
+      'Panini family member'
+    ],
+    paniniContentBeats: [
+      'Individuality',
+      'Legacy and pressure',
+      'What he wishes collectors understood about the person behind the card'
     ],
     schedule: null
   },
