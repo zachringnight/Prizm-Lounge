@@ -740,6 +740,50 @@ export const players: Player[] = [
       '"Watch this in 2026" energy'
     ],
     schedule: null
+  },
+  {
+    id: 'keisean-henderson',
+    name: 'Keisean Henderson',
+    category: 'Prospect',
+    team: 'Houston Cougars',
+    position: 'QB',
+    keyStats: [
+      '#1 overall recruit in Class of 2026',
+      '5-star quarterback, 6\'4" 180 lbs',
+      'Highest-rated offensive commit in Houston history',
+      '2025 Navy All-American Bowl MVP (first junior ever)'
+    ],
+    definingMoments: [
+      'Senior season start: 1,119 yards, 12 TDs in just 2 games',
+      'Junior year: 2,689 passing yards, 25 touchdowns',
+      'Converted from WR to QB as sophomore—immediate star',
+      'Navy All-American Bowl MVP as a junior (historic first)'
+    ],
+    cardHistory: [
+      'Bowman University cards will be highly sought',
+      'Early Prizm Draft Picks—get in before the NFL hype',
+      'Houston commit adds local collector interest',
+      '#1 recruit status drives premium on all parallels'
+    ],
+    personalDetails: [
+      'Legacy School of Sport Sciences (Spring, Texas)',
+      'Houston native, committed to play for his city',
+      'Freshman WR: 74 rec, 1,135 yards, 14 TDs',
+      'Second highest-rated UH commit ever (behind Ed Oliver)',
+      'Enrolling at Houston January 2026'
+    ],
+    paniniContentBeats: [
+      'Playing for his hometown—Houston pride',
+      'The WR-to-QB transition and what it taught him',
+      'What being #1 recruit means and how he handles pressure',
+      'His vision for Houston football'
+    ],
+    schedule: {
+      day: 'Saturday',
+      date: 'Feb 7',
+      startTime: '11:00',
+      endTime: '13:00'
+    }
   }
 ];
 
