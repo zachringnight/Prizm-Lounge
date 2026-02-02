@@ -60,37 +60,38 @@ export default function DeliverablesPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold mb-1">Deliverables</h1>
-        <p className="text-sm text-[var(--foreground-muted)]">
-          Track content deliverables
-        </p>
+    <div className="space-y-8">
+      <header className="page-header">
+        <h1>Deliverables</h1>
+        <p>Track content deliverables</p>
       </header>
 
-      {/* Progress */}
-      <div className="card p-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium">Completion</span>
-          <span className="text-sm text-[var(--foreground-muted)]">
+      {/* Progress Card */}
+      <div className="card p-5">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-base font-semibold">Completion</span>
+          <span className="text-base text-[var(--foreground-muted)]">
             {completedCount} / {totalCount} done
           </span>
         </div>
-        <div className="h-3 bg-[var(--background-tertiary)] rounded-full overflow-hidden">
+        <div className="progress-bar">
           <div
-            className="h-full bg-[var(--panini-red)] transition-all duration-300"
+            className="progress-fill"
             style={{ width: `${progress}%` }}
           />
+        </div>
+        <div className="text-center mt-3">
+          <span className="text-3xl font-bold text-[var(--panini-red)]">{Math.round(progress)}%</span>
         </div>
       </div>
 
       {/* Status Filter */}
-      <div className="tabs overflow-x-auto">
+      <div className="tabs-enhanced overflow-x-auto">
         {statuses.map(status => (
           <button
             key={status}
             onClick={() => setStatusFilter(status)}
-            className={`tab whitespace-nowrap ${statusFilter === status ? 'active' : ''}`}
+            className={`tab-enhanced whitespace-nowrap ${statusFilter === status ? 'active' : ''}`}
           >
             {status === 'all' ? 'All' : STATUS_LABELS[status]}
           </button>
@@ -98,45 +99,45 @@ export default function DeliverablesPage() {
       </div>
 
       {/* Deliverables List */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         {filteredDeliverables.length === 0 ? (
           <div className="empty-state">
-            <ClipboardIcon size={48} className="mx-auto mb-4 opacity-50" />
-            <p>No deliverables to show</p>
+            <ClipboardIcon size={56} className="mx-auto mb-4 opacity-40" />
+            <p className="text-lg">No deliverables to show</p>
           </div>
         ) : (
           filteredDeliverables.map(deliverable => {
             const TypeIcon = TYPE_ICONS[deliverable.type];
             return (
-              <div key={deliverable.id} className="card p-4">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-[var(--background-tertiary)] flex items-center justify-center flex-shrink-0">
-                    <TypeIcon size={20} className="text-[var(--foreground-muted)]" />
+              <div key={deliverable.id} className="card p-5">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-[var(--background-tertiary)] flex items-center justify-center flex-shrink-0">
+                    <TypeIcon size={24} className="text-[var(--foreground-muted)]" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="font-medium">{deliverable.title}</div>
+                    <div className="text-lg font-semibold mb-1">{deliverable.title}</div>
                     {deliverable.description && (
-                      <div className="text-sm text-[var(--foreground-muted)] mt-1">
+                      <div className="text-base text-[var(--foreground-muted)]">
                         {deliverable.description}
                       </div>
                     )}
                     {deliverable.dueDay && (
-                      <div className="text-xs text-[var(--foreground-dim)] mt-1">
+                      <div className="text-sm text-[var(--foreground-dim)] mt-2">
                         Due: {deliverable.dueDay}
                       </div>
                     )}
                   </div>
                   <button
                     onClick={() => updateDeliverableStatus(deliverable.id, cycleStatus(deliverable.status))}
-                    className={`px-3 py-1 text-xs rounded-full font-medium transition-colors ${STATUS_COLORS[deliverable.status]}`}
+                    className={`px-4 py-2 text-sm rounded-full font-semibold transition-colors ${STATUS_COLORS[deliverable.status]}`}
                   >
                     {STATUS_LABELS[deliverable.status]}
                   </button>
                 </div>
                 {deliverable.status === 'completed' || deliverable.status === 'delivered' ? (
-                  <div className="flex items-center gap-2 mt-3 pt-3 border-t border-[var(--background-tertiary)]">
-                    <CheckIcon size={14} className="text-[var(--status-live)]" />
-                    <span className="text-xs text-[var(--foreground-muted)]">
+                  <div className="flex items-center gap-3 mt-4 pt-4 border-t border-[var(--background-tertiary)]">
+                    <CheckIcon size={18} className="text-[var(--status-live)]" />
+                    <span className="text-sm text-[var(--foreground-muted)]">
                       {deliverable.completedAt
                         ? `Completed ${new Date(deliverable.completedAt).toLocaleDateString()}`
                         : 'Completed'}
@@ -150,13 +151,13 @@ export default function DeliverablesPage() {
       </div>
 
       {/* Legend */}
-      <div className="card p-4">
-        <div className="text-xs text-[var(--foreground-muted)] mb-2">Tap status to cycle:</div>
-        <div className="flex flex-wrap gap-2">
+      <div className="info-card">
+        <div className="text-sm text-[var(--foreground-muted)] mb-3">Tap status badge to cycle through:</div>
+        <div className="flex flex-wrap gap-3">
           {(['pending', 'in-progress', 'completed', 'delivered'] as DeliverableStatus[]).map(status => (
             <span
               key={status}
-              className={`px-2 py-1 text-xs rounded-full ${STATUS_COLORS[status]}`}
+              className={`px-3 py-1.5 text-sm rounded-full font-medium ${STATUS_COLORS[status]}`}
             >
               {STATUS_LABELS[status]}
             </span>

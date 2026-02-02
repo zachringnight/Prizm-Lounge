@@ -35,18 +35,16 @@ export default function PlayersPage() {
   const categories: (PlayerCategory | 'All')[] = ['All', 'Current', 'Legend', 'Prospect'];
 
   return (
-    <div className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold mb-1">Players</h1>
-        <p className="text-sm text-[var(--foreground-muted)]">
-          {players.length} players confirmed
-        </p>
+    <div className="space-y-8">
+      <header className="page-header">
+        <h1>Players</h1>
+        <p>{players.length} confirmed appearances</p>
       </header>
 
       {/* Search */}
       <div className="relative">
         <SearchIcon
-          size={18}
+          size={20}
           className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--foreground-dim)]"
         />
         <input
@@ -54,21 +52,21 @@ export default function PlayersPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search players..."
-          className="input pl-11"
+          className="input pl-12 text-base"
         />
       </div>
 
       {/* Category Filter */}
-      <div className="tabs">
+      <div className="tabs-enhanced">
         {categories.map(cat => (
           <button
             key={cat}
             onClick={() => setCategoryFilter(cat)}
-            className={`tab ${categoryFilter === cat ? 'active' : ''}`}
+            className={`tab-enhanced ${categoryFilter === cat ? 'active' : ''}`}
           >
             {cat}
             {cat !== 'All' && (
-              <span className="text-xs ml-1 opacity-50">
+              <span className="text-sm ml-1 opacity-60">
                 ({players.filter(p => p.category === cat).length})
               </span>
             )}
@@ -77,10 +75,10 @@ export default function PlayersPage() {
       </div>
 
       {/* Player List */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         {filteredPlayers.length === 0 ? (
           <div className="empty-state">
-            <p>No players found</p>
+            <p className="text-lg">No players found</p>
           </div>
         ) : (
           filteredPlayers.map(player => (

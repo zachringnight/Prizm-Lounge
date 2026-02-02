@@ -55,38 +55,39 @@ export default function ChecklistPage() {
   const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
   return (
-    <div className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold mb-1">Event Checklist</h1>
-        <p className="text-sm text-[var(--foreground-muted)]">
-          Track tasks for Super Bowl LX
-        </p>
+    <div className="space-y-8">
+      <header className="page-header">
+        <h1>Event Checklist</h1>
+        <p>Track tasks for Super Bowl LX</p>
       </header>
 
-      {/* Progress Bar */}
-      <div className="card p-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium">Progress</span>
-          <span className="text-sm text-[var(--foreground-muted)]">
+      {/* Progress Card */}
+      <div className="card p-5">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-base font-semibold">Progress</span>
+          <span className="text-base text-[var(--foreground-muted)]">
             {completedCount} / {totalCount} complete
           </span>
         </div>
-        <div className="h-3 bg-[var(--background-tertiary)] rounded-full overflow-hidden">
+        <div className="progress-bar">
           <div
-            className="h-full bg-[var(--status-live)] transition-all duration-300"
+            className="progress-fill"
             style={{ width: `${progress}%` }}
           />
+        </div>
+        <div className="text-center mt-3">
+          <span className="text-3xl font-bold text-[var(--status-live)]">{Math.round(progress)}%</span>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="space-y-3">
-        <div className="tabs overflow-x-auto">
+      <div className="space-y-4">
+        <div className="tabs-enhanced overflow-x-auto">
           {categories.map(cat => (
             <button
               key={cat}
               onClick={() => setCategoryFilter(cat)}
-              className={`tab whitespace-nowrap ${categoryFilter === cat ? 'active' : ''}`}
+              className={`tab-enhanced whitespace-nowrap ${categoryFilter === cat ? 'active' : ''}`}
             >
               {cat === 'all' ? 'All' : CATEGORY_LABELS[cat]}
             </button>
@@ -99,7 +100,7 @@ export default function ChecklistPage() {
               <button
                 key={day}
                 onClick={() => setDayFilter(day)}
-                className={`px-3 py-1 text-xs rounded-full transition-colors
+                className={`px-4 py-2 text-sm font-medium rounded-full transition-colors
                   ${dayFilter === day
                     ? 'bg-[var(--panini-yellow)] text-black'
                     : 'bg-[var(--background-tertiary)] text-[var(--foreground-muted)]'
@@ -111,7 +112,7 @@ export default function ChecklistPage() {
           </div>
           <button
             onClick={() => setShowCompleted(!showCompleted)}
-            className="text-xs text-[var(--foreground-muted)]"
+            className="text-sm font-medium text-[var(--foreground-muted)]"
           >
             {showCompleted ? 'Hide done' : 'Show done'}
           </button>
@@ -119,41 +120,34 @@ export default function ChecklistPage() {
       </div>
 
       {/* Checklist Items */}
-      <div className="space-y-6">
+      <div className="space-y-8">
         {Object.entries(groupedChecklist).map(([category, items]) => (
           <div key={category}>
-            <h3 className={`section-title mb-3 ${CATEGORY_COLORS[category as ChecklistCategory]}`}>
+            <h3 className={`section-title mb-4 ${CATEGORY_COLORS[category as ChecklistCategory]}`}>
               {CATEGORY_LABELS[category as ChecklistCategory]}
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-3">
               {items.map(item => (
                 <button
                   key={item.id}
                   onClick={() => toggleChecklistItem(item.id)}
-                  className={`card p-4 w-full text-left flex items-start gap-3 transition-all
-                    ${item.completed ? 'opacity-60' : ''}`}
+                  className={`checklist-item w-full text-left transition-all
+                    ${item.completed ? 'completed' : ''}`}
                 >
-                  <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center flex-shrink-0 transition-colors
-                    ${item.completed
-                      ? 'bg-[var(--status-live)] border-[var(--status-live)]'
-                      : 'border-[var(--foreground-dim)]'
-                    }`}
-                  >
-                    {item.completed && <CheckIcon size={14} className="text-white" />}
+                  <div className={`checkbox ${item.completed ? 'checked' : ''}`}>
+                    {item.completed && <CheckIcon size={16} className="text-white" />}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className={`font-medium ${item.completed ? 'line-through' : ''}`}>
+                  <div className="item-content flex-1 min-w-0">
+                    <h4 className={item.completed ? 'line-through opacity-70' : ''}>
                       {item.title}
-                    </div>
+                    </h4>
                     {item.description && (
-                      <div className="text-sm text-[var(--foreground-muted)] mt-1">
-                        {item.description}
-                      </div>
+                      <p className="mt-1">{item.description}</p>
                     )}
                     {item.dueDay && (
-                      <div className="text-xs text-[var(--foreground-dim)] mt-1">
+                      <p className="text-sm text-[var(--foreground-dim)] mt-2">
                         {item.dueDay}
-                      </div>
+                      </p>
                     )}
                   </div>
                 </button>
@@ -164,12 +158,12 @@ export default function ChecklistPage() {
 
         {filteredChecklist.length === 0 && (
           <div className="empty-state">
-            <CheckIcon size={48} className="mx-auto mb-4 opacity-50" />
-            <p>No items to show</p>
+            <CheckIcon size={56} className="mx-auto mb-4 opacity-40" />
+            <p className="text-lg">No items to show</p>
             {!showCompleted && (
               <button
                 onClick={() => setShowCompleted(true)}
-                className="text-sm text-[var(--panini-yellow)] mt-2"
+                className="text-base font-medium text-[var(--panini-yellow)] mt-3"
               >
                 Show completed items
               </button>

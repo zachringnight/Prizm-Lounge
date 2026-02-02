@@ -54,44 +54,42 @@ export default function SchedulePage() {
   };
 
   return (
-    <div className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold mb-1">Schedule</h1>
-        <p className="text-sm text-[var(--foreground-muted)]">
-          Player appearances at Prizm Lounge
-        </p>
+    <div className="space-y-8">
+      <header className="page-header">
+        <h1>Schedule</h1>
+        <p>Player appearances at Prizm Lounge</p>
       </header>
 
       {/* Live/Up Next Banner */}
       {(livePlayer || upcomingPlayer) && (
-        <div className={`card p-4 ${livePlayer ? 'border-[var(--status-live)]' : 'border-[var(--panini-yellow)]'}`}>
+        <div className={`card p-5 ${livePlayer ? 'card-live' : 'border-[var(--panini-yellow)]'}`}>
           {livePlayer ? (
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="status-dot live animate-pulse-live" />
-                <span className="text-sm font-semibold text-[var(--status-live)]">LIVE NOW</span>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="status-dot live animate-pulse-live scale-125" />
+                <span className="text-sm font-bold text-[var(--status-live)] tracking-wide">LIVE NOW</span>
               </div>
-              <div className="font-bold text-lg">{livePlayer.name}</div>
-              <div className="text-sm text-[var(--foreground-muted)]">
-                {livePlayer.position} - {livePlayer.team}
+              <div className="font-bold text-xl mb-1">{livePlayer.name}</div>
+              <div className="text-base text-[var(--foreground-muted)]">
+                {livePlayer.position} • {livePlayer.team}
               </div>
               {livePlayer.schedule && (
-                <div className="text-sm text-[var(--foreground-dim)] mt-1">
+                <div className="text-sm text-[var(--foreground-dim)] mt-2">
                   Until {formatTime(livePlayer.schedule.endTime)}
                 </div>
               )}
             </div>
           ) : upcomingPlayer && (
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="status-dot upcoming" />
-                <span className="text-sm font-semibold text-[var(--panini-yellow)]">UP NEXT</span>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="status-dot upcoming scale-125" />
+                <span className="text-sm font-bold text-[var(--panini-yellow)] tracking-wide">UP NEXT</span>
               </div>
-              <div className="font-bold text-lg">{upcomingPlayer.name}</div>
-              <div className="text-sm text-[var(--foreground-muted)]">
-                {upcomingPlayer.position} - {upcomingPlayer.team}
+              <div className="font-bold text-xl mb-1">{upcomingPlayer.name}</div>
+              <div className="text-base text-[var(--foreground-muted)]">
+                {upcomingPlayer.position} • {upcomingPlayer.team}
               </div>
-              <div className="countdown text-lg mt-2">
+              <div className="countdown text-xl mt-3">
                 {getTimeUntil(upcomingPlayer.schedule)}
               </div>
             </div>
@@ -100,31 +98,31 @@ export default function SchedulePage() {
       )}
 
       {/* Day Filter */}
-      <div className="tabs">
+      <div className="tabs-enhanced">
         {days.map(day => (
           <button
             key={day}
             onClick={() => setDayFilter(day)}
-            className={`tab ${dayFilter === day ? 'active' : ''}`}
+            className={`tab-enhanced ${dayFilter === day ? 'active' : ''}`}
           >
             {day === 'All' ? 'All Days' : (
-              <>
-                {day}
-                <span className="text-xs ml-1 opacity-50">
+              <span className="flex flex-col items-center">
+                <span>{day}</span>
+                <span className="text-xs opacity-60">
                   {getDateDisplay(day as Exclude<DayFilter, 'All'>)}
                 </span>
-              </>
+              </span>
             )}
           </button>
         ))}
       </div>
 
       {/* Schedule List */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         {filteredPlayers.length === 0 ? (
           <div className="empty-state">
-            <ClockIcon size={48} className="mx-auto mb-4 opacity-50" />
-            <p>No appearances scheduled</p>
+            <ClockIcon size={56} className="mx-auto mb-4 opacity-40" />
+            <p className="text-lg">No appearances scheduled</p>
           </div>
         ) : (
           filteredPlayers.map(player => {
@@ -133,38 +131,38 @@ export default function SchedulePage() {
             return (
               <div
                 key={player.id}
-                className={`card p-4 ${status === 'live' ? 'border-[var(--status-live)]' : ''}`}
+                className={`schedule-card ${status === 'live' ? 'is-live' : ''}`}
               >
                 <div className="flex items-start gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-semibold">{player.name}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="player-name truncate">{player.name}</span>
                       <span className={`badge badge-${player.category.toLowerCase()}`}>
                         {player.category}
                       </span>
+                      {status === 'live' && (
+                        <span className="badge bg-[var(--status-live)] text-white">LIVE</span>
+                      )}
                     </div>
-                    <div className="text-sm text-[var(--foreground-muted)]">
-                      {player.position} - {player.team}
+                    <div className="player-details">
+                      {player.position} • {player.team}
                     </div>
                   </div>
 
-                  <div className="text-right">
-                    <div className="flex items-center gap-2 justify-end">
-                      <div className={`status-dot ${status}`} />
-                      {status === 'live' && (
-                        <span className="text-xs font-semibold text-[var(--status-live)]">LIVE</span>
-                      )}
-                    </div>
+                  <div className="text-right flex-shrink-0">
                     {player.schedule && (
                       <>
-                        <div className="text-sm font-semibold mt-1">
-                          {formatTime(player.schedule.startTime)} - {formatTime(player.schedule.endTime)}
+                        <div className="time-display text-lg">
+                          {formatTime(player.schedule.startTime)}
                         </div>
-                        <div className="text-xs text-[var(--foreground-dim)]">
-                          {player.schedule.day}, {player.schedule.date}
+                        <div className="text-sm text-[var(--foreground-dim)]">
+                          to {formatTime(player.schedule.endTime)}
+                        </div>
+                        <div className="text-sm text-[var(--foreground-dim)] mt-1">
+                          {player.schedule.day}
                         </div>
                         {status === 'upcoming' && (
-                          <div className="countdown text-sm mt-1">
+                          <div className="countdown text-base mt-2">
                             {getTimeUntil(player.schedule)}
                           </div>
                         )}

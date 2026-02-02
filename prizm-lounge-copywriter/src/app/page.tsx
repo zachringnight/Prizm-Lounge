@@ -59,39 +59,34 @@ export default function Home() {
   const deliverablesTotal = deliverables.length;
 
   return (
-    <div className="space-y-6">
-      <header className="text-center py-4">
-        <div className="text-xs font-semibold text-[var(--foreground-muted)] uppercase tracking-widest mb-1">
-          Panini America
-        </div>
-        <h1 className="text-2xl font-bold">
+    <div className="space-y-8">
+      {/* Hero Section */}
+      <div className="hero-section">
+        <div className="brand-text">Panini America</div>
+        <h1>
           <span className="text-[var(--panini-red)]">Prizm</span>{' '}
           <span className="text-[var(--panini-yellow)]">Lounge</span>
         </h1>
-        <p className="text-sm text-[var(--foreground-muted)]">
-          Super Bowl LX • San Francisco
-        </p>
-        <p className="text-xs text-[var(--foreground-dim)] mt-1">
-          Feb 6-8, 2026
-        </p>
-      </header>
+        <p className="event-info">Super Bowl LX • San Francisco</p>
+        <p className="event-dates">February 6-8, 2026</p>
+      </div>
 
       {/* Live Now Banner */}
       {livePlayer && (
         <button
           onClick={() => router.push(`/players/${livePlayer.id}`)}
-          className="card p-4 border-[var(--status-live)] w-full text-left"
+          className="card card-live p-5 w-full text-left"
         >
-          <div className="flex items-center gap-2 mb-2">
-            <div className="status-dot live animate-pulse-live" />
-            <span className="text-sm font-semibold text-[var(--status-live)]">LIVE NOW</span>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="status-dot live animate-pulse-live scale-125" />
+            <span className="text-sm font-bold text-[var(--status-live)] tracking-wide">LIVE NOW</span>
           </div>
-          <div className="font-bold text-lg">{livePlayer.name}</div>
-          <div className="text-sm text-[var(--foreground-muted)]">
+          <div className="font-bold text-xl mb-1">{livePlayer.name}</div>
+          <div className="text-base text-[var(--foreground-muted)]">
             {livePlayer.position} • {livePlayer.team}
           </div>
           {livePlayer.schedule && (
-            <div className="text-sm text-[var(--foreground-dim)] mt-1">
+            <div className="text-sm text-[var(--foreground-dim)] mt-2">
               Until {formatTime(livePlayer.schedule.endTime)}
             </div>
           )}
@@ -99,30 +94,36 @@ export default function Home() {
       )}
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-4">
         <button
           onClick={() => router.push('/schedule')}
-          className="card p-4 text-center"
+          className="stat-card"
         >
-          <CalendarIcon size={24} className="mx-auto mb-2 text-[var(--panini-yellow)]" />
-          <div className="text-2xl font-bold">{players.filter(p => p.schedule).length}</div>
-          <div className="text-xs text-[var(--foreground-muted)]">Players</div>
+          <div className="stat-icon">
+            <CalendarIcon size={28} className="mx-auto text-[var(--panini-yellow)]" />
+          </div>
+          <div className="stat-value">{players.filter(p => p.schedule).length}</div>
+          <div className="stat-label">Players</div>
         </button>
         <button
           onClick={() => router.push('/checklist')}
-          className="card p-4 text-center"
+          className="stat-card"
         >
-          <CheckIcon size={24} className="mx-auto mb-2 text-[var(--status-live)]" />
-          <div className="text-2xl font-bold">{checklistComplete}/{checklistTotal}</div>
-          <div className="text-xs text-[var(--foreground-muted)]">Checklist</div>
+          <div className="stat-icon">
+            <CheckIcon size={28} className="mx-auto text-[var(--status-live)]" />
+          </div>
+          <div className="stat-value">{checklistComplete}/{checklistTotal}</div>
+          <div className="stat-label">Tasks</div>
         </button>
         <button
           onClick={() => router.push('/deliverables')}
-          className="card p-4 text-center"
+          className="stat-card"
         >
-          <ClipboardIcon size={24} className="mx-auto mb-2 text-[var(--panini-red)]" />
-          <div className="text-2xl font-bold">{deliverablesComplete}/{deliverablesTotal}</div>
-          <div className="text-xs text-[var(--foreground-muted)]">Deliverables</div>
+          <div className="stat-icon">
+            <ClipboardIcon size={28} className="mx-auto text-[var(--panini-red)]" />
+          </div>
+          <div className="stat-value">{deliverablesComplete}/{deliverablesTotal}</div>
+          <div className="stat-label">Deliverables</div>
         </button>
       </div>
 
@@ -132,14 +133,14 @@ export default function Home() {
           <span className="section-title">Coming Up</span>
           <button
             onClick={() => router.push('/schedule')}
-            className="text-sm text-[var(--panini-yellow)]"
+            className="text-sm font-semibold text-[var(--panini-yellow)]"
           >
-            View All
+            View All →
           </button>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-3">
           {upcomingPlayers.length === 0 ? (
-            <div className="card p-4 text-center text-[var(--foreground-muted)]">
+            <div className="card p-6 text-center text-[var(--foreground-muted)]">
               No upcoming appearances
             </div>
           ) : (
@@ -149,31 +150,31 @@ export default function Home() {
                 <button
                   key={player.id}
                   onClick={() => router.push(`/players/${player.id}`)}
-                  className="card p-4 w-full text-left"
+                  className="schedule-card w-full text-left"
                 >
                   <div className="flex items-center justify-between">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold">{player.name}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-3 mb-1">
+                        <span className="player-name truncate">{player.name}</span>
                         <span className={`badge badge-${player.category.toLowerCase()}`}>
                           {player.category}
                         </span>
                       </div>
-                      <div className="text-sm text-[var(--foreground-muted)]">
+                      <div className="player-details">
                         {player.position} • {player.team}
                       </div>
                     </div>
-                    <div className="text-right">
+                    <div className="text-right ml-4">
                       {player.schedule && (
                         <>
-                          <div className="text-sm font-semibold">
+                          <div className="time-display">
                             {formatTime(player.schedule.startTime)}
                           </div>
-                          <div className="text-xs text-[var(--foreground-dim)]">
+                          <div className="text-sm text-[var(--foreground-dim)]">
                             {player.schedule.day}
                           </div>
                           {status === 'upcoming' && (
-                            <div className="countdown text-sm">
+                            <div className="countdown text-base mt-1">
                               {getTimeUntil(player.schedule)}
                             </div>
                           )}
@@ -189,20 +190,20 @@ export default function Home() {
       </div>
 
       {/* Quick Links */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-4">
         <button
           onClick={() => router.push('/players')}
-          className="card p-4 flex items-center gap-3"
+          className="card p-5 flex items-center gap-4"
         >
-          <UsersIcon size={20} className="text-[var(--foreground-muted)]" />
-          <span className="font-medium">Player Info</span>
+          <UsersIcon size={24} className="text-[var(--panini-yellow)]" />
+          <span className="font-semibold text-base">Player Info</span>
         </button>
         <button
           onClick={() => router.push('/checklist')}
-          className="card p-4 flex items-center gap-3"
+          className="card p-5 flex items-center gap-4"
         >
-          <CheckIcon size={20} className="text-[var(--foreground-muted)]" />
-          <span className="font-medium">Checklist</span>
+          <CheckIcon size={24} className="text-[var(--status-live)]" />
+          <span className="font-semibold text-base">Checklist</span>
         </button>
       </div>
     </div>
