@@ -740,6 +740,49 @@ export const players: Player[] = [
       '"Watch this in 2026" energy'
     ],
     schedule: null
+  },
+  {
+    id: 'keisean-henderson',
+    name: 'Keisean Henderson',
+    category: 'Current',
+    team: 'Las Vegas Raiders',
+    position: 'LB',
+    keyStats: [
+      'Versatile defensive playmaker',
+      'Physical run-stopping presence',
+      'Special teams contributor',
+      'NFL journey through multiple teams'
+    ],
+    definingMoments: [
+      'Developed from undrafted to NFL roster',
+      'Key defensive depth piece',
+      'Consistent special teams performer',
+      'Earned roster spot through hard work'
+    ],
+    cardHistory: [
+      'Panini Prizm cards available',
+      'Value play for defensive collectors',
+      'Raiders team cards gaining interest',
+      'Undrafted success story adds to narrative'
+    ],
+    personalDetails: [
+      'Undrafted free agent journey',
+      'Physical, downhill linebacker',
+      'Special teams standout',
+      'Earned everything mentality',
+      'Raiders defensive depth'
+    ],
+    paniniContentBeats: [
+      'Undrafted to NFL journey',
+      'What it takes to stay in the league',
+      'Special teams mentality and value'
+    ],
+    schedule: {
+      day: 'Saturday',
+      date: 'Feb 7',
+      startTime: '11:00',
+      endTime: '13:00'
+    }
   }
 ];
 
