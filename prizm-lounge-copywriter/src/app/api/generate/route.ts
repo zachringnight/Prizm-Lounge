@@ -190,7 +190,7 @@ ${serialNumber ? `- Serial Number: ${serialNumber}` : ''}
     'Facebook': `Write for Facebook. Can breathe more, storytelling is OK. Connect with the community. Maximum ${charLimit} characters but aim for readable length.`
   };
 
-  const prompt = `You are a content producer for Panini America's Prizm Lounge activation at Super Bowl LIX in New Orleans (Feb 6-8, 2026). You create social media content for sports card collectors and football fans.
+  const prompt = `You are a content producer for Panini America's Prizm Lounge activation at Super Bowl LX in San Francisco (Feb 6-8, 2026). You create social media content for sports card collectors and football fans.
 
 CRITICAL - PANINI ONLY:
 - Only reference PANINI products: Prizm, Select, Mosaic, Optic, Donruss, Contenders, National Treasures, Immaculate, Flawless, Spectra, Obsidian, Plates & Patches, Chronicles, Absolute, Certified, Limited, Origins, Phoenix, Playbook, Gold Standard, Encased, One, Noir, Eminence

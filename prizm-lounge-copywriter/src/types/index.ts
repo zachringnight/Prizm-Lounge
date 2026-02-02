@@ -133,6 +133,7 @@ export interface Player {
   definingMoments: string[];
   cardHistory: string[];
   personalDetails: string[];
+  paniniContentBeats?: string[]; // Content/interview talking points
   schedule: AppearanceSchedule | null;
   imageUrl?: string;
 }
@@ -202,6 +203,46 @@ export interface DayRecapInput {
   day: 'Thursday' | 'Friday' | 'Saturday';
 }
 
+// Event checklist items
+export type ChecklistCategory = 'setup' | 'player' | 'content' | 'teardown';
+
+export interface ChecklistItem {
+  id: string;
+  category: ChecklistCategory;
+  title: string;
+  description?: string;
+  completed: boolean;
+  completedAt?: number;
+  assignee?: string;
+  dueDay?: 'Thursday' | 'Friday' | 'Saturday';
+}
+
+// Deliverables tracking
+export type DeliverableStatus = 'pending' | 'in-progress' | 'completed' | 'delivered';
+export type DeliverableType = 'photo' | 'video' | 'social' | 'document' | 'other';
+
+export interface Deliverable {
+  id: string;
+  title: string;
+  description?: string;
+  type: DeliverableType;
+  status: DeliverableStatus;
+  playerId?: string;
+  dueDay?: 'Thursday' | 'Friday' | 'Saturday';
+  completedAt?: number;
+  notes?: string;
+}
+
+// Interview questions for players
+export type QuestionCategory = 'career' | 'cards' | 'personal' | 'event';
+
+export interface InterviewQuestion {
+  id: string;
+  question: string;
+  category: QuestionCategory;
+  forCategories?: PlayerCategory[]; // Which player categories this applies to
+}
+
 // Platform character limits
 export const PLATFORM_LIMITS: Record<Platform, number> = {
   'Instagram': 2200,
@@ -224,8 +265,8 @@ export function getScheduleStatus(schedule: AppearanceSchedule | null): Schedule
   const dateStr = eventDates[schedule.day];
   if (!dateStr) return 'scheduled';
 
-  const startDateTime = new Date(`${dateStr}T${schedule.startTime}:00-06:00`); // CST
-  const endDateTime = new Date(`${dateStr}T${schedule.endTime}:00-06:00`);
+  const startDateTime = new Date(`${dateStr}T${schedule.startTime}:00-08:00`); // PST
+  const endDateTime = new Date(`${dateStr}T${schedule.endTime}:00-08:00`);
 
   if (now >= startDateTime && now <= endDateTime) return 'live';
   if (now < startDateTime) {
@@ -250,7 +291,7 @@ export function getTimeUntil(schedule: AppearanceSchedule | null): string {
   const dateStr = eventDates[schedule.day];
   if (!dateStr) return '';
 
-  const startDateTime = new Date(`${dateStr}T${schedule.startTime}:00-06:00`);
+  const startDateTime = new Date(`${dateStr}T${schedule.startTime}:00-08:00`);
   const now = new Date();
 
   if (now >= startDateTime) return '';

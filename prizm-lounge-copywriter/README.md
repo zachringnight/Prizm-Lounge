@@ -1,6 +1,6 @@
 # Prizm Lounge Production Hub
 
-Full content production tool for Panini America's Prizm Lounge activation at Super Bowl LIX in New Orleans.
+Full content production tool for Panini America's Prizm Lounge activation at Super Bowl LX in San Francisco.
 
 **Event Dates:** Thursday Feb 6 - Saturday Feb 8, 2026
 
@@ -171,4 +171,4 @@ The app works offline with limited functionality:
 
 ---
 
-Built for Super Bowl LIX, New Orleans 2026
+Built for Super Bowl LX, San Francisco 2026

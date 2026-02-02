@@ -3,25 +3,22 @@
 import { useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
-import { formatTime, getScheduleStatus, ContentMode } from '@/types';
+import { formatTime, getScheduleStatus, QuestionCategory } from '@/types';
 import {
-  ChevronRightIcon,
   MicIcon,
   QuoteIcon,
   TrashIcon,
   PlusIcon,
-  SparklesIcon
+  ChevronRightIcon
 } from '@/components/Icons';
 import { useToast } from '@/components/Toast';
+import { interviewQuestions } from '@/data/checklist';
 
-const ALL_MODES: ContentMode[] = [
-  'Player Spotlight',
-  'Pack Reveal / Hit',
-  'Signing Session',
-  'Legend Tribute',
-  'Current Star Hype',
-  'Event Promo',
-  'Behind the Scenes'
+const QUESTION_CATEGORIES: { id: QuestionCategory; label: string }[] = [
+  { id: 'career', label: 'Career' },
+  { id: 'cards', label: 'Cards & Collecting' },
+  { id: 'personal', label: 'Personal' },
+  { id: 'event', label: 'Event' }
 ];
 
 export default function PlayerDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -30,20 +27,17 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
   const {
     players,
     notes,
-    contentTracking,
     addNote,
-    deleteNote,
-    setSelectedPlayer,
-    setSelectedMode
+    deleteNote
   } = useAppStore();
   const player = players.find(p => p.id === id);
   const playerNotes = notes.filter(n => n.playerId === id).sort((a, b) => b.timestamp - a.timestamp);
-  const playerTracking = contentTracking.filter(t => t.playerId === id);
 
   const [noteInput, setNoteInput] = useState('');
   const [isQuote, setIsQuote] = useState(false);
-  const [activeTab, setActiveTab] = useState<'info' | 'notes' | 'content'>('info');
+  const [activeTab, setActiveTab] = useState<'info' | 'questions' | 'notes'>('info');
   const [isListening, setIsListening] = useState(false);
+  const [expandedCategory, setExpandedCategory] = useState<QuestionCategory | null>('career');
   const { showToast, ToastComponent } = useToast();
 
   if (!player) {
@@ -58,6 +52,15 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
   }
 
   const status = getScheduleStatus(player.schedule);
+
+  // Filter questions based on player category
+  const getQuestionsForCategory = (questionCategory: QuestionCategory) => {
+    return interviewQuestions.filter(q => {
+      if (q.category !== questionCategory) return false;
+      if (q.forCategories && !q.forCategories.includes(player.category)) return false;
+      return true;
+    });
+  };
 
   const handleAddNote = () => {
     if (!noteInput.trim()) return;
@@ -94,27 +97,10 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
     recognition.start();
   };
 
-  const handleGenerateForMode = (mode: ContentMode) => {
-    setSelectedPlayer(id);
-    setSelectedMode(mode);
-    router.push('/');
-  };
-
-  const hasUsedMode = (mode: ContentMode) => {
-    return playerTracking.some(t => t.mode === mode);
-  };
-
-  // Filter modes based on player category
-  const availableModes = ALL_MODES.filter(mode => {
-    if (mode === 'Legend Tribute' && player.category !== 'Legend') return false;
-    if (mode === 'Current Star Hype' && player.category !== 'Current') return false;
-    return true;
-  });
-
   const tabs = [
     { id: 'info' as const, label: 'Info' },
-    { id: 'notes' as const, label: `Notes (${playerNotes.length})` },
-    { id: 'content' as const, label: 'Content' }
+    { id: 'questions' as const, label: 'Questions' },
+    { id: 'notes' as const, label: `Notes (${playerNotes.length})` }
   ];
 
   return (
@@ -127,7 +113,7 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
         <div className="flex-1">
           <h1 className="text-2xl font-bold">{player.name}</h1>
           <div className="text-[var(--foreground-muted)]">
-            {player.position} - {player.team}
+            {player.position} • {player.team}
           </div>
           <div className="flex items-center gap-2 mt-2">
             <span className={`badge badge-${player.category.toLowerCase()}`}>
@@ -157,15 +143,6 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
           </div>
         </div>
       )}
-
-      {/* Quick Generate Button */}
-      <button
-        onClick={() => handleGenerateForMode('Player Spotlight')}
-        className="btn btn-primary w-full gap-2"
-      >
-        <SparklesIcon size={20} />
-        Generate Content
-      </button>
 
       {/* Tabs */}
       <div className="tabs">
@@ -234,6 +211,50 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
               ))}
             </ul>
           </div>
+        </div>
+      )}
+
+      {activeTab === 'questions' && (
+        <div className="space-y-4">
+          <p className="text-sm text-[var(--foreground-muted)]">
+            Suggested interview questions for {player.name}
+          </p>
+
+          {QUESTION_CATEGORIES.map(category => {
+            const questions = getQuestionsForCategory(category.id);
+            if (questions.length === 0) return null;
+
+            const isExpanded = expandedCategory === category.id;
+
+            return (
+              <div key={category.id} className="card overflow-hidden">
+                <button
+                  onClick={() => setExpandedCategory(isExpanded ? null : category.id)}
+                  className="w-full p-4 flex items-center justify-between"
+                >
+                  <span className="font-medium">{category.label}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-[var(--foreground-muted)]">
+                      {questions.length} questions
+                    </span>
+                    <ChevronRightIcon
+                      size={18}
+                      className={`text-[var(--foreground-dim)] transition-transform ${isExpanded ? 'rotate-90' : ''}`}
+                    />
+                  </div>
+                </button>
+                {isExpanded && (
+                  <div className="border-t border-[var(--background-tertiary)] p-4 space-y-3">
+                    {questions.map((q, i) => (
+                      <div key={i} className="text-sm text-[var(--foreground-muted)]">
+                        {i + 1}. {q.question}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 
@@ -309,59 +330,6 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
                   </div>
                 </div>
               ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {activeTab === 'content' && (
-        <div className="space-y-4">
-          <p className="text-sm text-[var(--foreground-muted)]">
-            Track which content modes you've used for {player.name}
-          </p>
-
-          <div className="space-y-2">
-            {availableModes.map(mode => {
-              const used = hasUsedMode(mode);
-              return (
-                <button
-                  key={mode}
-                  onClick={() => handleGenerateForMode(mode)}
-                  className={`w-full p-4 rounded-xl flex items-center justify-between transition-all
-                    ${used
-                      ? 'bg-[var(--background-tertiary)] border border-[var(--status-live)]'
-                      : 'bg-[var(--background-secondary)] border border-[var(--background-tertiary)]'
-                    }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${used ? 'bg-[var(--status-live)]' : 'bg-[var(--background-tertiary)]'}`} />
-                    <span className={used ? 'text-[var(--foreground-muted)]' : 'text-[var(--foreground)]'}>
-                      {mode}
-                    </span>
-                  </div>
-                  {used ? (
-                    <span className="text-xs text-[var(--status-live)]">Done</span>
-                  ) : (
-                    <ChevronRightIcon size={18} className="text-[var(--foreground-dim)]" />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-
-          {playerTracking.length > 0 && (
-            <div className="mt-6">
-              <h3 className="section-title mb-3">Recent Posts</h3>
-              <div className="space-y-2">
-                {playerTracking.slice(0, 5).map((track, i) => (
-                  <div key={i} className="text-sm text-[var(--foreground-muted)] flex justify-between">
-                    <span>{track.mode}</span>
-                    <span className="text-[var(--foreground-dim)]">
-                      {new Date(track.usedAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                ))}
-              </div>
             </div>
           )}
         </div>

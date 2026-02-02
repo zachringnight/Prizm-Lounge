@@ -6,7 +6,7 @@ This repository contains the Prizm Lounge Production Hub application.
 
 ```
 .
-├── prizm-lounge-copywriter/    # Next.js application for Super Bowl LIX content generation
+├── prizm-lounge-copywriter/    # Next.js application for Super Bowl LX content generation
 │   ├── src/                    # Application source code
 │   ├── public/                 # Static assets
 │   ├── package.json            # Dependencies
@@ -78,7 +78,7 @@ See [prizm-lounge-copywriter/README.md](./prizm-lounge-copywriter/README.md) for
 
 ## Application Details
 
-The Prizm Lounge Production Hub is a full content production tool for Panini America's Prizm Lounge activation at Super Bowl LIX in New Orleans.
+The Prizm Lounge Production Hub is a full content production tool for Panini America's Prizm Lounge activation at Super Bowl LX in San Francisco.
 
 **Event Dates:** Thursday Feb 6 - Saturday Feb 8, 2026
 
