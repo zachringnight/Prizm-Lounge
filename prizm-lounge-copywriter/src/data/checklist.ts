@@ -24,21 +24,27 @@ export const defaultChecklist: Omit<ChecklistItem, 'id' | 'completed' | 'complet
   { category: 'content', title: 'B-roll locations identified' },
 
   // Daily tasks - Thursday
-  { category: 'player', title: 'Ty Law - arrival confirmed', dueDay: 'Thursday' },
-  { category: 'player', title: 'Trevor Lawrence - arrival confirmed', dueDay: 'Thursday' },
-  { category: 'player', title: 'Aidan Hutchinson - arrival confirmed', dueDay: 'Thursday' },
-  { category: 'player', title: 'Ricky Williams - arrival confirmed', dueDay: 'Thursday' },
+  { category: 'player', title: 'Jahmyr Gibbs - arrival confirmed (11AM)', dueDay: 'Thursday' },
+  { category: 'player', title: 'Penei Sewell - arrival confirmed (11AM)', dueDay: 'Thursday' },
+  { category: 'player', title: 'Quinn Ewers - arrival confirmed (2:30PM)', dueDay: 'Thursday' },
+  { category: 'player', title: 'Matt Leinart - arrival confirmed (TBD)', dueDay: 'Thursday' },
 
   // Daily tasks - Friday
-  { category: 'player', title: 'Garrett Wilson - arrival confirmed', dueDay: 'Friday' },
-  { category: 'player', title: 'Matt Leinart - arrival confirmed', dueDay: 'Friday' },
-  { category: 'player', title: 'Julian Edelman - arrival confirmed', dueDay: 'Friday' },
-  { category: 'player', title: 'Malcolm Butler - arrival confirmed', dueDay: 'Friday' },
+  { category: 'player', title: 'Trevor Lawrence - arrival confirmed (10AM)', dueDay: 'Friday' },
+  { category: 'player', title: 'Tyler Shough - arrival confirmed (10AM)', dueDay: 'Friday' },
+  { category: 'player', title: 'Rome Odunze - arrival confirmed (11AM)', dueDay: 'Friday' },
+  { category: 'player', title: 'Ty Law - arrival confirmed (12PM)', dueDay: 'Friday' },
+  { category: 'player', title: 'Champ Bailey - arrival confirmed (12PM)', dueDay: 'Friday' },
+  { category: 'player', title: 'Aidan Hutchinson - arrival confirmed (2PM)', dueDay: 'Friday' },
+  { category: 'player', title: 'Andre Reed - arrival confirmed (2:30PM)', dueDay: 'Friday' },
+  { category: 'player', title: 'Dante Moore - arrival confirmed (4:30PM)', dueDay: 'Friday' },
 
   // Daily tasks - Saturday
-  { category: 'player', title: 'Dante Moore - arrival confirmed', dueDay: 'Saturday' },
-  { category: 'player', title: 'Champ Bailey - arrival confirmed', dueDay: 'Saturday' },
-  { category: 'player', title: 'Eli Manning - arrival confirmed', dueDay: 'Saturday' },
+  { category: 'player', title: 'Julian Edelman - arrival confirmed (2PM)', dueDay: 'Saturday' },
+
+  // TBD players
+  { category: 'player', title: 'Ricky Williams - schedule TBD', description: 'Confirm date and time' },
+  { category: 'player', title: 'Will Anderson Jr. - schedule TBD', description: 'Confirm date and time' },
 
   // Teardown
   { category: 'teardown', title: 'Equipment inventory complete', dueDay: 'Saturday' },
