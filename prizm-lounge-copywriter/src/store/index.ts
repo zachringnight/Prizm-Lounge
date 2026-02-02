@@ -285,18 +285,19 @@ export const useAppStore = create<AppState>()(
           d.id === id ? { ...d, notes: note } : d
         )
       })),
-      initializeDeliverables: () => set(state => {
-        if (state.deliverables.length === 0) {
-          return {
-            deliverables: defaultDeliverables.map(d => ({
-              ...d,
-              id: uuidv4(),
-              status: 'pending' as const
-            }))
-          };
+      initializeDeliverables: () => {
+        const { deliverables } = get();
+        if (deliverables.length > 0) {
+          return;
         }
-        return {};
-      }),
+        set({
+          deliverables: defaultDeliverables.map(d => ({
+            ...d,
+            id: uuidv4(),
+            status: 'pending' as const
+          }))
+        });
+      },
 
       // Reset
       resetUIState: () => set({
