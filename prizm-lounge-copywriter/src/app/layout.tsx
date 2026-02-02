@@ -5,8 +5,8 @@ import OfflineBanner from "@/components/OfflineBanner";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
-  title: "Prizm Lounge Production Hub | Super Bowl LIX",
-  description: "Content production tool for Panini Prizm Lounge activation at Super Bowl LIX in New Orleans",
+  title: "Prizm Lounge Production Hub | Super Bowl LX",
+  description: "Content production tool for Panini Prizm Lounge activation at Super Bowl LX in San Francisco",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

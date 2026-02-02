@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     const dayNumber = day === 'Thursday' ? '1' : day === 'Friday' ? '2' : '3';
     const dateDisplay = day === 'Thursday' ? 'Feb 6' : day === 'Friday' ? 'Feb 7' : 'Feb 8';
 
-    const prompt = `You are a copywriter for Panini's Prizm Lounge activation at Super Bowl LIX in New Orleans.
+    const prompt = `You are a copywriter for Panini's Prizm Lounge activation at Super Bowl LX in San Francisco.
 
 Write a Day ${dayNumber} (${dateDisplay}) recap post for ${platform}.
 

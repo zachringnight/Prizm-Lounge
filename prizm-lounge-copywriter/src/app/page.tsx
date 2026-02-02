@@ -14,7 +14,7 @@ export default function Home() {
           <span className="text-[var(--panini-yellow)]">Lounge</span>
         </h1>
         <p className="text-sm text-[var(--foreground-muted)]">
-          Production Hub • Super Bowl LIX • New Orleans
+          Production Hub • Super Bowl LX • San Francisco
         </p>
       </header>
 

@@ -224,8 +224,8 @@ export function getScheduleStatus(schedule: AppearanceSchedule | null): Schedule
   const dateStr = eventDates[schedule.day];
   if (!dateStr) return 'scheduled';
 
-  const startDateTime = new Date(`${dateStr}T${schedule.startTime}:00-06:00`); // CST
-  const endDateTime = new Date(`${dateStr}T${schedule.endTime}:00-06:00`);
+  const startDateTime = new Date(`${dateStr}T${schedule.startTime}:00-08:00`); // PST
+  const endDateTime = new Date(`${dateStr}T${schedule.endTime}:00-08:00`);
 
   if (now >= startDateTime && now <= endDateTime) return 'live';
   if (now < startDateTime) {
@@ -250,7 +250,7 @@ export function getTimeUntil(schedule: AppearanceSchedule | null): string {
   const dateStr = eventDates[schedule.day];
   if (!dateStr) return '';
 
-  const startDateTime = new Date(`${dateStr}T${schedule.startTime}:00-06:00`);
+  const startDateTime = new Date(`${dateStr}T${schedule.startTime}:00-08:00`);
   const now = new Date();
 
   if (now >= startDateTime) return '';

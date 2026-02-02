@@ -337,7 +337,7 @@ export const players: Player[] = [
     personalDetails: [
       'New Orleans Draft Day trade (entire draft for one pick)',
       'Outspoken, unique personality',
-      'Connects to NOLA—perfect for this event',
+      'Heisman Trophy winner with iconic NFL career',
       'San Diego, California native',
       'Texas Longhorns legend'
     ],
