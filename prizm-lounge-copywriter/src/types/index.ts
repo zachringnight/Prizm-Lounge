@@ -202,6 +202,46 @@ export interface DayRecapInput {
   day: 'Thursday' | 'Friday' | 'Saturday';
 }
 
+// Event checklist items
+export type ChecklistCategory = 'setup' | 'player' | 'content' | 'teardown';
+
+export interface ChecklistItem {
+  id: string;
+  category: ChecklistCategory;
+  title: string;
+  description?: string;
+  completed: boolean;
+  completedAt?: number;
+  assignee?: string;
+  dueDay?: 'Thursday' | 'Friday' | 'Saturday';
+}
+
+// Deliverables tracking
+export type DeliverableStatus = 'pending' | 'in-progress' | 'completed' | 'delivered';
+export type DeliverableType = 'photo' | 'video' | 'social' | 'document' | 'other';
+
+export interface Deliverable {
+  id: string;
+  title: string;
+  description?: string;
+  type: DeliverableType;
+  status: DeliverableStatus;
+  playerId?: string;
+  dueDay?: 'Thursday' | 'Friday' | 'Saturday';
+  completedAt?: number;
+  notes?: string;
+}
+
+// Interview questions for players
+export type QuestionCategory = 'career' | 'cards' | 'personal' | 'event';
+
+export interface InterviewQuestion {
+  id: string;
+  question: string;
+  category: QuestionCategory;
+  forCategories?: PlayerCategory[]; // Which player categories this applies to
+}
+
 // Platform character limits
 export const PLATFORM_LIMITS: Record<Platform, number> = {
   'Instagram': 2200,

@@ -11,9 +11,13 @@ import {
   Platform,
   CardType,
   Product,
-  AppearanceSchedule
+  AppearanceSchedule,
+  ChecklistItem,
+  Deliverable,
+  DeliverableStatus
 } from '@/types';
 import { players as initialPlayers } from '@/data/players';
+import { defaultChecklist, defaultDeliverables } from '@/data/checklist';
 
 interface AppState {
   // Players (editable copy)
@@ -75,6 +79,17 @@ interface AppState {
   dayRecapBestPull: string;
   dayRecapCrowdNotes: string;
   setDayRecapField: (field: 'highlights' | 'autosSigned' | 'bestPull' | 'crowdNotes', value: string) => void;
+
+  // Checklist
+  checklist: ChecklistItem[];
+  toggleChecklistItem: (id: string) => void;
+  initializeChecklist: () => void;
+
+  // Deliverables
+  deliverables: Deliverable[];
+  updateDeliverableStatus: (id: string, status: DeliverableStatus) => void;
+  addDeliverableNote: (id: string, note: string) => void;
+  initializeDeliverables: () => void;
 
   // Reset
   resetUIState: () => void;
@@ -234,6 +249,55 @@ export const useAppStore = create<AppState>()(
         set({ [fieldMap[field]]: value });
       },
 
+      // Checklist
+      checklist: [],
+      toggleChecklistItem: (id) => set(state => ({
+        checklist: state.checklist.map(item =>
+          item.id === id
+            ? { ...item, completed: !item.completed, completedAt: !item.completed ? Date.now() : undefined }
+            : item
+        )
+      })),
+      initializeChecklist: () => set(state => {
+        if (state.checklist.length === 0) {
+          return {
+            checklist: defaultChecklist.map(item => ({
+              ...item,
+              id: uuidv4(),
+              completed: false
+            }))
+          };
+        }
+        return {};
+      }),
+
+      // Deliverables
+      deliverables: [],
+      updateDeliverableStatus: (id, status) => set(state => ({
+        deliverables: state.deliverables.map(d =>
+          d.id === id
+            ? { ...d, status, completedAt: status === 'completed' || status === 'delivered' ? Date.now() : undefined }
+            : d
+        )
+      })),
+      addDeliverableNote: (id, note) => set(state => ({
+        deliverables: state.deliverables.map(d =>
+          d.id === id ? { ...d, notes: note } : d
+        )
+      })),
+      initializeDeliverables: () => set(state => {
+        if (state.deliverables.length === 0) {
+          return {
+            deliverables: defaultDeliverables.map(d => ({
+              ...d,
+              id: uuidv4(),
+              status: 'pending' as const
+            }))
+          };
+        }
+        return {};
+      }),
+
       // Reset
       resetUIState: () => set({
         selectedPlayerId: null,
@@ -258,7 +322,9 @@ export const useAppStore = create<AppState>()(
         dayRecapHighlights: state.dayRecapHighlights,
         dayRecapAutosSigned: state.dayRecapAutosSigned,
         dayRecapBestPull: state.dayRecapBestPull,
-        dayRecapCrowdNotes: state.dayRecapCrowdNotes
+        dayRecapCrowdNotes: state.dayRecapCrowdNotes,
+        checklist: state.checklist,
+        deliverables: state.deliverables
       })
     }
   )

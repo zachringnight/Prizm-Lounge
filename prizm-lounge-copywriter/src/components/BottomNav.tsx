@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { GridIcon, UsersIcon, CalendarIcon, PenIcon, LayersIcon } from './Icons';
+import { HomeIcon, UsersIcon, CalendarIcon, CheckIcon, ClipboardIcon } from './Icons';
 
 interface NavItem {
   href: string;
@@ -10,11 +10,11 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { href: '/', label: 'Generate', icon: PenIcon },
-  { href: '/stations', label: 'Stations', icon: LayersIcon },
-  { href: '/players', label: 'Players', icon: UsersIcon },
+  { href: '/', label: 'Home', icon: HomeIcon },
   { href: '/schedule', label: 'Schedule', icon: CalendarIcon },
-  { href: '/tracking', label: 'Tracking', icon: GridIcon },
+  { href: '/players', label: 'Players', icon: UsersIcon },
+  { href: '/checklist', label: 'Tasks', icon: CheckIcon },
+  { href: '/deliverables', label: 'Deliver', icon: ClipboardIcon },
 ];
 
 export default function BottomNav() {
@@ -32,7 +32,8 @@ export default function BottomNav() {
   return (
     <nav className="bottom-nav">
       {navItems.map((item) => {
-        const isActive = pathname === item.href;
+        const isActive = pathname === item.href ||
+          (item.href !== '/' && pathname.startsWith(item.href));
         const Icon = item.icon;
 
         return (

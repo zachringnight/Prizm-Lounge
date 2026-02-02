@@ -10,13 +10,17 @@ import {
   DownloadIcon,
   CalendarIcon,
   UsersIcon,
-  HistoryIcon
+  HistoryIcon,
+  SparklesIcon,
+  GridIcon
 } from '@/components/Icons';
+import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/Toast';
 
-type AdminTab = 'schedule' | 'players' | 'data';
+type AdminTab = 'schedule' | 'players' | 'data' | 'tools';
 
 export default function AdminPage() {
+  const router = useRouter();
   const {
     players,
     updatePlayerSchedule,
@@ -99,7 +103,8 @@ export default function AdminPage() {
   const tabs: { id: AdminTab; label: string; icon: React.ComponentType<any> }[] = [
     { id: 'schedule', label: 'Schedule', icon: CalendarIcon },
     { id: 'players', label: 'Players', icon: UsersIcon },
-    { id: 'data', label: 'Data', icon: HistoryIcon }
+    { id: 'data', label: 'Data', icon: HistoryIcon },
+    { id: 'tools', label: 'Tools', icon: SparklesIcon }
   ];
 
   return (
@@ -312,6 +317,79 @@ export default function AdminPage() {
               className="btn bg-[var(--error)] text-white hover:bg-red-700"
             >
               Clear All Data
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Tools Tab - Internal Tools */}
+      {activeTab === 'tools' && (
+        <div className="space-y-4">
+          <div className="card p-4 border-[var(--panini-yellow)]">
+            <p className="text-sm text-[var(--foreground-muted)]">
+              Internal tools for the Panini team. These are hidden from the client-facing navigation.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            <button
+              onClick={() => router.push('/generate')}
+              className="card p-4 w-full text-left flex items-center gap-4"
+            >
+              <div className="w-12 h-12 rounded-lg bg-[var(--panini-red)] flex items-center justify-center">
+                <SparklesIcon size={24} className="text-white" />
+              </div>
+              <div>
+                <div className="font-semibold">Content Generator</div>
+                <div className="text-sm text-[var(--foreground-muted)]">
+                  AI-powered social media copy generator
+                </div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => router.push('/recap')}
+              className="card p-4 w-full text-left flex items-center gap-4"
+            >
+              <div className="w-12 h-12 rounded-lg bg-[var(--panini-yellow)] flex items-center justify-center">
+                <HistoryIcon size={24} className="text-black" />
+              </div>
+              <div>
+                <div className="font-semibold">Day Recap</div>
+                <div className="text-sm text-[var(--foreground-muted)]">
+                  Generate end-of-day summary posts
+                </div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => router.push('/tracking')}
+              className="card p-4 w-full text-left flex items-center gap-4"
+            >
+              <div className="w-12 h-12 rounded-lg bg-[var(--background-tertiary)] flex items-center justify-center">
+                <GridIcon size={24} className="text-[var(--foreground-muted)]" />
+              </div>
+              <div>
+                <div className="font-semibold">Content Tracking</div>
+                <div className="text-sm text-[var(--foreground-muted)]">
+                  Track coverage and find content gaps
+                </div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => router.push('/stations')}
+              className="card p-4 w-full text-left flex items-center gap-4"
+            >
+              <div className="w-12 h-12 rounded-lg bg-[var(--background-tertiary)] flex items-center justify-center">
+                <CalendarIcon size={24} className="text-[var(--foreground-muted)]" />
+              </div>
+              <div>
+                <div className="font-semibold">Stations</div>
+                <div className="text-sm text-[var(--foreground-muted)]">
+                  View station status and assignments
+                </div>
+              </div>
             </button>
           </div>
         </div>
