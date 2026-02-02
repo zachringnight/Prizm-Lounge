@@ -30,12 +30,6 @@ export default function Home() {
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const currentDayName = dayNames[today.getDay()];
 
-  // For the event, map to event days
-  const eventDay = currentDayName === 'Thursday' ? 'Thursday'
-    : currentDayName === 'Friday' ? 'Friday'
-    : currentDayName === 'Saturday' ? 'Saturday'
-    : null;
-
   // Find live/upcoming players
   const livePlayer = players.find(p => getScheduleStatus(p.schedule) === 'live');
   const upcomingPlayers = players
