@@ -289,7 +289,7 @@ const StationCard = memo(function StationCard({
                 Signing Questions for {assignedPlayer.name}
               </h4>
               {/* Mobile view */}
-              <div className="md:hidden space-y-2">
+              <div className="questions-container md:hidden space-y-2">
                 {playerQuestions?.signing?.map((q, i) => (
                   <div key={i} className="text-sm text-[var(--foreground)] py-2 border-b border-[var(--background-tertiary)] last:border-0">
                     <span className="text-[var(--panini-yellow)] font-bold mr-2">{i + 1}.</span>
@@ -298,7 +298,7 @@ const StationCard = memo(function StationCard({
                 ))}
               </div>
               {/* Desktop view */}
-              <div className="hidden md:block space-y-3">
+              <div className="questions-container hidden md:block space-y-3">
                 {playerQuestions?.signing?.map((q, i) => (
                   <div key={i} className="text-base text-[var(--foreground)] py-3 border-b border-[var(--background-tertiary)] last:border-0">
                     <span className="text-[var(--panini-yellow)] font-bold mr-3 text-lg">{i + 1}.</span>
@@ -316,7 +316,7 @@ const StationCard = memo(function StationCard({
                 Pack Rips Questions for {assignedPlayer.name}
               </h4>
               {/* Mobile view */}
-              <div className="md:hidden space-y-2">
+              <div className="questions-container md:hidden space-y-2">
                 {playerQuestions?.packRips?.map((q, i) => (
                   <div key={i} className="text-sm text-[var(--foreground)] py-2 border-b border-[var(--background-tertiary)] last:border-0">
                     <span className="text-[var(--panini-red)] font-bold mr-2">{i + 1}.</span>
@@ -325,7 +325,7 @@ const StationCard = memo(function StationCard({
                 ))}
               </div>
               {/* Desktop view */}
-              <div className="hidden md:block space-y-3">
+              <div className="questions-container hidden md:block space-y-3">
                 {playerQuestions?.packRips?.map((q, i) => (
                   <div key={i} className="text-base text-[var(--foreground)] py-3 border-b border-[var(--background-tertiary)] last:border-0">
                     <span className="text-[var(--panini-red)] font-bold mr-3 text-lg">{i + 1}.</span>
