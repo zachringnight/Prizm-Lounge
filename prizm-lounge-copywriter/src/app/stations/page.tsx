@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, memo } from 'react';
+import { useState, useEffect, useCallback, memo, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
 import {
@@ -90,33 +90,6 @@ const PlayerCard = memo(function PlayerCard({
   );
 });
 
-// Get players scheduled for a specific station
-const getPlayersForStation = (stationName: Station, allPlayers: Player[]): { player: Player; startTime: string; endTime: string }[] => {
-  const result: { player: Player; startTime: string; endTime: string }[] = [];
-
-  allPlayers.forEach(player => {
-    if (player.schedule?.commitments) {
-      player.schedule.commitments.forEach(commitment => {
-        if (commitment.station === stationName) {
-          result.push({
-            player,
-            startTime: commitment.startTime,
-            endTime: commitment.endTime
-          });
-        }
-      });
-    }
-  });
-
-  // Sort by day and time
-  return result.sort((a, b) => {
-    const dayOrder = { 'Thursday': 0, 'Friday': 1, 'Saturday': 2 };
-    const dayDiff = (dayOrder[a.player.schedule?.day || 'Thursday'] || 0) - (dayOrder[b.player.schedule?.day || 'Thursday'] || 0);
-    if (dayDiff !== 0) return dayDiff;
-    return a.startTime.localeCompare(b.startTime);
-  });
-};
-
 // Memoized Station Card for performance
 const StationCard = memo(function StationCard({
   station,
@@ -127,7 +100,7 @@ const StationCard = memo(function StationCard({
   expanded,
   assignedPlayer,
   players,
-  allPlayers,
+  scheduledPlayers,
   elapsedTime,
   onToggle,
   onUpdate,
@@ -141,14 +114,12 @@ const StationCard = memo(function StationCard({
   expanded: boolean;
   assignedPlayer: { id: string; name: string; position: string; team: string } | null;
   players: Array<{ id: string; name: string }>;
-  allPlayers: Player[];
+  scheduledPlayers: { player: Player; startTime: string; endTime: string }[];
   elapsedTime: number | null;
   onToggle: () => void;
   onUpdate: (updates: { status?: 'active' | 'idle' | 'setup'; currentPlayer?: string | null; currentCommitment?: CommitmentType | null; notes?: string }) => void;
   onPlayerClick: (playerId: string) => void;
 }) {
-  // Get scheduled players for this station
-  const scheduledPlayers = getPlayersForStation(station, allPlayers);
 
   // Get questions for the assigned player if at Signing or Pack Rips
   const playerQuestions = assignedPlayer ? getPlayerQuestions(assignedPlayer.id) : null;
@@ -489,6 +460,44 @@ export default function StationsPage() {
       return a.schedule.startTime.localeCompare(b.schedule.startTime);
     });
 
+  // Memoize station-to-players mapping to avoid recomputing on every render
+  const stationPlayersMap = useMemo(() => {
+    const map = new Map<Station, { player: Player; startTime: string; endTime: string }[]>();
+    
+    // Initialize empty arrays for each station
+    stations.forEach(s => {
+      map.set(s.station, []);
+    });
+    
+    // Build the map by iterating through players once
+    players.forEach(player => {
+      if (player.schedule?.commitments) {
+        player.schedule.commitments.forEach(commitment => {
+          const stationPlayers = map.get(commitment.station);
+          if (stationPlayers) {
+            stationPlayers.push({
+              player,
+              startTime: commitment.startTime,
+              endTime: commitment.endTime
+            });
+          }
+        });
+      }
+    });
+    
+    // Sort each station's players by day and time
+    const dayOrder: Record<string, number> = { 'Thursday': 0, 'Friday': 1, 'Saturday': 2 };
+    map.forEach(stationPlayers => {
+      stationPlayers.sort((a, b) => {
+        const dayDiff = (dayOrder[a.player.schedule?.day || 'Thursday'] ?? 0) - (dayOrder[b.player.schedule?.day || 'Thursday'] ?? 0);
+        if (dayDiff !== 0) return dayDiff;
+        return a.startTime.localeCompare(b.startTime);
+      });
+    });
+    
+    return map;
+  }, [players, stations]);
+
   return (
     <div className="space-y-6">
       <header className="flex items-center justify-between">
@@ -712,6 +721,7 @@ export default function StationsPage() {
             ? players.find(p => p.id === data.currentPlayer) || null
             : null;
           const elapsed = data.currentPlayer ? getElapsedTime(data.currentPlayer) : null;
+          const scheduledPlayers = stationPlayersMap.get(data.station) || [];
 
           return (
             <StationCard
@@ -724,7 +734,7 @@ export default function StationsPage() {
               expanded={expandedStations.has(data.station)}
               assignedPlayer={assignedPlayer}
               players={players}
-              allPlayers={players as Player[]}
+              scheduledPlayers={scheduledPlayers}
               elapsedTime={elapsed}
               onToggle={() => toggleStation(data.station)}
               onUpdate={(updates) => handleUpdate(data.station, updates)}
