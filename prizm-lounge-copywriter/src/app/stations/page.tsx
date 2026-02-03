@@ -90,6 +90,54 @@ const PlayerCard = memo(function PlayerCard({
   );
 });
 
+// Get commitment-specific schedule status
+const getCommitmentStatus = (day: string, startTime: string, endTime: string): 'live' | 'upcoming' | 'completed' | 'scheduled' => {
+  const now = new Date();
+  const eventDates: Record<string, string> = {
+    'Thursday': '2026-02-06',
+    'Friday': '2026-02-07',
+    'Saturday': '2026-02-08'
+  };
+
+  const dateStr = eventDates[day];
+  if (!dateStr) return 'scheduled';
+
+  const startDateTime = new Date(`${dateStr}T${startTime}:00-08:00`); // PST
+  const endDateTime = new Date(`${dateStr}T${endTime}:00-08:00`);
+
+  if (now >= startDateTime && now <= endDateTime) return 'live';
+  if (now < startDateTime) {
+    const diffMs = startDateTime.getTime() - now.getTime();
+    const diffMins = diffMs / (1000 * 60);
+    if (diffMins <= 30) return 'upcoming';
+    return 'scheduled';
+  }
+  return 'completed';
+};
+
+// Get time until commitment starts
+const getCommitmentTimeUntil = (day: string, startTime: string): string => {
+  const now = new Date();
+  const eventDates: Record<string, string> = {
+    'Thursday': '2026-02-06',
+    'Friday': '2026-02-07',
+    'Saturday': '2026-02-08'
+  };
+
+  const dateStr = eventDates[day];
+  if (!dateStr) return '';
+
+  const startDateTime = new Date(`${dateStr}T${startTime}:00-08:00`); // PST
+  const diffMs = startDateTime.getTime() - now.getTime();
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+
+  if (diffMins < 1) return 'Now';
+  if (diffMins < 60) return `${diffMins}m`;
+  const hours = Math.floor(diffMins / 60);
+  const mins = diffMins % 60;
+  return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+};
+
 // Get players scheduled for a specific station
 const getPlayersForStation = (stationName: Station, allPlayers: Player[]): { player: Player; startTime: string; endTime: string }[] => {
   const result: { player: Player; startTime: string; endTime: string }[] = [];
@@ -343,15 +391,16 @@ const StationCard = memo(function StationCard({
                 Scheduled at this Station
               </h4>
               <div className="space-y-2 md:space-y-3">
-                {scheduledPlayers.map(({ player, startTime }, i) => {
+                {scheduledPlayers.map(({ player, startTime, endTime }, i) => {
                   const dayLabel = player.schedule?.day || '';
-                  const playerStatus = getScheduleStatus(player.schedule);
+                  // Use commitment-specific status instead of player.schedule
+                  const commitmentStatus = getCommitmentStatus(dayLabel, startTime, endTime);
                   return (
                     <button
                       key={`${player.id}-${i}`}
                       onClick={() => onPlayerClick(player.id)}
                       className={`w-full flex items-center justify-between p-2 md:p-3 rounded hover:bg-[var(--background-tertiary)] transition-colors ${
-                        playerStatus === 'live' ? 'bg-[var(--status-live)]/10' : ''
+                        commitmentStatus === 'live' ? 'bg-[var(--status-live)]/10' : ''
                       }`}
                     >
                       <div className="flex items-center gap-2 md:gap-3 text-left">
@@ -362,11 +411,11 @@ const StationCard = memo(function StationCard({
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-xs md:text-sm text-[var(--foreground-dim)]">{dayLabel}</span>
-                        {playerStatus === 'live' && (
+                        {commitmentStatus === 'live' && (
                           <span className="text-xs md:text-sm font-bold text-[var(--status-live)]">LIVE</span>
                         )}
-                        {playerStatus === 'upcoming' && (
-                          <span className="text-xs md:text-sm text-[var(--panini-yellow)]">{getTimeUntil(player.schedule)}</span>
+                        {commitmentStatus === 'upcoming' && (
+                          <span className="text-xs md:text-sm text-[var(--panini-yellow)]">{getCommitmentTimeUntil(dayLabel, startTime)}</span>
                         )}
                       </div>
                     </button>
