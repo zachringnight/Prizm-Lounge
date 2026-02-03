@@ -1,21 +1,34 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { useAppStore } from '@/store';
 import { WifiOffIcon } from './Icons';
 
+// Use useSyncExternalStore for hydration-safe client-side only state
+function useIsMounted() {
+  return useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
+}
+
 export default function OfflineBanner() {
   const { isOffline, setIsOffline } = useAppStore();
-  const [mounted, setMounted] = useState(false);
+  const isMounted = useIsMounted();
+  const initializedRef = useRef(false);
 
   useEffect(() => {
-    setMounted(true);
-
     const handleOnline = () => setIsOffline(false);
     const handleOffline = () => setIsOffline(true);
 
-    // Check initial state
-    setIsOffline(!navigator.onLine);
+    // Check initial state only once
+    if (!initializedRef.current) {
+      initializedRef.current = true;
+      if (typeof navigator !== 'undefined') {
+        setIsOffline(!navigator.onLine);
+      }
+    }
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
@@ -26,7 +39,7 @@ export default function OfflineBanner() {
     };
   }, [setIsOffline]);
 
-  if (!mounted || !isOffline) return null;
+  if (!isMounted || !isOffline) return null;
 
   return (
     <div className="offline-banner flex items-center justify-center gap-2">

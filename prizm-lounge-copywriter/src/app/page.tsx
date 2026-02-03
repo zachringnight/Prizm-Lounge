@@ -25,10 +25,7 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  // Get today's schedule
-  const today = new Date();
-  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const currentDayName = dayNames[today.getDay()];
+  // Event dates are fixed for Super Bowl LX (Feb 6-8, 2026)
 
   // Find live/upcoming players
   const livePlayer = players.find(p => getScheduleStatus(p.schedule) === 'live');

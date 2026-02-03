@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useAppStore } from '@/store';
 import { Player, AppearanceSchedule } from '@/types';
 import {
-  PlusIcon,
   TrashIcon,
   SaveIcon,
   DownloadIcon,
@@ -100,7 +99,7 @@ export default function AdminPage() {
     showToast('Data exported', 'success');
   };
 
-  const tabs: { id: AdminTab; label: string; icon: React.ComponentType<any> }[] = [
+  const tabs: { id: AdminTab; label: string; icon: React.ComponentType<{ size?: number; className?: string }> }[] = [
     { id: 'schedule', label: 'Schedule', icon: CalendarIcon },
     { id: 'players', label: 'Players', icon: UsersIcon },
     { id: 'data', label: 'Data', icon: HistoryIcon },
@@ -158,7 +157,7 @@ export default function AdminPage() {
                       <label className="text-xs text-[var(--foreground-muted)]">Day</label>
                       <select
                         value={scheduleForm.day || ''}
-                        onChange={(e) => setScheduleForm({ ...scheduleForm, day: e.target.value as any })}
+                        onChange={(e) => setScheduleForm({ ...scheduleForm, day: e.target.value as 'Thursday' | 'Friday' | 'Saturday' })}
                         className="input select mt-1"
                       >
                         <option value="Thursday">Thursday</option>

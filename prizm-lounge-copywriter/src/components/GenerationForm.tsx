@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useAppStore, useSelectedPlayer, usePlayerNotes } from '@/store';
+import { useState } from 'react';
+import { useAppStore, useSelectedPlayer } from '@/store';
 import {
   ContentMode,
   Platform,
@@ -135,20 +135,20 @@ export default function GenerationForm() {
 
   // Voice input handler
   const handleVoiceInput = () => {
-    if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+    const SpeechRecognitionAPI = window.webkitSpeechRecognition || window.SpeechRecognition;
+    if (!SpeechRecognitionAPI) {
       showToast('Voice input not supported in this browser', 'error');
       return;
     }
 
-    const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
-    const recognition = new SpeechRecognition();
+    const recognition = new SpeechRecognitionAPI();
     recognition.continuous = false;
     recognition.interimResults = false;
 
     recognition.onstart = () => setIsListening(true);
     recognition.onend = () => setIsListening(false);
 
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
       const newValue = contextInput ? `${contextInput} ${transcript}` : transcript;
       setContextInput(newValue);
@@ -194,7 +194,7 @@ export default function GenerationForm() {
 
       const data = await response.json();
 
-      const newVariations: GeneratedVariation[] = data.variations.map((v: any) => ({
+      const newVariations: GeneratedVariation[] = data.variations.map((v: { label: string; content: string; characterCount: number }) => ({
         id: uuidv4(),
         label: v.label,
         content: v.content,
@@ -241,7 +241,7 @@ export default function GenerationForm() {
       }
 
       showToast('Copied to clipboard', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to copy', 'error');
     }
   };

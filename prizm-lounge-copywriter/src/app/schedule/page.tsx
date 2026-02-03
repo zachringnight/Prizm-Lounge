@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAppStore } from '@/store';
-import { getScheduleStatus, getTimeUntil, formatTime, Player } from '@/types';
-import PlayerCard from '@/components/PlayerCard';
+import { getScheduleStatus, getTimeUntil, formatTime } from '@/types';
 import { ClockIcon } from '@/components/Icons';
 
 type DayFilter = 'All' | 'Thursday' | 'Friday' | 'Saturday';

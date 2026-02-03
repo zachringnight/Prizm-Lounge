@@ -21,7 +21,7 @@ export default function PlayerCard({
   selected = false,
   compact = false
 }: PlayerCardProps) {
-  const { getUnusedModes, hasUsedMode } = useAppStore();
+  const { getUnusedModes } = useAppStore();
 
   const status = getScheduleStatus(player.schedule);
   const timeUntil = getTimeUntil(player.schedule);

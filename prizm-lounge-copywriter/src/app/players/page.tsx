@@ -9,7 +9,7 @@ import { PlayerCategory } from '@/types';
 
 export default function PlayersPage() {
   const router = useRouter();
-  const { players, setSelectedPlayer } = useAppStore();
+  const { players } = useAppStore();
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<PlayerCategory | 'All'>('All');
 
