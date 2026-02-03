@@ -24,6 +24,13 @@ const STATION_DESCRIPTIONS: Record<Station, string> = {
   'Free': 'Buffer/break time (no station)'
 };
 
+// Event date mapping for status calculations
+const EVENT_DATES: Record<string, string> = {
+  'Thursday': '2026-02-06',
+  'Friday': '2026-02-07',
+  'Saturday': '2026-02-08'
+};
+
 // Memoized status color helper
 const getStatusColor = (status: 'active' | 'idle' | 'setup') => {
   switch (status) {
@@ -93,13 +100,7 @@ const PlayerCard = memo(function PlayerCard({
 // Get commitment-specific schedule status
 const getCommitmentStatus = (day: string, startTime: string, endTime: string): 'live' | 'upcoming' | 'completed' | 'scheduled' => {
   const now = new Date();
-  const eventDates: Record<string, string> = {
-    'Thursday': '2026-02-06',
-    'Friday': '2026-02-07',
-    'Saturday': '2026-02-08'
-  };
-
-  const dateStr = eventDates[day];
+  const dateStr = EVENT_DATES[day];
   if (!dateStr) return 'scheduled';
 
   const startDateTime = new Date(`${dateStr}T${startTime}:00-08:00`); // PST
@@ -118,13 +119,7 @@ const getCommitmentStatus = (day: string, startTime: string, endTime: string): '
 // Get time until commitment starts
 const getCommitmentTimeUntil = (day: string, startTime: string): string => {
   const now = new Date();
-  const eventDates: Record<string, string> = {
-    'Thursday': '2026-02-06',
-    'Friday': '2026-02-07',
-    'Saturday': '2026-02-08'
-  };
-
-  const dateStr = eventDates[day];
+  const dateStr = EVENT_DATES[day];
   if (!dateStr) return '';
 
   const startDateTime = new Date(`${dateStr}T${startTime}:00-08:00`); // PST
