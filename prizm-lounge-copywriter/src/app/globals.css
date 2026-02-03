@@ -918,3 +918,179 @@ select:focus-visible {
   color: var(--foreground-muted);
   line-height: 1.5;
 }
+
+/* Desktop Top Navigation */
+.desktop-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--background-secondary);
+  border-bottom: 1px solid var(--background-tertiary);
+  padding: 0 32px;
+  height: 64px;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 100;
+}
+
+.desktop-nav-brand {
+  font-size: 20px;
+  letter-spacing: -0.5px;
+}
+
+.desktop-nav-links {
+  display: flex;
+  gap: 8px;
+}
+
+.desktop-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  color: var(--foreground-muted);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.desktop-nav-item.active {
+  color: var(--panini-yellow);
+  background: var(--background-tertiary);
+}
+
+.desktop-nav-item:hover {
+  color: var(--foreground);
+  background: var(--background-tertiary);
+}
+
+/* Responsive Media Queries */
+@media (min-width: 768px) {
+  /* Add top padding to account for fixed desktop nav */
+  body {
+    padding-top: 64px;
+  }
+
+  /* Page headers */
+  .page-header h1 {
+    font-size: 36px;
+  }
+
+  .page-header p {
+    font-size: 17px;
+  }
+
+  /* Hero section */
+  .hero-section {
+    padding: 48px 32px;
+  }
+
+  .hero-section h1 {
+    font-size: 48px;
+  }
+
+  .hero-section .event-info {
+    font-size: 18px;
+  }
+
+  /* Cards */
+  .card {
+    padding: 24px;
+  }
+
+  .schedule-card {
+    padding: 24px;
+  }
+
+  .stat-card {
+    padding: 28px;
+  }
+
+  .stat-card .stat-value {
+    font-size: 40px;
+  }
+
+  /* Player cards */
+  .player-card-enhanced {
+    padding: 24px;
+  }
+
+  .player-card-enhanced .avatar {
+    width: 64px;
+    height: 64px;
+    font-size: 22px;
+  }
+
+  .player-card-enhanced .player-info h3 {
+    font-size: 19px;
+  }
+
+  /* Tabs */
+  .tabs-enhanced {
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  .tab-enhanced {
+    padding: 14px 24px;
+    font-size: 16px;
+  }
+
+  /* Toast notification */
+  .toast {
+    bottom: 40px;
+  }
+
+  /* Section title */
+  .section-title {
+    font-size: 14px;
+  }
+
+  /* Checklist items */
+  .checklist-item {
+    padding: 22px;
+  }
+
+  .checklist-item .item-content h4 {
+    font-size: 17px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .desktop-nav {
+    padding: 0 48px;
+  }
+
+  /* Hero section */
+  .hero-section {
+    padding: 56px 40px;
+    max-width: 800px;
+    margin: 0 auto 32px;
+  }
+
+  .hero-section h1 {
+    font-size: 56px;
+  }
+
+  /* Cards */
+  .stat-card .stat-value {
+    font-size: 48px;
+  }
+
+  /* Page headers */
+  .page-header h1 {
+    font-size: 42px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .desktop-nav {
+    padding: 0 64px;
+  }
+}

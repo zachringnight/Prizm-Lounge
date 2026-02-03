@@ -37,7 +37,7 @@ export default function RootLayout({
       <body className="antialiased">
         <ServiceWorkerRegister />
         <OfflineBanner />
-        <main className="pb-20 pt-4 px-4 max-w-lg mx-auto min-h-screen">
+        <main className="pb-20 md:pb-6 pt-4 md:pt-8 px-4 md:px-8 lg:px-12 max-w-7xl mx-auto min-h-screen">
           {children}
         </main>
         <BottomNav />
