@@ -1,4 +1,393 @@
-import { Player } from '@/types';
+import { Player, PlayerQuestions } from '@/types';
+
+// Questions bank for each player
+export const playerQuestions: Record<string, PlayerQuestions> = {
+  'jahmyr-gibbs': {
+    signing: [
+      'Intro: quick name + team + excited to sign with Panini',
+      'Which moment from this season would you want captured on a card forever?',
+      'What\'s it like signing cards that collectors are about to chase?',
+      'What do you want a fan to feel when they get your autograph?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: [
+      'Intro: quick hype + "let\'s rip"',
+      'Who are you hoping to pull?',
+      'Favorite card memory growing up?',
+      'Favorite card design you\'ve seen?',
+      'If you could create a new card design, what would it be?',
+      'What makes you a 1/1?',
+      'What\'s a moment from your career that deserves to be on a card forever?',
+      'If a kid pulls your card today, what do you hope they feel?',
+      'Best pull so far, what makes it special?',
+      'Outro: thank Panini + collectors'
+    ]
+  },
+  'penei-sewell': {
+    signing: [
+      'Intro: quick name + team + excited to sign with Panini',
+      'What\'s it mean seeing collectors value offensive line greatness?',
+      'What do you want fans to notice on a card, the photo, the details, the story on the back?',
+      'What do you want your autograph to represent to collectors?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: []
+  },
+  'kyle-hamilton': {
+    signing: [
+      'Intro: quick name + team + excited to sign with Panini',
+      'What part of your game do you want collectors to recognize most: instincts, range, versatility?',
+      'If you could choose one defensive moment for a card photo, what is it?',
+      'What do you want fans to feel when they get your autograph?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: []
+  },
+  'matt-leinart': {
+    signing: [
+      'Intro: quick name + "excited to be here with Panini"',
+      'What moment from your playing days belongs on a card forever?',
+      'When fans get your autograph, what do you hope they remember most?',
+      'What\'s your favorite part of the hobby: nostalgia, storytelling, or the chase?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: [
+      'Intro: quick hype + "let\'s rip"',
+      'Who are you hoping to pull?',
+      'Favorite card memory growing up?',
+      'Favorite card design you\'ve seen?',
+      'If you could create a new card design, what would it be?',
+      'What makes you a 1/1?',
+      'What\'s a career moment that deserves to live on a card forever?',
+      'If a kid pulls your card today, what do you hope they feel?',
+      'Best pull so far, what makes it special?',
+      'Outro: thank Panini + collectors'
+    ]
+  },
+  'cole-kmet': {
+    signing: [
+      'Intro: quick name + team + excited to sign with Panini',
+      'These cards are about to drop, what are you most excited for collectors to see?',
+      'What detail matters most on a card for you: photo, finish, numbering, or autograph placement?',
+      'What do you want fans to feel when they get your autograph on a new release?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: []
+  },
+  'quinn-ewers': {
+    signing: [
+      'Intro: quick name + excited to sign with Panini',
+      'These cards are about to drop, what are you most excited for collectors to see?',
+      'Which moment from this season would you want captured on a card forever?',
+      'Panini family: what does it mean seeing your story live through the hobby?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: [
+      'Intro: quick hype + "let\'s rip"',
+      'Who are you hoping to pull?',
+      'Favorite card memory growing up?',
+      'Favorite card design you\'ve seen?',
+      'If you could create a new card design, what would it be?',
+      'What makes you a 1/1?',
+      'What\'s a career moment that deserves to live on a card forever?',
+      'If a kid pulls your card today, what do you hope they feel?',
+      'Dream pull: Texas legend, NFL legend, or a QB you grew up watching?',
+      'Outro: thank Panini + collectors'
+    ]
+  },
+  'trevor-lawrence': {
+    signing: [
+      'Intro: quick name + team + excited to sign with Panini',
+      'Which moment from this season would you want captured on a card forever?',
+      'What\'s it like signing cards that collectors are about to chase?',
+      'What do you want a fan to feel when they get your autograph?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: [
+      'Intro: quick hype + "let\'s rip"',
+      'Who are you hoping to pull?',
+      'Favorite card memory growing up?',
+      'Favorite card design you\'ve seen?',
+      'If you could create a new card design, what would it be?',
+      'What makes you a 1/1?',
+      'What\'s a career moment that deserves to live on a card forever?',
+      'If a kid pulls your card today, what do you hope they feel?',
+      'Dream pull: which QB card would you keep for your personal collection?',
+      'Outro: thank Panini + collectors'
+    ]
+  },
+  'tyler-shough': {
+    signing: [
+      'Intro: quick name + team + excited to sign with Panini',
+      'These cards are about to drop, what are you most excited for collectors to see?',
+      'Which moment from this season would you want captured on a card forever?',
+      'What do you want fans to feel when they get your autograph on a new release?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: [
+      'Intro: quick hype + "let\'s rip"',
+      'Who are you hoping to pull?',
+      'Favorite card memory growing up?',
+      'Favorite card design you\'ve seen?',
+      'If you could create a new card design, what would it be?',
+      'What makes you a 1/1?',
+      'If you pull a Saints legend, who\'s the dream hit?',
+      'What\'s a career moment that deserves to live on a card forever?',
+      'If a kid pulls your card today, what do you hope they feel?',
+      'Outro: thank Panini + collectors'
+    ]
+  },
+  'rome-odunze': {
+    signing: [
+      'Intro: quick name + team + excited to sign with Panini',
+      'Which moment from this season would you want captured on a card forever?',
+      'What catch type should be your signature card photo: toe-tap, contested, deep ball, over the middle?',
+      'Panini family: what does it mean being part of the hobby\'s next wave?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: [
+      'Intro: quick hype + "let\'s rip"',
+      'Who are you hoping to pull?',
+      'Favorite card memory growing up?',
+      'Favorite card design you\'ve seen?',
+      'If you could create a new card design, what would it be?',
+      'What makes you a 1/1?',
+      'Panini family: what does that relationship mean to you?',
+      'What\'s a career moment that deserves to live on a card forever?',
+      'If a kid pulls your card today, what do you hope they feel?',
+      'Outro: thank Panini + collectors'
+    ]
+  },
+  'aidan-hutchinson': {
+    signing: [
+      'Intro: quick name + team + excited to sign with Panini',
+      'Which moment from this season would you want captured on a card forever?',
+      'If you could pick one play style for your signature card shot, what is it?',
+      'Panini family: what does being a long-time Panini partner mean to you?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: [
+      'Intro: quick hype + "let\'s rip"',
+      'Who are you hoping to pull?',
+      'Favorite card memory growing up?',
+      'Favorite card design you\'ve seen?',
+      'If you could create a new card design, what would it be?',
+      'What makes you a 1/1?',
+      'Panini family: what does that relationship mean to you?',
+      'If you pull a legendary pass rusher, who\'s the dream hit?',
+      'If a kid pulls your card today, what do you hope they feel?',
+      'Outro: thank Panini + collectors'
+    ]
+  },
+  'andre-reed': {
+    signing: [
+      'Intro: quick name + excited to sign with Panini',
+      'Which moment from your career deserves a forever card?',
+      'What\'s it like seeing new collectors discover your legacy?',
+      'Panini family: what does that partnership mean to you?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: [
+      'Intro: quick hype + "let\'s rip"',
+      'Who are you hoping to pull?',
+      'Favorite card memory growing up?',
+      'Favorite card design you\'ve seen?',
+      'If you could create a new card design, what would it be?',
+      'What makes you a 1/1?',
+      'Panini family: what does that relationship mean to you?',
+      'What\'s a career moment that deserves to live on a card forever?',
+      'If a kid pulls your card today, what do you hope they feel?',
+      'Outro: thank Panini + collectors'
+    ]
+  },
+  'champ-bailey': {
+    signing: [
+      'Intro: quick name + excited to sign with Panini',
+      'Which moment from your career would you want on a card forever?',
+      'When you hear "shutdown corner," what trait should collectors associate with you?',
+      'What do you want fans to feel when they get your autograph?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: [
+      'Intro: quick hype + "let\'s rip"',
+      'Who are you hoping to pull?',
+      'Favorite card memory growing up?',
+      'Favorite card design you\'ve seen?',
+      'If you could create a new card design, what would it be?',
+      'What makes you a 1/1?',
+      'If you pull a DB legend, who\'s the dream hit?',
+      'What\'s a career moment that deserves to live on a card forever?',
+      'If a kid pulls your card today, what do you hope they feel?',
+      'Outro: thank Panini + collectors'
+    ]
+  },
+  'ty-law': {
+    signing: [
+      'Intro: quick name + excited to sign with Panini',
+      'Which moment from your career would you want on a card forever?',
+      'If you could name a "lockdown" insert set, what\'s it called?',
+      'What do you want fans to feel when they get your autograph?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: [
+      'Intro: quick hype + "let\'s rip"',
+      'Who are you hoping to pull?',
+      'Favorite card memory growing up?',
+      'Favorite card design you\'ve seen?',
+      'If you could create a new card design, what would it be?',
+      'What makes you a 1/1?',
+      'What\'s a career moment that deserves to live on a card forever?',
+      'If a kid pulls your card today, what do you hope they feel?',
+      'What makes a card feel like a piece of history?',
+      'Outro: thank Panini + collectors'
+    ]
+  },
+  'ricky-williams': {
+    signing: [
+      'Intro: quick name + excited to sign with Panini',
+      'Which run or era best captures "Ricky" for a forever card moment?',
+      'What\'s it like seeing new collectors connect with your legacy?',
+      'Panini family: what does that relationship mean to you today?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: [
+      'Intro: quick hype + "let\'s rip"',
+      'Who are you hoping to pull?',
+      'Favorite card memory growing up?',
+      'Favorite card design you\'ve seen?',
+      'If you could create a new card design, what would it be?',
+      'What makes you a 1/1?',
+      'Panini family: what does that relationship mean to you?',
+      'If you pull a legendary RB, who\'s the dream hit?',
+      'If a kid pulls your card today, what do you hope they feel?',
+      'Outro: thank Panini + collectors'
+    ]
+  },
+  'will-anderson-jr': {
+    signing: [
+      'Intro: quick name + team + excited to sign with Panini',
+      'Which moment from this season would you want captured on a card forever?',
+      'What does it mean signing cards that collectors are about to chase?',
+      'What do you want fans to feel when they get your autograph?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: [
+      'Intro: quick hype + "let\'s rip"',
+      'Who are you hoping to pull?',
+      'Favorite card memory growing up?',
+      'Favorite card design you\'ve seen?',
+      'If you could create a new card design, what would it be?',
+      'What makes you a 1/1?',
+      'If you pull a legendary edge rusher, who\'s the dream hit?',
+      'What\'s a career moment that deserves to live on a card forever?',
+      'If a kid pulls your card today, what do you hope they feel?',
+      'Outro: thank Panini + collectors'
+    ]
+  },
+  'dante-moore': {
+    signing: [
+      'Intro: quick name + school + excited to sign with Panini',
+      'Which moment from this season would you want captured on a card forever?',
+      'What do you want your card story to say about you as a QB right now?',
+      'What do you want fans to feel when they get your autograph?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: [
+      'Intro: quick hype + "let\'s rip"',
+      'Who are you hoping to pull?',
+      'Favorite card memory growing up?',
+      'Favorite card design you\'ve seen?',
+      'If you could create a new card design, what would it be?',
+      'What makes you a 1/1?',
+      'If you pull an Oregon legend, who\'s the dream hit?',
+      'What\'s a career moment that deserves to live on a card forever?',
+      'If a kid pulls your card today, what do you hope they feel?',
+      'Outro: thank Panini + collectors'
+    ]
+  },
+  'julian-edelman': {
+    signing: [
+      'Intro: quick name + excited to sign with Panini',
+      'Which moment from your career would you want on a card forever?',
+      'If you could name an insert set after your play style, what\'s it called?',
+      'What do you want fans to feel when they get your autograph?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: [
+      'Intro: quick hype + "let\'s rip"',
+      'Who are you hoping to pull?',
+      'Favorite card memory growing up?',
+      'Favorite card design you\'ve seen?',
+      'If you could create a new card design, what would it be?',
+      'What makes you a 1/1?',
+      'What\'s a career moment that deserves to live on a card forever?',
+      'If a kid pulls your card today, what do you hope they feel?',
+      'What\'s the best part of the hobby: nostalgia, storytelling, or the chase?',
+      'Outro: thank Panini + collectors'
+    ]
+  },
+  'keisean-henderson': {
+    signing: [
+      'Intro: quick name + school/commit + excited to sign with Panini',
+      'What do you want your first big card to represent about your story?',
+      'If you could pick a "welcome to the next level" moment for your card photo, what would it be?',
+      'What do you want kids your age to feel when they see you on a card?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: [
+      'Intro: quick hype + "let\'s rip"',
+      'Who are you hoping to pull?',
+      'Favorite card memory growing up?',
+      'Favorite card design you\'ve seen?',
+      'If you could create a new card design, what would it be?',
+      'What makes you a 1/1 right now?',
+      'What\'s a future moment you want to earn that deserves a forever card?',
+      'If a kid pulls your card today, what do you hope they feel?',
+      'Dream pull: which QB card would you keep?',
+      'Outro: thank Panini + collectors'
+    ]
+  },
+  'cooper-kupp': {
+    signing: [
+      'Intro: quick name + team + excited to sign with Panini',
+      'These cards are about to drop, what are you most excited for collectors to see?',
+      'What detail matters most on a premium card for you: photo, finish, numbering, or autograph placement?',
+      'What do you want fans to feel when they get your autograph on a new release?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: []
+  },
+  'antonio-gibson': {
+    signing: [
+      'Intro: quick name + team + excited to sign with Panini',
+      'If you could design a "versatility" insert set, what would it look like?',
+      'What\'s it mean signing cards that collectors are about to chase?',
+      'What do you want fans to feel when they get your autograph?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: []
+  },
+  'brian-robinson-jr': {
+    signing: [
+      'Intro: quick name + team + excited to sign with Panini',
+      'What identity do you want your cards to represent: toughness, consistency, or explosiveness?',
+      'These cards are about to drop, what are you most excited for collectors to see?',
+      'What do you want fans to feel when they get your autograph?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: []
+  },
+  'trey-mcbride': {
+    signing: [
+      'Intro: quick name + team + excited to sign with Panini',
+      'What makes a tight end card iconic: the catch, the contact, or the moment?',
+      'If you could create a TE-themed insert set, what\'s the name and design?',
+      'What do you want fans to feel when they get your autograph on a new release?',
+      'Outro: thank Panini + collectors'
+    ],
+    packRips: []
+  }
+};
 
 export const players: Player[] = [
   // THURSDAY
@@ -1073,7 +1462,12 @@ export const players: Player[] = [
 
 // Helper functions
 export function getPlayerById(id: string): Player | undefined {
-  return players.find(p => p.id === id);
+  const player = players.find(p => p.id === id);
+  if (player) {
+    // Attach questions from the questions bank
+    return { ...player, questions: playerQuestions[id] };
+  }
+  return undefined;
 }
 
 export function getPlayersByCategory(category: Player['category']): Player[] {
@@ -1091,4 +1485,9 @@ export function searchPlayers(query: string): Player[] {
     p.team.toLowerCase().includes(lowerQuery) ||
     p.position.toLowerCase().includes(lowerQuery)
   );
+}
+
+// Get questions for a specific player
+export function getPlayerQuestions(playerId: string): PlayerQuestions | undefined {
+  return playerQuestions[playerId];
 }

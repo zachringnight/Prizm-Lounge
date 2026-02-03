@@ -41,7 +41,7 @@ export default function RootLayout({
           <ServiceWorkerRegister />
           <OfflineBanner />
           <GlobalSearch />
-          <main className="pb-20 md:pb-6 pt-4 md:pt-8 px-4 md:px-8 lg:px-12 max-w-7xl mx-auto min-h-screen">
+          <main className="pb-24 md:pb-8 pt-4 md:pt-8 px-4 md:px-8 lg:px-12 max-w-4xl mx-auto min-h-screen">
             {children}
           </main>
           <BottomNav />
