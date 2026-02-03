@@ -152,8 +152,12 @@ const StationCard = memo(function StationCard({
 
   // Get questions for the assigned player if at Signing or Pack Rips
   const playerQuestions = assignedPlayer ? getPlayerQuestions(assignedPlayer.id) : null;
-  const showSigningQuestions = (station === 'Signing' || currentCommitment === 'Signing') && playerQuestions?.signing?.length;
-  const showPackRipsQuestions = (station === 'Pack Rips' || currentCommitment === 'Pack Rips') && playerQuestions?.packRips?.length;
+  const showSigningQuestions =
+    (station === 'Signing' || currentCommitment === 'Signing') &&
+    ((playerQuestions?.signing?.length ?? 0) > 0);
+  const showPackRipsQuestions =
+    (station === 'Pack Rips' || currentCommitment === 'Pack Rips') &&
+    ((playerQuestions?.packRips?.length ?? 0) > 0);
   return (
     <div>
       {/* Station Header - Clickable */}
