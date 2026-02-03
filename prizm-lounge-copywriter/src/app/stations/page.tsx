@@ -486,10 +486,10 @@ export default function StationsPage() {
     });
     
     // Sort each station's players by day and time
-    const dayOrder = { 'Thursday': 0, 'Friday': 1, 'Saturday': 2 };
+    const dayOrder: Record<string, number> = { 'Thursday': 0, 'Friday': 1, 'Saturday': 2 };
     map.forEach(stationPlayers => {
       stationPlayers.sort((a, b) => {
-        const dayDiff = (dayOrder[a.player.schedule?.day || 'Thursday'] || 0) - (dayOrder[b.player.schedule?.day || 'Thursday'] || 0);
+        const dayDiff = (dayOrder[a.player.schedule?.day || 'Thursday'] ?? 0) - (dayOrder[b.player.schedule?.day || 'Thursday'] ?? 0);
         if (dayDiff !== 0) return dayDiff;
         return a.startTime.localeCompare(b.startTime);
       });
