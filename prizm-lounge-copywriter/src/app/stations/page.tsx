@@ -288,23 +288,25 @@ const StationCard = memo(function StationCard({
               <h4 className="text-sm md:text-base font-bold text-[var(--panini-yellow)] mb-3 uppercase tracking-wide">
                 Signing Questions for {assignedPlayer.name}
               </h4>
-              {/* Mobile view */}
-              <div className="md:hidden space-y-2">
-                {playerQuestions?.signing?.map((q, i) => (
-                  <div key={i} className="text-sm text-[var(--foreground)] py-2 border-b border-[var(--background-tertiary)] last:border-0">
-                    <span className="text-[var(--panini-yellow)] font-bold mr-2">{i + 1}.</span>
-                    {q}
-                  </div>
-                ))}
-              </div>
-              {/* Desktop view */}
-              <div className="hidden md:block space-y-3">
-                {playerQuestions?.signing?.map((q, i) => (
-                  <div key={i} className="text-base text-[var(--foreground)] py-3 border-b border-[var(--background-tertiary)] last:border-0">
-                    <span className="text-[var(--panini-yellow)] font-bold mr-3 text-lg">{i + 1}.</span>
-                    {q}
-                  </div>
-                ))}
+              <div className="station-questions">
+                {/* Mobile view */}
+                <div className="md:hidden space-y-2">
+                  {playerQuestions?.signing?.map((q, i) => (
+                    <div key={i} className="text-sm text-[var(--foreground)] py-2 border-b border-[var(--background-tertiary)] last:border-0">
+                      <span className="text-[var(--panini-yellow)] font-bold mr-2">{i + 1}.</span>
+                      {q}
+                    </div>
+                  ))}
+                </div>
+                {/* Desktop view */}
+                <div className="hidden md:block space-y-3">
+                  {playerQuestions?.signing?.map((q, i) => (
+                    <div key={i} className="text-base text-[var(--foreground)] py-3 border-b border-[var(--background-tertiary)] last:border-0">
+                      <span className="text-[var(--panini-yellow)] font-bold mr-3 text-lg">{i + 1}.</span>
+                      {q}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
@@ -315,23 +317,25 @@ const StationCard = memo(function StationCard({
               <h4 className="text-sm md:text-base font-bold text-[var(--panini-red)] mb-3 uppercase tracking-wide">
                 Pack Rips Questions for {assignedPlayer.name}
               </h4>
-              {/* Mobile view */}
-              <div className="md:hidden space-y-2">
-                {playerQuestions?.packRips?.map((q, i) => (
-                  <div key={i} className="text-sm text-[var(--foreground)] py-2 border-b border-[var(--background-tertiary)] last:border-0">
-                    <span className="text-[var(--panini-red)] font-bold mr-2">{i + 1}.</span>
-                    {q}
-                  </div>
-                ))}
-              </div>
-              {/* Desktop view */}
-              <div className="hidden md:block space-y-3">
-                {playerQuestions?.packRips?.map((q, i) => (
-                  <div key={i} className="text-base text-[var(--foreground)] py-3 border-b border-[var(--background-tertiary)] last:border-0">
-                    <span className="text-[var(--panini-red)] font-bold mr-3 text-lg">{i + 1}.</span>
-                    {q}
-                  </div>
-                ))}
+              <div className="station-questions">
+                {/* Mobile view */}
+                <div className="md:hidden space-y-2">
+                  {playerQuestions?.packRips?.map((q, i) => (
+                    <div key={i} className="text-sm text-[var(--foreground)] py-2 border-b border-[var(--background-tertiary)] last:border-0">
+                      <span className="text-[var(--panini-red)] font-bold mr-2">{i + 1}.</span>
+                      {q}
+                    </div>
+                  ))}
+                </div>
+                {/* Desktop view */}
+                <div className="hidden md:block space-y-3">
+                  {playerQuestions?.packRips?.map((q, i) => (
+                    <div key={i} className="text-base text-[var(--foreground)] py-3 border-b border-[var(--background-tertiary)] last:border-0">
+                      <span className="text-[var(--panini-red)] font-bold mr-3 text-lg">{i + 1}.</span>
+                      {q}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
