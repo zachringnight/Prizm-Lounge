@@ -67,6 +67,7 @@ interface AppState {
   isGenerating: boolean;
   isOffline: boolean;
   largeTextMode: boolean;
+  searchOpen: boolean;
 
   // UI Actions
   setSelectedPlayer: (id: string | null) => void;
@@ -79,6 +80,7 @@ interface AppState {
   setIsGenerating: (generating: boolean) => void;
   setIsOffline: (offline: boolean) => void;
   toggleLargeTextMode: () => void;
+  setSearchOpen: (open: boolean) => void;
 
   // Day Recap
   dayRecapHighlights: string;
@@ -243,6 +245,7 @@ export const useAppStore = create<AppState>()(
       isGenerating: false,
       isOffline: false,
       largeTextMode: false,
+      searchOpen: false,
 
       setSelectedPlayer: (id) => set({ selectedPlayerId: id }),
       setSelectedMode: (mode) => set({ selectedMode: mode }),
@@ -254,6 +257,7 @@ export const useAppStore = create<AppState>()(
       setIsGenerating: (generating) => set({ isGenerating: generating }),
       setIsOffline: (offline) => set({ isOffline: offline }),
       toggleLargeTextMode: () => set(state => ({ largeTextMode: !state.largeTextMode })),
+      setSearchOpen: (open) => set({ searchOpen: open }),
 
       // Day Recap
       dayRecapHighlights: '',

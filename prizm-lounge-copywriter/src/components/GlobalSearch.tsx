@@ -8,8 +8,7 @@ import { SearchIcon, XIcon } from './Icons';
 
 export default function GlobalSearch() {
   const router = useRouter();
-  const { players } = useAppStore();
-  const [isOpen, setIsOpen] = useState(false);
+  const { players, searchOpen: isOpen, setSearchOpen: setIsOpen } = useAppStore();
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
