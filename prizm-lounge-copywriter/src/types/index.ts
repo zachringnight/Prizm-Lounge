@@ -3,40 +3,34 @@ export type PlayerCategory = 'Current' | 'Legend' | 'Prospect';
 
 // Station Types - Physical locations in the Prizm Lounge
 export type Station =
-  | 'Tunnel'           // Player entrance/walkthrough tunnel
-  | 'Card Breaks'      // Live card breaking station
-  | 'Signing Table 1'  // Primary autograph station
-  | 'Signing Table 2'  // Secondary autograph station
-  | 'Media Stage'      // Interview/content capture area
-  | 'Product Display'; // Product signing/photo op area
+  | 'LED Wall'         // LED Wall content capture (capacity: 1)
+  | 'Signing'          // Autograph station (unlimited capacity)
+  | 'PR Interview'     // PR/Media interview area (capacity: 1)
+  | 'Pack Rips'        // Pack rip content station (capacity: 1)
+  | 'Free';            // Buffer/break time (no station)
 
 export const STATIONS: Station[] = [
-  'Tunnel',
-  'Card Breaks',
-  'Signing Table 1',
-  'Signing Table 2',
-  'Media Stage',
-  'Product Display'
+  'LED Wall',
+  'Signing',
+  'PR Interview',
+  'Pack Rips',
+  'Free'
 ];
 
 // Commitment Types - What the player is doing
 export type CommitmentType =
-  | 'Autograph Session'    // Fan signing
-  | 'Product Signing'      // Signing Panini product for inventory
-  | 'Media Interview'      // Press/content interviews
-  | 'Content Capture'      // Photo/video shoots
-  | 'Card Break Guest'     // Appearing on card break stream
-  | 'Meet & Greet'         // Fan interaction without signing
-  | 'Tunnel Walk';         // Walking through tunnel for content
+  | 'LED Wall'             // LED Wall content capture
+  | 'Signing'              // Autograph session
+  | 'PR Hold'              // PR interview placeholder (may convert to Free)
+  | 'Pack Rips'            // Pack rip content
+  | 'Free';                // Buffer/break time
 
 export const COMMITMENT_TYPES: CommitmentType[] = [
-  'Autograph Session',
-  'Product Signing',
-  'Media Interview',
-  'Content Capture',
-  'Card Break Guest',
-  'Meet & Greet',
-  'Tunnel Walk'
+  'LED Wall',
+  'Signing',
+  'PR Hold',
+  'Pack Rips',
+  'Free'
 ];
 
 export type ContentMode =
