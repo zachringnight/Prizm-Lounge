@@ -11,6 +11,7 @@ import {
   formatTime
 } from '@/types';
 import { useToast } from '@/components/Toast';
+import { ChevronDownIcon, ChevronUpIcon } from '@/components/Icons';
 
 interface StationData {
   station: Station;
@@ -18,15 +19,15 @@ interface StationData {
   currentPlayer: string | null;
   currentCommitment: CommitmentType | null;
   notes: string;
+  expanded: boolean;
 }
 
 const STATION_DESCRIPTIONS: Record<Station, string> = {
-  'Tunnel': 'Player entrance walkthrough for content capture',
-  'Card Breaks': 'Live card breaking stream station',
-  'Signing Table 1': 'Primary fan autograph station',
-  'Signing Table 2': 'Secondary autograph / overflow',
-  'Media Stage': 'Press interviews and content capture',
-  'Product Display': 'Product signing and photo opportunities'
+  'LED Wall': 'LED Wall content capture station (capacity: 1)',
+  'Signing': 'Autograph station for fan signings',
+  'PR Interview': 'PR/Media interview area (capacity: 1)',
+  'Pack Rips': 'Pack rip content station (capacity: 1)',
+  'Free': 'Buffer/break time (no station)'
 };
 
 export default function StationsPage() {
@@ -36,12 +37,13 @@ export default function StationsPage() {
 
   // Initialize station data
   const [stationData, setStationData] = useState<StationData[]>(
-    STATIONS.map(station => ({
+    STATIONS.map((station, index) => ({
       station,
       status: 'idle',
       currentPlayer: null,
       currentCommitment: null,
-      notes: ''
+      notes: '',
+      expanded: index === 0 // Auto-expand first station
     }))
   );
 
@@ -50,6 +52,19 @@ export default function StationsPage() {
     const interval = setInterval(() => setTick(t => t + 1), 60000);
     return () => clearInterval(interval);
   }, []);
+
+  // Auto-expand station with live player
+  useEffect(() => {
+    const livePlayers = players.filter(p => getScheduleStatus(p.schedule) === 'live');
+    if (livePlayers.length > 0) {
+      setStationData(prev =>
+        prev.map(s => ({
+          ...s,
+          expanded: s.currentPlayer && livePlayers.some(p => p.id === s.currentPlayer) ? true : s.expanded
+        }))
+      );
+    }
+  }, [players]);
 
   const updateStation = (
     station: Station,
@@ -61,6 +76,25 @@ export default function StationsPage() {
       )
     );
   };
+
+  const toggleStation = (station: Station) => {
+    setStationData(prev =>
+      prev.map(s =>
+        s.station === station ? { ...s, expanded: !s.expanded } : s
+      )
+    );
+  };
+
+  const expandAll = () => {
+    setStationData(prev => prev.map(s => ({ ...s, expanded: true })));
+  };
+
+  const collapseAll = () => {
+    setStationData(prev => prev.map(s => ({ ...s, expanded: false })));
+  };
+
+  const allExpanded = stationData.every(s => s.expanded);
+  const allCollapsed = stationData.every(s => !s.expanded);
 
   const getStatusColor = (status: 'active' | 'idle' | 'setup') => {
     switch (status) {
@@ -84,11 +118,29 @@ export default function StationsPage() {
 
   return (
     <div className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold mb-1">Stations</h1>
-        <p className="text-sm text-[var(--foreground-muted)]">
-          Manage 6 activation stations
-        </p>
+      <header className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold mb-1">Stations</h1>
+          <p className="text-sm text-[var(--foreground-muted)]">
+            Manage activation stations
+          </p>
+        </div>
+        <button
+          onClick={allExpanded ? collapseAll : expandAll}
+          className="expand-collapse-all"
+        >
+          {allExpanded ? (
+            <>
+              <ChevronUpIcon size={16} />
+              <span>Collapse All</span>
+            </>
+          ) : (
+            <>
+              <ChevronDownIcon size={16} />
+              <span>Expand All</span>
+            </>
+          )}
+        </button>
       </header>
 
       {/* Quick Status */}
@@ -137,104 +189,151 @@ export default function StationsPage() {
       )}
 
       {/* Station Cards */}
-      <div className="space-y-4">
-        {stationData.map(data => (
-          <div
-            key={data.station}
-            className="card p-4"
-            style={{
-              borderColor: data.status === 'active' ? 'var(--status-live)' : undefined
-            }}
-          >
-            {/* Station Header */}
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <h3 className="font-semibold text-lg">{data.station}</h3>
-                <p className="text-xs text-[var(--foreground-dim)]">
-                  {STATION_DESCRIPTIONS[data.station]}
-                </p>
-              </div>
-              <div
-                className="px-3 py-1 rounded-full text-xs font-bold"
+      <div className="space-y-3">
+        {stationData.map(data => {
+          const assignedPlayer = data.currentPlayer
+            ? players.find(p => p.id === data.currentPlayer)
+            : null;
+
+          return (
+            <div key={data.station}>
+              {/* Station Header - Clickable */}
+              <button
+                onClick={() => toggleStation(data.station)}
+                className={`station-header w-full ${data.expanded ? 'expanded' : ''}`}
                 style={{
-                  backgroundColor: getStatusColor(data.status),
-                  color: data.status === 'idle' ? 'white' : 'var(--background)'
+                  borderColor: data.status === 'active' ? 'var(--status-live)' : undefined
                 }}
               >
-                {getStatusLabel(data.status)}
-              </div>
-            </div>
+                <div className="flex items-center gap-3">
+                  <div
+                    className="w-3 h-3 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: getStatusColor(data.status) }}
+                  />
+                  <div className="text-left">
+                    <h3 className="font-semibold text-base">{data.station}</h3>
+                    {!data.expanded && assignedPlayer && (
+                      <p className="text-sm text-[var(--foreground-muted)]">
+                        {assignedPlayer.name}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div
+                    className="px-3 py-1 rounded-full text-xs font-bold"
+                    style={{
+                      backgroundColor: getStatusColor(data.status),
+                      color: data.status === 'idle' ? 'white' : 'var(--background)'
+                    }}
+                  >
+                    {getStatusLabel(data.status)}
+                  </div>
+                  {data.expanded ? (
+                    <ChevronUpIcon size={20} className="text-[var(--foreground-muted)]" />
+                  ) : (
+                    <ChevronDownIcon size={20} className="text-[var(--foreground-muted)]" />
+                  )}
+                </div>
+              </button>
 
-            {/* Status Toggle */}
-            <div className="flex gap-2 mb-3">
-              {(['idle', 'setup', 'active'] as const).map(status => (
-                <button
-                  key={status}
-                  onClick={() => updateStation(data.station, { status })}
-                  className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors
-                    ${data.status === status
-                      ? 'bg-[var(--background-tertiary)] text-[var(--foreground)]'
-                      : 'bg-transparent text-[var(--foreground-dim)]'
-                    }`}
-                >
-                  {status.charAt(0).toUpperCase() + status.slice(1)}
-                </button>
-              ))}
-            </div>
+              {/* Station Content - Expandable */}
+              {data.expanded && (
+                <div className="station-content">
+                  <p className="text-xs text-[var(--foreground-dim)] mb-4">
+                    {STATION_DESCRIPTIONS[data.station]}
+                  </p>
 
-            {/* Player Assignment */}
-            <div className="mb-3">
-              <label className="text-xs text-[var(--foreground-muted)] mb-1 block">
-                Current Player
-              </label>
-              <select
-                value={data.currentPlayer || ''}
-                onChange={(e) => updateStation(data.station, {
-                  currentPlayer: e.target.value || null
-                })}
-                className="input select"
-              >
-                <option value="">None assigned</option>
-                {players.map(p => (
-                  <option key={p.id} value={p.id}>{p.name}</option>
-                ))}
-              </select>
-            </div>
+                  {/* Status Toggle */}
+                  <div className="flex gap-2 mb-4">
+                    {(['idle', 'setup', 'active'] as const).map(status => (
+                      <button
+                        key={status}
+                        onClick={() => updateStation(data.station, { status })}
+                        className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors
+                          ${data.status === status
+                            ? 'bg-[var(--background-tertiary)] text-[var(--foreground)]'
+                            : 'bg-transparent text-[var(--foreground-dim)]'
+                          }`}
+                      >
+                        {status.charAt(0).toUpperCase() + status.slice(1)}
+                      </button>
+                    ))}
+                  </div>
 
-            {/* Commitment Type */}
-            <div className="mb-3">
-              <label className="text-xs text-[var(--foreground-muted)] mb-1 block">
-                Activity
-              </label>
-              <select
-                value={data.currentCommitment || ''}
-                onChange={(e) => updateStation(data.station, {
-                  currentCommitment: (e.target.value as CommitmentType) || null
-                })}
-                className="input select"
-              >
-                <option value="">Select activity...</option>
-                {COMMITMENT_TYPES.map(type => (
-                  <option key={type} value={type}>{type}</option>
-                ))}
-              </select>
-            </div>
+                  {/* Player Assignment */}
+                  <div className="mb-4">
+                    <label className="text-xs text-[var(--foreground-muted)] mb-1 block">
+                      Current Player
+                    </label>
+                    <select
+                      value={data.currentPlayer || ''}
+                      onChange={(e) => updateStation(data.station, {
+                        currentPlayer: e.target.value || null
+                      })}
+                      className="input select"
+                    >
+                      <option value="">None assigned</option>
+                      {players.map(p => (
+                        <option key={p.id} value={p.id}>{p.name}</option>
+                      ))}
+                    </select>
+                  </div>
 
-            {/* Notes */}
-            <div>
-              <label className="text-xs text-[var(--foreground-muted)] mb-1 block">
-                Notes
-              </label>
-              <input
-                type="text"
-                value={data.notes}
-                onChange={(e) => updateStation(data.station, { notes: e.target.value })}
-                placeholder="e.g., 200 autos remaining, ESPN at 3pm..."
-                className="input"
-              />
+                  {/* Show player info if assigned */}
+                  {assignedPlayer && (
+                    <div className="mb-4 p-3 bg-[var(--background)] rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <div className="avatar w-10 h-10 text-sm">
+                          {assignedPlayer.name.charAt(0)}
+                        </div>
+                        <div>
+                          <div className="font-semibold">{assignedPlayer.name}</div>
+                          <div className="text-sm text-[var(--foreground-muted)]">
+                            {assignedPlayer.position} • {assignedPlayer.team}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Commitment Type */}
+                  <div className="mb-4">
+                    <label className="text-xs text-[var(--foreground-muted)] mb-1 block">
+                      Activity
+                    </label>
+                    <select
+                      value={data.currentCommitment || ''}
+                      onChange={(e) => updateStation(data.station, {
+                        currentCommitment: (e.target.value as CommitmentType) || null
+                      })}
+                      className="input select"
+                    >
+                      <option value="">Select activity...</option>
+                      {COMMITMENT_TYPES.map(type => (
+                        <option key={type} value={type}>{type}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Notes */}
+                  <div>
+                    <label className="text-xs text-[var(--foreground-muted)] mb-1 block">
+                      Notes
+                    </label>
+                    <input
+                      type="text"
+                      value={data.notes}
+                      onChange={(e) => updateStation(data.station, { notes: e.target.value })}
+                      placeholder="e.g., 200 autos remaining, ESPN at 3pm..."
+                      className="input"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {ToastComponent}

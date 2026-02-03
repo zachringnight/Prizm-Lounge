@@ -1,7 +1,8 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { HomeIcon, UsersIcon, CalendarIcon, ClipboardIcon } from './Icons';
+import { useAppStore } from '@/store';
+import { HomeIcon, UsersIcon, CalendarIcon, ClipboardIcon, SearchIcon } from './Icons';
 
 interface NavItem {
   href: string;
@@ -19,6 +20,7 @@ const navItems: NavItem[] = [
 export default function BottomNav() {
   const pathname = usePathname();
   const router = useRouter();
+  const { largeTextMode, toggleLargeTextMode } = useAppStore();
 
   const handleNavClick = (href: string) => {
     // Trigger haptic feedback if available
@@ -26,6 +28,16 @@ export default function BottomNav() {
       navigator.vibrate(10);
     }
     router.push(href);
+  };
+
+  const openSearch = () => {
+    // Dispatch a keyboard event to trigger the global search
+    const event = new KeyboardEvent('keydown', {
+      key: 'k',
+      metaKey: true,
+      bubbles: true
+    });
+    document.dispatchEvent(event);
   };
 
   return (
@@ -73,6 +85,26 @@ export default function BottomNav() {
               </button>
             );
           })}
+
+          {/* Search Trigger */}
+          <button
+            onClick={openSearch}
+            className="search-trigger ml-4"
+            title="Search (Cmd+K)"
+          >
+            <SearchIcon size={16} />
+            <span className="hidden lg:inline">Search</span>
+            <kbd>⌘K</kbd>
+          </button>
+
+          {/* Large Text Mode Toggle */}
+          <button
+            onClick={toggleLargeTextMode}
+            className={`text-size-toggle ml-2 ${largeTextMode ? 'active' : ''}`}
+            title="Toggle large text mode"
+          >
+            Aa
+          </button>
         </div>
       </nav>
     </>
