@@ -21,12 +21,11 @@ interface StationData {
 }
 
 const STATION_DESCRIPTIONS: Record<Station, string> = {
-  'Tunnel': 'Player entrance walkthrough for content capture',
-  'Card Breaks': 'Live card breaking stream station',
-  'Signing Table 1': 'Primary fan autograph station',
-  'Signing Table 2': 'Secondary autograph / overflow',
-  'Media Stage': 'Press interviews and content capture',
-  'Product Display': 'Product signing and photo opportunities'
+  'LED Wall': 'LED Wall content capture station',
+  'Signing': 'Fan autograph station',
+  'PR Interview': 'Press interviews and media content',
+  'Pack Rips': 'Live pack rip content station',
+  'Free': 'Buffer/break time (no station)'
 };
 
 export default function StationsPage() {
@@ -87,7 +86,7 @@ export default function StationsPage() {
       <header>
         <h1 className="text-2xl font-bold mb-1">Stations</h1>
         <p className="text-sm text-[var(--foreground-muted)]">
-          Manage 6 activation stations
+          Manage activation stations
         </p>
       </header>
 
