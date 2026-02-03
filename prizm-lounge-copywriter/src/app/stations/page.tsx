@@ -280,14 +280,24 @@ const StationCard = memo(function StationCard({
 
           {/* Questions for Signing Station */}
           {showSigningQuestions && assignedPlayer && (
-            <div className="mt-4 p-4 bg-[var(--background)] rounded-lg border-l-4 border-l-[var(--panini-yellow)]">
-              <h4 className="text-sm font-semibold text-[var(--panini-yellow)] mb-3 uppercase tracking-wide">
+            <div className="mt-4 p-4 md:p-5 bg-[var(--background)] rounded-lg border-l-4 border-l-[var(--panini-yellow)]">
+              <h4 className="text-sm md:text-base font-bold text-[var(--panini-yellow)] mb-3 uppercase tracking-wide">
                 Signing Questions for {assignedPlayer.name}
               </h4>
-              <div className="space-y-2">
+              {/* Mobile view */}
+              <div className="md:hidden space-y-2">
                 {playerQuestions?.signing?.map((q, i) => (
-                  <div key={i} className="text-sm text-[var(--foreground-muted)] py-1.5 border-b border-[var(--background-tertiary)] last:border-0">
+                  <div key={i} className="text-sm text-[var(--foreground)] py-2 border-b border-[var(--background-tertiary)] last:border-0">
                     <span className="text-[var(--panini-yellow)] font-bold mr-2">{i + 1}.</span>
+                    {q}
+                  </div>
+                ))}
+              </div>
+              {/* Desktop view */}
+              <div className="hidden md:block space-y-3">
+                {playerQuestions?.signing?.map((q, i) => (
+                  <div key={i} className="text-base text-[var(--foreground)] py-3 border-b border-[var(--background-tertiary)] last:border-0">
+                    <span className="text-[var(--panini-yellow)] font-bold mr-3 text-lg">{i + 1}.</span>
                     {q}
                   </div>
                 ))}
@@ -297,14 +307,24 @@ const StationCard = memo(function StationCard({
 
           {/* Questions for Pack Rips Station */}
           {showPackRipsQuestions && assignedPlayer && (
-            <div className="mt-4 p-4 bg-[var(--background)] rounded-lg border-l-4 border-l-[var(--panini-red)]">
-              <h4 className="text-sm font-semibold text-[var(--panini-red)] mb-3 uppercase tracking-wide">
+            <div className="mt-4 p-4 md:p-5 bg-[var(--background)] rounded-lg border-l-4 border-l-[var(--panini-red)]">
+              <h4 className="text-sm md:text-base font-bold text-[var(--panini-red)] mb-3 uppercase tracking-wide">
                 Pack Rips Questions for {assignedPlayer.name}
               </h4>
-              <div className="space-y-2">
+              {/* Mobile view */}
+              <div className="md:hidden space-y-2">
                 {playerQuestions?.packRips?.map((q, i) => (
-                  <div key={i} className="text-sm text-[var(--foreground-muted)] py-1.5 border-b border-[var(--background-tertiary)] last:border-0">
+                  <div key={i} className="text-sm text-[var(--foreground)] py-2 border-b border-[var(--background-tertiary)] last:border-0">
                     <span className="text-[var(--panini-red)] font-bold mr-2">{i + 1}.</span>
+                    {q}
+                  </div>
+                ))}
+              </div>
+              {/* Desktop view */}
+              <div className="hidden md:block space-y-3">
+                {playerQuestions?.packRips?.map((q, i) => (
+                  <div key={i} className="text-base text-[var(--foreground)] py-3 border-b border-[var(--background-tertiary)] last:border-0">
+                    <span className="text-[var(--panini-red)] font-bold mr-3 text-lg">{i + 1}.</span>
                     {q}
                   </div>
                 ))}
@@ -314,35 +334,35 @@ const StationCard = memo(function StationCard({
 
           {/* Scheduled Players for this station */}
           {scheduledPlayers.length > 0 && (
-            <div className="mt-4 p-4 bg-[var(--background)] rounded-lg">
-              <h4 className="text-xs font-semibold text-[var(--foreground-muted)] mb-3 uppercase tracking-wide">
+            <div className="mt-4 p-4 md:p-5 bg-[var(--background)] rounded-lg">
+              <h4 className="text-xs md:text-sm font-semibold text-[var(--foreground-muted)] mb-3 uppercase tracking-wide">
                 Scheduled at this Station
               </h4>
-              <div className="space-y-2 max-h-48 overflow-y-auto">
-                {scheduledPlayers.map(({ player, startTime, endTime }, i) => {
+              <div className="space-y-2 md:space-y-3">
+                {scheduledPlayers.map(({ player, startTime }, i) => {
                   const dayLabel = player.schedule?.day || '';
-                  const status = getScheduleStatus(player.schedule);
+                  const playerStatus = getScheduleStatus(player.schedule);
                   return (
                     <button
                       key={`${player.id}-${i}`}
                       onClick={() => onPlayerClick(player.id)}
-                      className={`w-full flex items-center justify-between p-2 rounded hover:bg-[var(--background-tertiary)] transition-colors ${
-                        status === 'live' ? 'bg-[var(--status-live)]/10' : ''
+                      className={`w-full flex items-center justify-between p-2 md:p-3 rounded hover:bg-[var(--background-tertiary)] transition-colors ${
+                        playerStatus === 'live' ? 'bg-[var(--status-live)]/10' : ''
                       }`}
                     >
-                      <div className="flex items-center gap-2 text-left">
-                        <span className="text-xs text-[var(--foreground-dim)] font-mono w-10">
+                      <div className="flex items-center gap-2 md:gap-3 text-left">
+                        <span className="text-xs md:text-sm text-[var(--foreground-dim)] font-mono w-12 md:w-16">
                           {formatTime(startTime).replace(' ', '')}
                         </span>
-                        <span className="text-sm">{player.name}</span>
+                        <span className="text-sm md:text-base font-medium">{player.name}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-[var(--foreground-dim)]">{dayLabel}</span>
-                        {status === 'live' && (
-                          <span className="text-xs font-bold text-[var(--status-live)]">LIVE</span>
+                        <span className="text-xs md:text-sm text-[var(--foreground-dim)]">{dayLabel}</span>
+                        {playerStatus === 'live' && (
+                          <span className="text-xs md:text-sm font-bold text-[var(--status-live)]">LIVE</span>
                         )}
-                        {status === 'upcoming' && (
-                          <span className="text-xs text-[var(--panini-yellow)]">{getTimeUntil(player.schedule)}</span>
+                        {playerStatus === 'upcoming' && (
+                          <span className="text-xs md:text-sm text-[var(--panini-yellow)]">{getTimeUntil(player.schedule)}</span>
                         )}
                       </div>
                     </button>
