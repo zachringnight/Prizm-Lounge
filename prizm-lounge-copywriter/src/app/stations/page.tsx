@@ -7,8 +7,7 @@ import {
   STATIONS,
   CommitmentType,
   COMMITMENT_TYPES,
-  getScheduleStatus,
-  formatTime
+  getScheduleStatus
 } from '@/types';
 import { useToast } from '@/components/Toast';
 
@@ -21,17 +20,16 @@ interface StationData {
 }
 
 const STATION_DESCRIPTIONS: Record<Station, string> = {
-  'Tunnel': 'Player entrance walkthrough for content capture',
-  'Card Breaks': 'Live card breaking stream station',
-  'Signing Table 1': 'Primary fan autograph station',
-  'Signing Table 2': 'Secondary autograph / overflow',
-  'Media Stage': 'Press interviews and content capture',
-  'Product Display': 'Product signing and photo opportunities'
+  'LED Wall': 'LED Wall content capture (capacity: 1)',
+  'Signing': 'Autograph station (unlimited capacity)',
+  'PR Interview': 'PR/Media interview area (capacity: 1)',
+  'Pack Rips': 'Pack rip content station (capacity: 1)',
+  'Free': 'Buffer/break time (no physical station)'
 };
 
 export default function StationsPage() {
   const { players } = useAppStore();
-  const { showToast, ToastComponent } = useToast();
+  const { ToastComponent } = useToast();
   const [, setTick] = useState(0);
 
   // Initialize station data
@@ -87,7 +85,7 @@ export default function StationsPage() {
       <header>
         <h1 className="text-2xl font-bold mb-1">Stations</h1>
         <p className="text-sm text-[var(--foreground-muted)]">
-          Manage 6 activation stations
+          Manage activation stations
         </p>
       </header>
 
