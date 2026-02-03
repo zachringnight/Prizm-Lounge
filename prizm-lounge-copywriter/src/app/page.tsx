@@ -4,18 +4,17 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
 import { getScheduleStatus, getTimeUntil, formatTime } from '@/types';
-import { CalendarIcon, CheckIcon, UsersIcon, ClipboardIcon } from '@/components/Icons';
+import { CalendarIcon, UsersIcon, ClipboardIcon } from '@/components/Icons';
 
 export default function Home() {
   const router = useRouter();
-  const { players, checklist, deliverables, initializeChecklist, initializeDeliverables } = useAppStore();
+  const { players, deliverables, initializeDeliverables } = useAppStore();
   const [, setTick] = useState(0);
 
-  // Initialize checklist and deliverables on first load
+  // Initialize deliverables on first load
   useEffect(() => {
-    initializeChecklist();
     initializeDeliverables();
-  }, [initializeChecklist, initializeDeliverables]);
+  }, [initializeDeliverables]);
 
   // Update every minute for countdown timers
   useEffect(() => {
@@ -43,10 +42,6 @@ export default function Home() {
       return a.schedule.startTime.localeCompare(b.schedule.startTime);
     })
     .slice(0, 3);
-
-  // Calculate checklist progress
-  const checklistComplete = checklist.filter(c => c.completed).length;
-  const checklistTotal = checklist.length;
 
   // Calculate deliverables progress
   const deliverablesComplete = deliverables.filter(d => d.status === 'completed' || d.status === 'delivered').length;
@@ -88,7 +83,7 @@ export default function Home() {
       )}
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
         <button
           onClick={() => router.push('/schedule')}
           className="stat-card"
@@ -97,24 +92,24 @@ export default function Home() {
             <CalendarIcon size={28} className="mx-auto text-[var(--panini-yellow)]" />
           </div>
           <div className="stat-value">{players.filter(p => p.schedule).length}</div>
+          <div className="stat-label">Scheduled</div>
+        </button>
+        <button
+          onClick={() => router.push('/players')}
+          className="stat-card"
+        >
+          <div className="stat-icon">
+            <UsersIcon size={28} className="mx-auto text-[var(--panini-red)]" />
+          </div>
+          <div className="stat-value">{players.length}</div>
           <div className="stat-label">Players</div>
         </button>
         <button
-          onClick={() => router.push('/checklist')}
-          className="stat-card"
-        >
-          <div className="stat-icon">
-            <CheckIcon size={28} className="mx-auto text-[var(--status-live)]" />
-          </div>
-          <div className="stat-value">{checklistComplete}/{checklistTotal}</div>
-          <div className="stat-label">Tasks</div>
-        </button>
-        <button
           onClick={() => router.push('/deliverables')}
-          className="stat-card"
+          className="stat-card col-span-2 md:col-span-1"
         >
           <div className="stat-icon">
-            <ClipboardIcon size={28} className="mx-auto text-[var(--panini-red)]" />
+            <ClipboardIcon size={28} className="mx-auto text-[var(--status-live)]" />
           </div>
           <div className="stat-value">{deliverablesComplete}/{deliverablesTotal}</div>
           <div className="stat-label">Deliverables</div>
@@ -132,9 +127,9 @@ export default function Home() {
             View All →
           </button>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-3 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4 md:space-y-0">
           {upcomingPlayers.length === 0 ? (
-            <div className="card p-6 text-center text-[var(--foreground-muted)]">
+            <div className="card p-6 text-center text-[var(--foreground-muted)] md:col-span-full">
               No upcoming appearances
             </div>
           ) : (
@@ -184,7 +179,7 @@ export default function Home() {
       </div>
 
       {/* Quick Links */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <button
           onClick={() => router.push('/players')}
           className="card p-5 flex items-center gap-4"
@@ -193,11 +188,18 @@ export default function Home() {
           <span className="font-semibold text-base">Player Info</span>
         </button>
         <button
-          onClick={() => router.push('/checklist')}
+          onClick={() => router.push('/schedule')}
           className="card p-5 flex items-center gap-4"
         >
-          <CheckIcon size={24} className="text-[var(--status-live)]" />
-          <span className="font-semibold text-base">Checklist</span>
+          <CalendarIcon size={24} className="text-[var(--panini-red)]" />
+          <span className="font-semibold text-base">Schedule</span>
+        </button>
+        <button
+          onClick={() => router.push('/deliverables')}
+          className="card p-5 flex items-center gap-4 col-span-2 md:col-span-2"
+        >
+          <ClipboardIcon size={24} className="text-[var(--status-live)]" />
+          <span className="font-semibold text-base">Deliverables</span>
         </button>
       </div>
     </div>

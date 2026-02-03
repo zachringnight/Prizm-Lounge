@@ -118,9 +118,9 @@ export default function SchedulePage() {
       </div>
 
       {/* Schedule List */}
-      <div className="space-y-4">
+      <div className="space-y-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4 md:space-y-0">
         {filteredPlayers.length === 0 ? (
-          <div className="empty-state">
+          <div className="empty-state md:col-span-full">
             <ClockIcon size={56} className="mx-auto mb-4 opacity-40" />
             <p className="text-lg">No appearances scheduled</p>
           </div>
