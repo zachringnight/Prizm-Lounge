@@ -138,8 +138,17 @@ export interface StationStatus {
   currentPlayer: string | null; // player ID
   currentCommitment: CommitmentType | null;
   status: 'active' | 'idle' | 'setup';
+  notes: string;
   nextPlayer?: string; // player ID
   nextTime?: string;
+}
+
+// Player arrival tracking
+export interface PlayerArrival {
+  playerId: string;
+  arrivedAt: number; // timestamp
+  departedAt?: number; // timestamp when they left
+  actualDuration?: number; // in minutes
 }
 
 export interface PlayerNote {

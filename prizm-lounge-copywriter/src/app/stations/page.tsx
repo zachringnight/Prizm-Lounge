@@ -1,27 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
 import {
   Station,
-  STATIONS,
   CommitmentType,
   COMMITMENT_TYPES,
   getScheduleStatus,
-  formatTime
 } from '@/types';
 import { useToast } from '@/components/Toast';
-import { ChevronDownIcon, ChevronUpIcon, ChevronRightIcon } from '@/components/Icons';
-
-interface StationData {
-  station: Station;
-  status: 'active' | 'idle' | 'setup';
-  currentPlayer: string | null;
-  currentCommitment: CommitmentType | null;
-  notes: string;
-  expanded: boolean;
-}
+import { ChevronDownIcon, ChevronUpIcon, ChevronRightIcon, ClockIcon, CheckIcon } from '@/components/Icons';
 
 const STATION_DESCRIPTIONS: Record<Station, string> = {
   'LED Wall': 'LED Wall content capture station (capacity: 1)',
@@ -31,88 +20,310 @@ const STATION_DESCRIPTIONS: Record<Station, string> = {
   'Free': 'Buffer/break time (no station)'
 };
 
+// Memoized status color helper
+const getStatusColor = (status: 'active' | 'idle' | 'setup') => {
+  switch (status) {
+    case 'active': return 'var(--status-live)';
+    case 'setup': return 'var(--panini-yellow)';
+    case 'idle': return 'var(--foreground-dim)';
+  }
+};
+
+const getStatusLabel = (status: 'active' | 'idle' | 'setup') => {
+  switch (status) {
+    case 'active': return 'LIVE';
+    case 'setup': return 'SETUP';
+    case 'idle': return 'IDLE';
+  }
+};
+
+// Format elapsed time
+const formatElapsedTime = (minutes: number) => {
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  if (hours > 0) {
+    return `${hours}h ${mins}m`;
+  }
+  return `${mins}m`;
+};
+
+// Memoized Player Card Component for performance
+const PlayerCard = memo(function PlayerCard({
+  player,
+  onClick,
+  elapsedTime
+}: {
+  player: { id: string; name: string; position: string; team: string };
+  onClick: () => void;
+  elapsedTime: number | null;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="mb-4 p-3 bg-[var(--background)] rounded-lg w-full text-left hover:bg-[var(--background-tertiary)] transition-colors"
+    >
+      <div className="flex items-center gap-3">
+        <div className="avatar w-10 h-10 text-sm">
+          {player.name.charAt(0)}
+        </div>
+        <div className="flex-1">
+          <div className="font-semibold">{player.name}</div>
+          <div className="text-sm text-[var(--foreground-muted)]">
+            {player.position} • {player.team}
+          </div>
+          {elapsedTime !== null && (
+            <div className="text-xs text-[var(--panini-yellow)] mt-1 flex items-center gap-1">
+              <ClockIcon size={12} />
+              On-site: {formatElapsedTime(elapsedTime)}
+            </div>
+          )}
+        </div>
+        <div className="text-[var(--foreground-dim)]">
+          <ChevronRightIcon size={18} />
+        </div>
+      </div>
+    </button>
+  );
+});
+
+// Memoized Station Card for performance
+const StationCard = memo(function StationCard({
+  station,
+  status,
+  currentPlayer,
+  currentCommitment,
+  notes,
+  expanded,
+  assignedPlayer,
+  players,
+  elapsedTime,
+  onToggle,
+  onUpdate,
+  onPlayerClick
+}: {
+  station: Station;
+  status: 'active' | 'idle' | 'setup';
+  currentPlayer: string | null;
+  currentCommitment: CommitmentType | null;
+  notes: string;
+  expanded: boolean;
+  assignedPlayer: { id: string; name: string; position: string; team: string } | null;
+  players: Array<{ id: string; name: string }>;
+  elapsedTime: number | null;
+  onToggle: () => void;
+  onUpdate: (updates: { status?: 'active' | 'idle' | 'setup'; currentPlayer?: string | null; currentCommitment?: CommitmentType | null; notes?: string }) => void;
+  onPlayerClick: (playerId: string) => void;
+}) {
+  return (
+    <div>
+      {/* Station Header - Clickable */}
+      <button
+        onClick={onToggle}
+        className={`station-header w-full ${expanded ? 'expanded' : ''}`}
+        style={{
+          borderColor: status === 'active' ? 'var(--status-live)' : undefined
+        }}
+      >
+        <div className="flex items-center gap-3">
+          <div
+            className="w-3 h-3 rounded-full flex-shrink-0"
+            style={{ backgroundColor: getStatusColor(status) }}
+          />
+          <div className="text-left">
+            <h3 className="font-semibold text-base">{station}</h3>
+            {!expanded && assignedPlayer && (
+              <p className="text-sm text-[var(--foreground-muted)]">
+                {assignedPlayer.name}
+                {elapsedTime !== null && ` • ${formatElapsedTime(elapsedTime)}`}
+              </p>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <div
+            className="px-3 py-1 rounded-full text-xs font-bold"
+            style={{
+              backgroundColor: getStatusColor(status),
+              color: status === 'idle' ? 'white' : 'var(--background)'
+            }}
+          >
+            {getStatusLabel(status)}
+          </div>
+          {expanded ? (
+            <ChevronUpIcon size={20} className="text-[var(--foreground-muted)]" />
+          ) : (
+            <ChevronDownIcon size={20} className="text-[var(--foreground-muted)]" />
+          )}
+        </div>
+      </button>
+
+      {/* Station Content - Expandable */}
+      {expanded && (
+        <div className="station-content">
+          <p className="text-xs text-[var(--foreground-dim)] mb-4">
+            {STATION_DESCRIPTIONS[station]}
+          </p>
+
+          {/* Status Toggle */}
+          <div className="flex gap-2 mb-4">
+            {(['idle', 'setup', 'active'] as const).map(s => (
+              <button
+                key={s}
+                onClick={() => onUpdate({ status: s })}
+                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors
+                  ${status === s
+                    ? 'bg-[var(--background-tertiary)] text-[var(--foreground)]'
+                    : 'bg-transparent text-[var(--foreground-dim)]'
+                  }`}
+              >
+                {s.charAt(0).toUpperCase() + s.slice(1)}
+              </button>
+            ))}
+          </div>
+
+          {/* Player Assignment */}
+          <div className="mb-4">
+            <label className="text-xs text-[var(--foreground-muted)] mb-1 block">
+              Current Player
+            </label>
+            <select
+              value={currentPlayer || ''}
+              onChange={(e) => onUpdate({ currentPlayer: e.target.value || null })}
+              className="input select"
+            >
+              <option value="">None assigned</option>
+              {players.map(p => (
+                <option key={p.id} value={p.id}>{p.name}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Show player info if assigned */}
+          {assignedPlayer && (
+            <PlayerCard
+              player={assignedPlayer}
+              onClick={() => onPlayerClick(assignedPlayer.id)}
+              elapsedTime={elapsedTime}
+            />
+          )}
+
+          {/* Commitment Type */}
+          <div className="mb-4">
+            <label className="text-xs text-[var(--foreground-muted)] mb-1 block">
+              Activity
+            </label>
+            <select
+              value={currentCommitment || ''}
+              onChange={(e) => onUpdate({ currentCommitment: (e.target.value as CommitmentType) || null })}
+              className="input select"
+            >
+              <option value="">Select activity...</option>
+              {COMMITMENT_TYPES.map(type => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Notes */}
+          <div>
+            <label className="text-xs text-[var(--foreground-muted)] mb-1 block">
+              Notes
+            </label>
+            <input
+              type="text"
+              value={notes}
+              onChange={(e) => onUpdate({ notes: e.target.value })}
+              placeholder="e.g., 200 autos remaining, ESPN at 3pm..."
+              className="input"
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+});
+
 export default function StationsPage() {
   const router = useRouter();
-  const { players } = useAppStore();
+  const {
+    players,
+    stations,
+    updateStation,
+    initializeStations,
+    playerArrivals,
+    markPlayerArrived,
+    markPlayerDeparted
+  } = useAppStore();
   const { showToast, ToastComponent } = useToast();
+  const [expandedStations, setExpandedStations] = useState<Set<Station>>(new Set(['LED Wall']));
   const [, setTick] = useState(0);
 
-  // Initialize station data
-  const [stationData, setStationData] = useState<StationData[]>(
-    STATIONS.map((station, index) => ({
-      station,
-      status: 'idle',
-      currentPlayer: null,
-      currentCommitment: null,
-      notes: '',
-      expanded: index === 0 // Auto-expand first station
-    }))
-  );
-
-  // Auto-refresh every minute
+  // Initialize stations on mount
   useEffect(() => {
-    const interval = setInterval(() => setTick(t => t + 1), 60000);
+    initializeStations();
+  }, [initializeStations]);
+
+  // Auto-refresh every 10 seconds for elapsed time updates
+  useEffect(() => {
+    const interval = setInterval(() => setTick(t => t + 1), 10000);
     return () => clearInterval(interval);
   }, []);
 
-  // Auto-expand station with live player
-  useEffect(() => {
-    const livePlayers = players.filter(p => getScheduleStatus(p.schedule) === 'live');
-    if (livePlayers.length > 0) {
-      setStationData(prev =>
-        prev.map(s => ({
-          ...s,
-          expanded: s.currentPlayer && livePlayers.some(p => p.id === s.currentPlayer) ? true : s.expanded
-        }))
-      );
+  // Get elapsed time for a player
+  const getElapsedTime = useCallback((playerId: string): number | null => {
+    const arrival = playerArrivals.find(a => a.playerId === playerId && !a.departedAt);
+    if (!arrival) return null;
+    return Math.round((Date.now() - arrival.arrivedAt) / (1000 * 60));
+  }, [playerArrivals]);
+
+  // Check if player has arrived
+  const hasArrived = useCallback((playerId: string): boolean => {
+    return playerArrivals.some(a => a.playerId === playerId && !a.departedAt);
+  }, [playerArrivals]);
+
+  const toggleStation = useCallback((station: Station) => {
+    setExpandedStations(prev => {
+      const next = new Set(prev);
+      if (next.has(station)) {
+        next.delete(station);
+      } else {
+        next.add(station);
+      }
+      return next;
+    });
+  }, []);
+
+  const expandAll = useCallback(() => {
+    setExpandedStations(new Set(stations.map(s => s.station)));
+  }, [stations]);
+
+  const collapseAll = useCallback(() => {
+    setExpandedStations(new Set());
+  }, []);
+
+  const handleUpdate = useCallback((station: Station, updates: Partial<{
+    status: 'active' | 'idle' | 'setup';
+    currentPlayer: string | null;
+    currentCommitment: CommitmentType | null;
+    notes: string;
+  }>) => {
+    updateStation(station, updates);
+  }, [updateStation]);
+
+  const handlePlayerArrival = useCallback((playerId: string) => {
+    const player = players.find(p => p.id === playerId);
+    if (player) {
+      if (hasArrived(playerId)) {
+        markPlayerDeparted(playerId);
+        showToast(`${player.name} marked as departed`, 'info');
+      } else {
+        markPlayerArrived(playerId);
+        showToast(`${player.name} has arrived!`, 'success');
+      }
     }
-  }, [players]);
+  }, [players, hasArrived, markPlayerArrived, markPlayerDeparted, showToast]);
 
-  const updateStation = (
-    station: Station,
-    updates: Partial<StationData>
-  ) => {
-    setStationData(prev =>
-      prev.map(s =>
-        s.station === station ? { ...s, ...updates } : s
-      )
-    );
-  };
-
-  const toggleStation = (station: Station) => {
-    setStationData(prev =>
-      prev.map(s =>
-        s.station === station ? { ...s, expanded: !s.expanded } : s
-      )
-    );
-  };
-
-  const expandAll = () => {
-    setStationData(prev => prev.map(s => ({ ...s, expanded: true })));
-  };
-
-  const collapseAll = () => {
-    setStationData(prev => prev.map(s => ({ ...s, expanded: false })));
-  };
-
-  const allExpanded = stationData.every(s => s.expanded);
-  const allCollapsed = stationData.every(s => !s.expanded);
-
-  const getStatusColor = (status: 'active' | 'idle' | 'setup') => {
-    switch (status) {
-      case 'active': return 'var(--status-live)';
-      case 'setup': return 'var(--panini-yellow)';
-      case 'idle': return 'var(--foreground-dim)';
-    }
-  };
-
-  const getStatusLabel = (status: 'active' | 'idle' | 'setup') => {
-    switch (status) {
-      case 'active': return 'LIVE';
-      case 'setup': return 'SETUP';
-      case 'idle': return 'IDLE';
-    }
-  };
+  const allExpanded = expandedStations.size === stations.length;
 
   // Find currently live players
   const livePlayers = players.filter(p => getScheduleStatus(p.schedule) === 'live');
@@ -149,205 +360,149 @@ export default function StationsPage() {
       <div className="grid grid-cols-3 gap-2">
         <div className="card p-3 text-center">
           <div className="text-lg font-bold text-[var(--status-live)]">
-            {stationData.filter(s => s.status === 'active').length}
+            {stations.filter(s => s.status === 'active').length}
           </div>
           <div className="text-xs text-[var(--foreground-muted)]">Active</div>
         </div>
         <div className="card p-3 text-center">
           <div className="text-lg font-bold text-[var(--panini-yellow)]">
-            {stationData.filter(s => s.status === 'setup').length}
+            {stations.filter(s => s.status === 'setup').length}
           </div>
           <div className="text-xs text-[var(--foreground-muted)]">Setup</div>
         </div>
         <div className="card p-3 text-center">
           <div className="text-lg font-bold">
-            {stationData.filter(s => s.status === 'idle').length}
+            {stations.filter(s => s.status === 'idle').length}
           </div>
           <div className="text-xs text-[var(--foreground-muted)]">Idle</div>
         </div>
       </div>
 
-      {/* Live/Upcoming Players Quick Reference */}
+      {/* Live/Upcoming Players Quick Reference with Arrival Buttons */}
       {(livePlayers.length > 0 || upcomingPlayers.length > 0) && (
         <div className="card p-4">
-          <div className="text-xs font-semibold text-[var(--foreground-muted)] uppercase mb-2">
-            Currently On-Site
+          <div className="text-xs font-semibold text-[var(--foreground-muted)] uppercase mb-3">
+            Player Arrivals
           </div>
           <div className="space-y-2">
-            {livePlayers.map(p => (
-              <button
-                key={p.id}
-                onClick={() => router.push(`/players/${p.id}`)}
-                className="flex items-center justify-between w-full p-2 -mx-2 rounded-lg hover:bg-[var(--background-tertiary)] transition-colors"
-              >
-                <span className="font-medium">{p.name}</span>
-                <span className="text-xs text-[var(--status-live)]">LIVE NOW</span>
-              </button>
-            ))}
-            {upcomingPlayers.map(p => (
-              <button
-                key={p.id}
-                onClick={() => router.push(`/players/${p.id}`)}
-                className="flex items-center justify-between w-full p-2 -mx-2 rounded-lg hover:bg-[var(--background-tertiary)] transition-colors"
-              >
-                <span className="font-medium text-[var(--foreground-muted)]">{p.name}</span>
-                <span className="text-xs text-[var(--panini-yellow)]">UP NEXT</span>
-              </button>
-            ))}
+            {livePlayers.map(p => {
+              const arrived = hasArrived(p.id);
+              const elapsed = getElapsedTime(p.id);
+              return (
+                <div
+                  key={p.id}
+                  className="flex items-center justify-between p-2 -mx-2 rounded-lg"
+                >
+                  <button
+                    onClick={() => router.push(`/players/${p.id}`)}
+                    className="flex-1 text-left hover:text-[var(--panini-yellow)] transition-colors"
+                  >
+                    <span className="font-medium">{p.name}</span>
+                    {arrived && elapsed !== null && (
+                      <span className="text-xs text-[var(--panini-yellow)] ml-2">
+                        {formatElapsedTime(elapsed)}
+                      </span>
+                    )}
+                  </button>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-[var(--status-live)]">LIVE</span>
+                    <button
+                      onClick={() => handlePlayerArrival(p.id)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors ${
+                        arrived
+                          ? 'bg-[var(--status-live)] text-white'
+                          : 'bg-[var(--background-tertiary)] text-[var(--foreground-muted)] hover:bg-[var(--panini-yellow)] hover:text-black'
+                      }`}
+                    >
+                      {arrived ? (
+                        <>
+                          <CheckIcon size={12} />
+                          <span>Here</span>
+                        </>
+                      ) : (
+                        <>
+                          <ClockIcon size={12} />
+                          <span>Arrived</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+            {upcomingPlayers.map(p => {
+              const arrived = hasArrived(p.id);
+              const elapsed = getElapsedTime(p.id);
+              return (
+                <div
+                  key={p.id}
+                  className="flex items-center justify-between p-2 -mx-2 rounded-lg"
+                >
+                  <button
+                    onClick={() => router.push(`/players/${p.id}`)}
+                    className="flex-1 text-left hover:text-[var(--panini-yellow)] transition-colors"
+                  >
+                    <span className="font-medium text-[var(--foreground-muted)]">{p.name}</span>
+                    {arrived && elapsed !== null && (
+                      <span className="text-xs text-[var(--panini-yellow)] ml-2">
+                        {formatElapsedTime(elapsed)}
+                      </span>
+                    )}
+                  </button>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-[var(--panini-yellow)]">UP NEXT</span>
+                    <button
+                      onClick={() => handlePlayerArrival(p.id)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors ${
+                        arrived
+                          ? 'bg-[var(--status-live)] text-white'
+                          : 'bg-[var(--background-tertiary)] text-[var(--foreground-muted)] hover:bg-[var(--panini-yellow)] hover:text-black'
+                      }`}
+                    >
+                      {arrived ? (
+                        <>
+                          <CheckIcon size={12} />
+                          <span>Here</span>
+                        </>
+                      ) : (
+                        <>
+                          <ClockIcon size={12} />
+                          <span>Arrived</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
 
       {/* Station Cards */}
       <div className="space-y-3">
-        {stationData.map(data => {
+        {stations.map(data => {
           const assignedPlayer = data.currentPlayer
-            ? players.find(p => p.id === data.currentPlayer)
+            ? players.find(p => p.id === data.currentPlayer) || null
             : null;
+          const elapsed = data.currentPlayer ? getElapsedTime(data.currentPlayer) : null;
 
           return (
-            <div key={data.station}>
-              {/* Station Header - Clickable */}
-              <button
-                onClick={() => toggleStation(data.station)}
-                className={`station-header w-full ${data.expanded ? 'expanded' : ''}`}
-                style={{
-                  borderColor: data.status === 'active' ? 'var(--status-live)' : undefined
-                }}
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-3 h-3 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: getStatusColor(data.status) }}
-                  />
-                  <div className="text-left">
-                    <h3 className="font-semibold text-base">{data.station}</h3>
-                    {!data.expanded && assignedPlayer && (
-                      <p className="text-sm text-[var(--foreground-muted)]">
-                        {assignedPlayer.name}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div
-                    className="px-3 py-1 rounded-full text-xs font-bold"
-                    style={{
-                      backgroundColor: getStatusColor(data.status),
-                      color: data.status === 'idle' ? 'white' : 'var(--background)'
-                    }}
-                  >
-                    {getStatusLabel(data.status)}
-                  </div>
-                  {data.expanded ? (
-                    <ChevronUpIcon size={20} className="text-[var(--foreground-muted)]" />
-                  ) : (
-                    <ChevronDownIcon size={20} className="text-[var(--foreground-muted)]" />
-                  )}
-                </div>
-              </button>
-
-              {/* Station Content - Expandable */}
-              {data.expanded && (
-                <div className="station-content">
-                  <p className="text-xs text-[var(--foreground-dim)] mb-4">
-                    {STATION_DESCRIPTIONS[data.station]}
-                  </p>
-
-                  {/* Status Toggle */}
-                  <div className="flex gap-2 mb-4">
-                    {(['idle', 'setup', 'active'] as const).map(status => (
-                      <button
-                        key={status}
-                        onClick={() => updateStation(data.station, { status })}
-                        className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors
-                          ${data.status === status
-                            ? 'bg-[var(--background-tertiary)] text-[var(--foreground)]'
-                            : 'bg-transparent text-[var(--foreground-dim)]'
-                          }`}
-                      >
-                        {status.charAt(0).toUpperCase() + status.slice(1)}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Player Assignment */}
-                  <div className="mb-4">
-                    <label className="text-xs text-[var(--foreground-muted)] mb-1 block">
-                      Current Player
-                    </label>
-                    <select
-                      value={data.currentPlayer || ''}
-                      onChange={(e) => updateStation(data.station, {
-                        currentPlayer: e.target.value || null
-                      })}
-                      className="input select"
-                    >
-                      <option value="">None assigned</option>
-                      {players.map(p => (
-                        <option key={p.id} value={p.id}>{p.name}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Show player info if assigned */}
-                  {assignedPlayer && (
-                    <button
-                      onClick={() => router.push(`/players/${assignedPlayer.id}`)}
-                      className="mb-4 p-3 bg-[var(--background)] rounded-lg w-full text-left hover:bg-[var(--background-tertiary)] transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="avatar w-10 h-10 text-sm">
-                          {assignedPlayer.name.charAt(0)}
-                        </div>
-                        <div className="flex-1">
-                          <div className="font-semibold">{assignedPlayer.name}</div>
-                          <div className="text-sm text-[var(--foreground-muted)]">
-                            {assignedPlayer.position} • {assignedPlayer.team}
-                          </div>
-                        </div>
-                        <div className="text-[var(--foreground-dim)]">
-                          <ChevronRightIcon size={18} />
-                        </div>
-                      </div>
-                    </button>
-                  )}
-
-                  {/* Commitment Type */}
-                  <div className="mb-4">
-                    <label className="text-xs text-[var(--foreground-muted)] mb-1 block">
-                      Activity
-                    </label>
-                    <select
-                      value={data.currentCommitment || ''}
-                      onChange={(e) => updateStation(data.station, {
-                        currentCommitment: (e.target.value as CommitmentType) || null
-                      })}
-                      className="input select"
-                    >
-                      <option value="">Select activity...</option>
-                      {COMMITMENT_TYPES.map(type => (
-                        <option key={type} value={type}>{type}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Notes */}
-                  <div>
-                    <label className="text-xs text-[var(--foreground-muted)] mb-1 block">
-                      Notes
-                    </label>
-                    <input
-                      type="text"
-                      value={data.notes}
-                      onChange={(e) => updateStation(data.station, { notes: e.target.value })}
-                      placeholder="e.g., 200 autos remaining, ESPN at 3pm..."
-                      className="input"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
+            <StationCard
+              key={data.station}
+              station={data.station}
+              status={data.status}
+              currentPlayer={data.currentPlayer}
+              currentCommitment={data.currentCommitment}
+              notes={data.notes}
+              expanded={expandedStations.has(data.station)}
+              assignedPlayer={assignedPlayer}
+              players={players}
+              elapsedTime={elapsed}
+              onToggle={() => toggleStation(data.station)}
+              onUpdate={(updates) => handleUpdate(data.station, updates)}
+              onPlayerClick={(id) => router.push(`/players/${id}`)}
+            />
           );
         })}
       </div>
