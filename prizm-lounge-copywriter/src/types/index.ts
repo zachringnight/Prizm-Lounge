@@ -130,6 +130,7 @@ export interface Player {
   paniniContentBeats?: string[]; // Content/interview talking points
   schedule: AppearanceSchedule | null;
   imageUrl?: string;
+  questions?: PlayerQuestions; // Station-specific interview questions
 }
 
 // Station status tracking
@@ -244,6 +245,12 @@ export interface InterviewQuestion {
   question: string;
   category: QuestionCategory;
   forCategories?: PlayerCategory[]; // Which player categories this applies to
+}
+
+// Player-specific questions bank for stations
+export interface PlayerQuestions {
+  signing: string[];
+  packRips: string[];
 }
 
 // Platform character limits

@@ -10,10 +10,12 @@ import {
   TrashIcon,
   PlusIcon,
   ChevronRightIcon,
+  ChevronDownIcon,
   LayersIcon
 } from '@/components/Icons';
 import { useToast } from '@/components/Toast';
 import { interviewQuestions } from '@/data/checklist';
+import { getPlayerQuestions } from '@/data/players';
 
 const QUESTION_CATEGORIES: { id: QuestionCategory; label: string }[] = [
   { id: 'career', label: 'Career' },
@@ -39,7 +41,12 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
   const [activeTab, setActiveTab] = useState<'info' | 'questions' | 'notes'>('info');
   const [isListening, setIsListening] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<QuestionCategory | null>('career');
+  const [signingExpanded, setSigningExpanded] = useState(true);
+  const [packRipsExpanded, setPackRipsExpanded] = useState(true);
   const { showToast, ToastComponent } = useToast();
+
+  // Get station-specific questions for this player
+  const stationQuestions = id ? getPlayerQuestions(id) : null;
 
   if (!player) {
     return (
@@ -228,44 +235,124 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
       {activeTab === 'questions' && (
         <div className="space-y-4">
           <p className="text-sm text-[var(--foreground-muted)]">
-            Suggested interview questions for {player.name}
+            Station questions for {player.name}
           </p>
 
-          {QUESTION_CATEGORIES.map(category => {
-            const questions = getQuestionsForCategory(category.id);
-            if (questions.length === 0) return null;
-
-            const isExpanded = expandedCategory === category.id;
-
-            return (
-              <div key={category.id} className="card overflow-hidden">
-                <button
-                  onClick={() => setExpandedCategory(isExpanded ? null : category.id)}
-                  className="w-full p-4 flex items-center justify-between"
-                >
-                  <span className="font-medium">{category.label}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-[var(--foreground-muted)]">
-                      {questions.length} questions
-                    </span>
-                    <ChevronRightIcon
-                      size={18}
-                      className={`text-[var(--foreground-dim)] transition-transform ${isExpanded ? 'rotate-90' : ''}`}
-                    />
-                  </div>
-                </button>
-                {isExpanded && (
-                  <div className="border-t border-[var(--background-tertiary)] p-4 space-y-3">
-                    {questions.map((q, i) => (
-                      <div key={i} className="text-sm text-[var(--foreground-muted)]">
-                        {i + 1}. {q.question}
-                      </div>
-                    ))}
-                  </div>
+          {/* Signing Questions */}
+          {stationQuestions?.signing && stationQuestions.signing.length > 0 && (
+            <div className="card overflow-hidden border-l-4 border-l-[var(--panini-yellow)]">
+              <button
+                onClick={() => setSigningExpanded(!signingExpanded)}
+                className="w-full p-4 flex items-center justify-between bg-[var(--background-secondary)]"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="font-semibold text-[var(--panini-yellow)]">Signing</span>
+                  <span className="text-xs px-2 py-0.5 bg-[var(--panini-yellow)] text-black rounded font-medium">
+                    {stationQuestions.signing.length} questions
+                  </span>
+                </div>
+                {signingExpanded ? (
+                  <ChevronDownIcon size={18} className="text-[var(--foreground-dim)]" />
+                ) : (
+                  <ChevronRightIcon size={18} className="text-[var(--foreground-dim)]" />
                 )}
-              </div>
-            );
-          })}
+              </button>
+              {signingExpanded && (
+                <div className="border-t border-[var(--background-tertiary)] p-4 space-y-3">
+                  {stationQuestions.signing.map((q, i) => (
+                    <div key={i} className="text-sm text-[var(--foreground-muted)] py-1">
+                      <span className="text-[var(--panini-yellow)] font-semibold mr-2">{i + 1}.</span>
+                      {q}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Pack Rips Questions */}
+          {stationQuestions?.packRips && stationQuestions.packRips.length > 0 && (
+            <div className="card overflow-hidden border-l-4 border-l-[var(--panini-red)]">
+              <button
+                onClick={() => setPackRipsExpanded(!packRipsExpanded)}
+                className="w-full p-4 flex items-center justify-between bg-[var(--background-secondary)]"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="font-semibold text-[var(--panini-red)]">Pack Rips</span>
+                  <span className="text-xs px-2 py-0.5 bg-[var(--panini-red)] text-white rounded font-medium">
+                    {stationQuestions.packRips.length} questions
+                  </span>
+                </div>
+                {packRipsExpanded ? (
+                  <ChevronDownIcon size={18} className="text-[var(--foreground-dim)]" />
+                ) : (
+                  <ChevronRightIcon size={18} className="text-[var(--foreground-dim)]" />
+                )}
+              </button>
+              {packRipsExpanded && (
+                <div className="border-t border-[var(--background-tertiary)] p-4 space-y-3">
+                  {stationQuestions.packRips.map((q, i) => (
+                    <div key={i} className="text-sm text-[var(--foreground-muted)] py-1">
+                      <span className="text-[var(--panini-red)] font-semibold mr-2">{i + 1}.</span>
+                      {q}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* No station questions message */}
+          {(!stationQuestions?.signing?.length && !stationQuestions?.packRips?.length) && (
+            <div className="card p-4 text-center text-[var(--foreground-muted)]">
+              <p>No station-specific questions available for this player.</p>
+              <p className="text-sm mt-1">This player may be signing only.</p>
+            </div>
+          )}
+
+          {/* General Interview Questions */}
+          {QUESTION_CATEGORIES.some(cat => getQuestionsForCategory(cat.id).length > 0) && (
+            <div className="mt-6">
+              <h3 className="text-sm font-semibold text-[var(--foreground-muted)] mb-3 uppercase tracking-wide">
+                General Interview Topics
+              </h3>
+              {QUESTION_CATEGORIES.map(category => {
+                const questions = getQuestionsForCategory(category.id);
+                if (questions.length === 0) return null;
+
+                const isExpanded = expandedCategory === category.id;
+
+                return (
+                  <div key={category.id} className="card overflow-hidden mb-2">
+                    <button
+                      onClick={() => setExpandedCategory(isExpanded ? null : category.id)}
+                      className="w-full p-4 flex items-center justify-between"
+                    >
+                      <span className="font-medium">{category.label}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-[var(--foreground-muted)]">
+                          {questions.length} questions
+                        </span>
+                        <ChevronRightIcon
+                          size={18}
+                          className={`text-[var(--foreground-dim)] transition-transform ${isExpanded ? 'rotate-90' : ''}`}
+                        />
+                      </div>
+                    </button>
+                    {isExpanded && (
+                      <div className="border-t border-[var(--background-tertiary)] p-4 space-y-3">
+                        {questions.map((q, i) => (
+                          <div key={i} className="text-sm text-[var(--foreground-muted)]">
+                            {i + 1}. {q.question}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 

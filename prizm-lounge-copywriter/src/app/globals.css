@@ -75,6 +75,8 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
   overscroll-behavior: none;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* Touch-friendly inputs */
@@ -372,8 +374,14 @@ select:focus-visible {
   display: flex;
   justify-content: space-around;
   padding: 8px 0;
-  padding-bottom: calc(8px + env(safe-area-inset-bottom, 0));
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0));
   z-index: 100;
+}
+
+/* Main content container for proper scrolling */
+main {
+  display: flex;
+  flex-direction: column;
 }
 
 .nav-item {
@@ -1378,6 +1386,31 @@ select:focus-visible {
 .expand-collapse-all:hover {
   color: var(--foreground);
   background: var(--foreground-dim);
+}
+
+/* Station questions container */
+.station-questions {
+  max-height: 50vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+/* Player questions container */
+.questions-container {
+  max-height: none;
+}
+
+@media (max-width: 767px) {
+  .questions-container {
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+}
+
+/* Ensure content doesn't get cut off */
+.space-y-6 > *:last-child,
+.space-y-4 > *:last-child {
+  margin-bottom: 0;
 }
 
 /* Search trigger button */

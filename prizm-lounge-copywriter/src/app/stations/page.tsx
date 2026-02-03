@@ -10,9 +10,11 @@ import {
   getScheduleStatus,
   formatTime,
   getTimeUntil,
+  Player,
 } from '@/types';
 import { useToast } from '@/components/Toast';
 import { ChevronDownIcon, ChevronUpIcon, ChevronRightIcon, ClockIcon, CheckIcon } from '@/components/Icons';
+import { getPlayerQuestions } from '@/data/players';
 
 const STATION_DESCRIPTIONS: Record<Station, string> = {
   'LED Wall': 'LED Wall content capture station (capacity: 1)',
@@ -88,6 +90,33 @@ const PlayerCard = memo(function PlayerCard({
   );
 });
 
+// Get players scheduled for a specific station
+const getPlayersForStation = (stationName: Station, allPlayers: Player[]): { player: Player; startTime: string; endTime: string }[] => {
+  const result: { player: Player; startTime: string; endTime: string }[] = [];
+
+  allPlayers.forEach(player => {
+    if (player.schedule?.commitments) {
+      player.schedule.commitments.forEach(commitment => {
+        if (commitment.station === stationName) {
+          result.push({
+            player,
+            startTime: commitment.startTime,
+            endTime: commitment.endTime
+          });
+        }
+      });
+    }
+  });
+
+  // Sort by day and time
+  return result.sort((a, b) => {
+    const dayOrder = { 'Thursday': 0, 'Friday': 1, 'Saturday': 2 };
+    const dayDiff = (dayOrder[a.player.schedule?.day || 'Thursday'] || 0) - (dayOrder[b.player.schedule?.day || 'Thursday'] || 0);
+    if (dayDiff !== 0) return dayDiff;
+    return a.startTime.localeCompare(b.startTime);
+  });
+};
+
 // Memoized Station Card for performance
 const StationCard = memo(function StationCard({
   station,
@@ -98,6 +127,7 @@ const StationCard = memo(function StationCard({
   expanded,
   assignedPlayer,
   players,
+  allPlayers,
   elapsedTime,
   onToggle,
   onUpdate,
@@ -111,11 +141,19 @@ const StationCard = memo(function StationCard({
   expanded: boolean;
   assignedPlayer: { id: string; name: string; position: string; team: string } | null;
   players: Array<{ id: string; name: string }>;
+  allPlayers: Player[];
   elapsedTime: number | null;
   onToggle: () => void;
   onUpdate: (updates: { status?: 'active' | 'idle' | 'setup'; currentPlayer?: string | null; currentCommitment?: CommitmentType | null; notes?: string }) => void;
   onPlayerClick: (playerId: string) => void;
 }) {
+  // Get scheduled players for this station
+  const scheduledPlayers = getPlayersForStation(station, allPlayers);
+
+  // Get questions for the assigned player if at Signing or Pack Rips
+  const playerQuestions = assignedPlayer ? getPlayerQuestions(assignedPlayer.id) : null;
+  const showSigningQuestions = (station === 'Signing' || currentCommitment === 'Signing') && playerQuestions?.signing?.length;
+  const showPackRipsQuestions = (station === 'Pack Rips' || currentCommitment === 'Pack Rips') && playerQuestions?.packRips?.length;
   return (
     <div>
       {/* Station Header - Clickable */}
@@ -227,7 +265,7 @@ const StationCard = memo(function StationCard({
           </div>
 
           {/* Notes */}
-          <div>
+          <div className="mb-4">
             <label className="text-xs text-[var(--foreground-muted)] mb-1 block">
               Notes
             </label>
@@ -239,6 +277,80 @@ const StationCard = memo(function StationCard({
               className="input"
             />
           </div>
+
+          {/* Questions for Signing Station */}
+          {showSigningQuestions && assignedPlayer && (
+            <div className="mt-4 p-4 bg-[var(--background)] rounded-lg border-l-4 border-l-[var(--panini-yellow)]">
+              <h4 className="text-sm font-semibold text-[var(--panini-yellow)] mb-3 uppercase tracking-wide">
+                Signing Questions for {assignedPlayer.name}
+              </h4>
+              <div className="space-y-2">
+                {playerQuestions?.signing?.map((q, i) => (
+                  <div key={i} className="text-sm text-[var(--foreground-muted)] py-1.5 border-b border-[var(--background-tertiary)] last:border-0">
+                    <span className="text-[var(--panini-yellow)] font-bold mr-2">{i + 1}.</span>
+                    {q}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Questions for Pack Rips Station */}
+          {showPackRipsQuestions && assignedPlayer && (
+            <div className="mt-4 p-4 bg-[var(--background)] rounded-lg border-l-4 border-l-[var(--panini-red)]">
+              <h4 className="text-sm font-semibold text-[var(--panini-red)] mb-3 uppercase tracking-wide">
+                Pack Rips Questions for {assignedPlayer.name}
+              </h4>
+              <div className="space-y-2">
+                {playerQuestions?.packRips?.map((q, i) => (
+                  <div key={i} className="text-sm text-[var(--foreground-muted)] py-1.5 border-b border-[var(--background-tertiary)] last:border-0">
+                    <span className="text-[var(--panini-red)] font-bold mr-2">{i + 1}.</span>
+                    {q}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Scheduled Players for this station */}
+          {scheduledPlayers.length > 0 && (
+            <div className="mt-4 p-4 bg-[var(--background)] rounded-lg">
+              <h4 className="text-xs font-semibold text-[var(--foreground-muted)] mb-3 uppercase tracking-wide">
+                Scheduled at this Station
+              </h4>
+              <div className="space-y-2 max-h-48 overflow-y-auto">
+                {scheduledPlayers.map(({ player, startTime, endTime }, i) => {
+                  const dayLabel = player.schedule?.day || '';
+                  const status = getScheduleStatus(player.schedule);
+                  return (
+                    <button
+                      key={`${player.id}-${i}`}
+                      onClick={() => onPlayerClick(player.id)}
+                      className={`w-full flex items-center justify-between p-2 rounded hover:bg-[var(--background-tertiary)] transition-colors ${
+                        status === 'live' ? 'bg-[var(--status-live)]/10' : ''
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 text-left">
+                        <span className="text-xs text-[var(--foreground-dim)] font-mono w-10">
+                          {formatTime(startTime).replace(' ', '')}
+                        </span>
+                        <span className="text-sm">{player.name}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-[var(--foreground-dim)]">{dayLabel}</span>
+                        {status === 'live' && (
+                          <span className="text-xs font-bold text-[var(--status-live)]">LIVE</span>
+                        )}
+                        {status === 'upcoming' && (
+                          <span className="text-xs text-[var(--panini-yellow)]">{getTimeUntil(player.schedule)}</span>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -588,6 +700,7 @@ export default function StationsPage() {
               expanded={expandedStations.has(data.station)}
               assignedPlayer={assignedPlayer}
               players={players}
+              allPlayers={players as Player[]}
               elapsedTime={elapsed}
               onToggle={() => toggleStation(data.station)}
               onUpdate={(updates) => handleUpdate(data.station, updates)}
