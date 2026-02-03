@@ -3,6 +3,8 @@ import "./globals.css";
 import BottomNav from "@/components/BottomNav";
 import OfflineBanner from "@/components/OfflineBanner";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import GlobalSearch from "@/components/GlobalSearch";
+import AppWrapper from "@/components/AppWrapper";
 
 export const metadata: Metadata = {
   title: "Prizm Lounge Production Hub | Super Bowl LX",
@@ -35,12 +37,15 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
       <body className="antialiased">
-        <ServiceWorkerRegister />
-        <OfflineBanner />
-        <main className="pb-20 md:pb-6 pt-4 md:pt-8 px-4 md:px-8 lg:px-12 max-w-7xl mx-auto min-h-screen">
-          {children}
-        </main>
-        <BottomNav />
+        <AppWrapper>
+          <ServiceWorkerRegister />
+          <OfflineBanner />
+          <GlobalSearch />
+          <main className="pb-20 md:pb-6 pt-4 md:pt-8 px-4 md:px-8 lg:px-12 max-w-7xl mx-auto min-h-screen">
+            {children}
+          </main>
+          <BottomNav />
+        </AppWrapper>
       </body>
     </html>
   );

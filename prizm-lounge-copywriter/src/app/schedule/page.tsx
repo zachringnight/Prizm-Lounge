@@ -1,17 +1,102 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAppStore } from '@/store';
-import { getScheduleStatus, getTimeUntil, formatTime, Player } from '@/types';
+import { getScheduleStatus, getTimeUntil, formatTime, Player, AppearanceSchedule } from '@/types';
 import PlayerCard from '@/components/PlayerCard';
-import { ClockIcon } from '@/components/Icons';
+import { ClockIcon, ArrowDownIcon } from '@/components/Icons';
 
 type DayFilter = 'All' | 'Thursday' | 'Friday' | 'Saturday';
+
+// Helper to check if countdown is urgent (< 5 minutes)
+function isCountdownUrgent(schedule: AppearanceSchedule | null): boolean {
+  if (!schedule) return false;
+
+  const eventDates: Record<string, string> = {
+    'Thursday': '2026-02-06',
+    'Friday': '2026-02-07',
+    'Saturday': '2026-02-08'
+  };
+
+  const dateStr = eventDates[schedule.day];
+  if (!dateStr) return false;
+
+  const startDateTime = new Date(`${dateStr}T${schedule.startTime}:00-08:00`);
+  const now = new Date();
+
+  if (now >= startDateTime) return false;
+
+  const diffMs = startDateTime.getTime() - now.getTime();
+  const diffMins = diffMs / (1000 * 60);
+  return diffMins > 0 && diffMins <= 5;
+}
+
+// Helper to get smart status message
+function getSmartStatus(): { type: 'pre-event' | 'lunch-break' | 'wrap' | 'active' | null; message: string; subMessage: string } {
+  const now = new Date();
+  const hour = now.getHours();
+  const dayOfWeek = now.getDay();
+
+  // Event dates: Thu Feb 6, Fri Feb 7, Sat Feb 8 (2026)
+  const eventDates = {
+    start: new Date('2026-02-06T00:00:00-08:00'),
+    end: new Date('2026-02-08T23:59:59-08:00')
+  };
+
+  // Before event starts
+  if (now < eventDates.start) {
+    const daysUntil = Math.ceil((eventDates.start.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    return {
+      type: 'pre-event',
+      message: 'Event Starts Soon',
+      subMessage: daysUntil === 1 ? 'Tomorrow!' : `${daysUntil} days until Super Bowl LX`
+    };
+  }
+
+  // After event ends
+  if (now > eventDates.end) {
+    return {
+      type: 'wrap',
+      message: "That's a Wrap!",
+      subMessage: 'Super Bowl LX Prizm Lounge has concluded'
+    };
+  }
+
+  // During event - check for lunch break (12:00 - 13:00)
+  if (hour >= 12 && hour < 13) {
+    return {
+      type: 'lunch-break',
+      message: 'Lunch Break',
+      subMessage: 'Activities resume at 1:00 PM'
+    };
+  }
+
+  // Before daily start (before 10 AM)
+  if (hour < 10) {
+    return {
+      type: 'pre-event',
+      message: 'Good Morning',
+      subMessage: 'Activities begin at 10:00 AM'
+    };
+  }
+
+  // After daily end (after 6 PM)
+  if (hour >= 18) {
+    return {
+      type: 'wrap',
+      message: 'Day Complete',
+      subMessage: 'See you tomorrow!'
+    };
+  }
+
+  return { type: null, message: '', subMessage: '' };
+}
 
 export default function SchedulePage() {
   const { players } = useAppStore();
   const [dayFilter, setDayFilter] = useState<DayFilter>('All');
   const [, setTick] = useState(0);
+  const nowRef = useRef<HTMLDivElement>(null);
 
   // Update every minute for countdown timers
   useEffect(() => {
@@ -20,6 +105,13 @@ export default function SchedulePage() {
     }, 60000);
     return () => clearInterval(interval);
   }, []);
+
+  // Jump to now function
+  const jumpToNow = () => {
+    if (nowRef.current) {
+      nowRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
 
   const days: DayFilter[] = ['All', 'Thursday', 'Friday', 'Saturday'];
 
@@ -53,16 +145,51 @@ export default function SchedulePage() {
     }
   };
 
+  // Get smart status for display
+  const smartStatus = getSmartStatus();
+
   return (
     <div className="space-y-8">
       <header className="page-header">
-        <h1>Schedule</h1>
-        <p>Player appearances at Prizm Lounge</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1>Schedule</h1>
+            <p>Player appearances at Prizm Lounge</p>
+          </div>
+          {/* Jump to Now Button */}
+          {(livePlayer || upcomingPlayer) && (
+            <button
+              onClick={jumpToNow}
+              className="jump-to-now-btn"
+            >
+              <ArrowDownIcon size={18} />
+              <span>Jump to Now</span>
+            </button>
+          )}
+        </div>
       </header>
+
+      {/* Smart Status Banner */}
+      {smartStatus.type && (
+        <div className={`status-banner ${smartStatus.type}`}>
+          <div className="status-banner-icon">
+            {smartStatus.type === 'pre-event' && '🎯'}
+            {smartStatus.type === 'lunch-break' && '🍽️'}
+            {smartStatus.type === 'wrap' && '🎉'}
+          </div>
+          <div className="status-banner-content">
+            <h3>{smartStatus.message}</h3>
+            <p>{smartStatus.subMessage}</p>
+          </div>
+        </div>
+      )}
 
       {/* Live/Up Next Banner */}
       {(livePlayer || upcomingPlayer) && (
-        <div className={`card p-5 ${livePlayer ? 'card-live' : 'border-[var(--panini-yellow)]'}`}>
+        <div
+          ref={nowRef}
+          className={`card p-5 ${livePlayer ? 'card-live' : 'border-[var(--panini-yellow)]'}`}
+        >
           {livePlayer ? (
             <div>
               <div className="flex items-center gap-3 mb-3">
@@ -89,7 +216,7 @@ export default function SchedulePage() {
               <div className="text-base text-[var(--foreground-muted)]">
                 {upcomingPlayer.position} • {upcomingPlayer.team}
               </div>
-              <div className="countdown text-xl mt-3">
+              <div className={`countdown text-xl mt-3 ${isCountdownUrgent(upcomingPlayer.schedule) ? 'countdown-urgent' : ''}`}>
                 {getTimeUntil(upcomingPlayer.schedule)}
               </div>
             </div>
@@ -162,7 +289,7 @@ export default function SchedulePage() {
                           {player.schedule.day}
                         </div>
                         {status === 'upcoming' && (
-                          <div className="countdown text-base mt-2">
+                          <div className={`countdown text-base mt-2 ${isCountdownUrgent(player.schedule) ? 'countdown-urgent' : ''}`}>
                             {getTimeUntil(player.schedule)}
                           </div>
                         )}

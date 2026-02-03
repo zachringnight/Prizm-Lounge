@@ -61,6 +61,7 @@ interface AppState {
   contextInput: string;
   isGenerating: boolean;
   isOffline: boolean;
+  largeTextMode: boolean;
 
   // UI Actions
   setSelectedPlayer: (id: string | null) => void;
@@ -72,6 +73,7 @@ interface AppState {
   setContextInput: (context: string) => void;
   setIsGenerating: (generating: boolean) => void;
   setIsOffline: (offline: boolean) => void;
+  toggleLargeTextMode: () => void;
 
   // Day Recap
   dayRecapHighlights: string;
@@ -223,6 +225,7 @@ export const useAppStore = create<AppState>()(
       contextInput: '',
       isGenerating: false,
       isOffline: false,
+      largeTextMode: false,
 
       setSelectedPlayer: (id) => set({ selectedPlayerId: id }),
       setSelectedMode: (mode) => set({ selectedMode: mode }),
@@ -233,6 +236,7 @@ export const useAppStore = create<AppState>()(
       setContextInput: (context) => set({ contextInput: context }),
       setIsGenerating: (generating) => set({ isGenerating: generating }),
       setIsOffline: (offline) => set({ isOffline: offline }),
+      toggleLargeTextMode: () => set(state => ({ largeTextMode: !state.largeTextMode })),
 
       // Day Recap
       dayRecapHighlights: '',
@@ -325,7 +329,8 @@ export const useAppStore = create<AppState>()(
         dayRecapBestPull: state.dayRecapBestPull,
         dayRecapCrowdNotes: state.dayRecapCrowdNotes,
         checklist: state.checklist,
-        deliverables: state.deliverables
+        deliverables: state.deliverables,
+        largeTextMode: state.largeTextMode
       })
     }
   )
