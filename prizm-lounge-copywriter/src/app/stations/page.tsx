@@ -8,6 +8,8 @@ import {
   CommitmentType,
   COMMITMENT_TYPES,
   getScheduleStatus,
+  formatTime,
+  getTimeUntil,
 } from '@/types';
 import { useToast } from '@/components/Toast';
 import { ChevronDownIcon, ChevronUpIcon, ChevronRightIcon, ClockIcon, CheckIcon } from '@/components/Icons';
@@ -329,6 +331,28 @@ export default function StationsPage() {
   const livePlayers = players.filter(p => getScheduleStatus(p.schedule) === 'live');
   const upcomingPlayers = players.filter(p => getScheduleStatus(p.schedule) === 'upcoming');
 
+  // Get today's scheduled players (including scheduled status)
+  const now = new Date();
+  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const eventDays = ['Thursday', 'Friday', 'Saturday'];
+  const currentDayName = dayNames[now.getDay()];
+  const isEventDay = eventDays.includes(currentDayName);
+
+  const todaySchedule = players
+    .filter(p => {
+      if (!p.schedule) return false;
+      // Show all players scheduled for today (or all if not an event day for testing)
+      return isEventDay ? p.schedule.day === currentDayName : true;
+    })
+    .sort((a, b) => {
+      if (!a.schedule || !b.schedule) return 0;
+      // Sort by day first, then time
+      const dayOrder = { 'Thursday': 0, 'Friday': 1, 'Saturday': 2 };
+      const dayDiff = (dayOrder[a.schedule.day] || 0) - (dayOrder[b.schedule.day] || 0);
+      if (dayDiff !== 0) return dayDiff;
+      return a.schedule.startTime.localeCompare(b.schedule.startTime);
+    });
+
   return (
     <div className="space-y-6">
       <header className="flex items-center justify-between">
@@ -397,12 +421,15 @@ export default function StationsPage() {
                     onClick={() => router.push(`/players/${p.id}`)}
                     className="flex-1 text-left hover:text-[var(--panini-yellow)] transition-colors"
                   >
-                    <span className="font-medium">{p.name}</span>
-                    {arrived && elapsed !== null && (
-                      <span className="text-xs text-[var(--panini-yellow)] ml-2">
-                        {formatElapsedTime(elapsed)}
-                      </span>
-                    )}
+                    <div className="font-medium">{p.name}</div>
+                    <div className="text-xs text-[var(--foreground-dim)] flex items-center gap-2">
+                      {p.schedule && (
+                        <span>{formatTime(p.schedule.startTime)} - {formatTime(p.schedule.endTime)}</span>
+                      )}
+                      {arrived && elapsed !== null && (
+                        <span className="text-[var(--panini-yellow)]">• {formatElapsedTime(elapsed)} on-site</span>
+                      )}
+                    </div>
                   </button>
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-[var(--status-live)]">LIVE</span>
@@ -433,6 +460,7 @@ export default function StationsPage() {
             {upcomingPlayers.map(p => {
               const arrived = hasArrived(p.id);
               const elapsed = getElapsedTime(p.id);
+              const countdown = getTimeUntil(p.schedule);
               return (
                 <div
                   key={p.id}
@@ -442,12 +470,18 @@ export default function StationsPage() {
                     onClick={() => router.push(`/players/${p.id}`)}
                     className="flex-1 text-left hover:text-[var(--panini-yellow)] transition-colors"
                   >
-                    <span className="font-medium text-[var(--foreground-muted)]">{p.name}</span>
-                    {arrived && elapsed !== null && (
-                      <span className="text-xs text-[var(--panini-yellow)] ml-2">
-                        {formatElapsedTime(elapsed)}
-                      </span>
-                    )}
+                    <div className="font-medium text-[var(--foreground-muted)]">{p.name}</div>
+                    <div className="text-xs text-[var(--foreground-dim)] flex items-center gap-2">
+                      {p.schedule && (
+                        <span>{formatTime(p.schedule.startTime)}</span>
+                      )}
+                      {countdown && (
+                        <span className="text-[var(--panini-yellow)]">in {countdown}</span>
+                      )}
+                      {arrived && elapsed !== null && (
+                        <span className="text-[var(--status-live)]">• here early!</span>
+                      )}
+                    </div>
                   </button>
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-[var(--panini-yellow)]">UP NEXT</span>
@@ -473,6 +507,62 @@ export default function StationsPage() {
                     </button>
                   </div>
                 </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Today's Schedule */}
+      {todaySchedule.length > 0 && (
+        <div className="card p-4">
+          <div className="text-xs font-semibold text-[var(--foreground-muted)] uppercase mb-3">
+            {isEventDay ? `${currentDayName}'s Schedule` : 'Full Schedule'}
+          </div>
+          <div className="space-y-1">
+            {todaySchedule.map(p => {
+              const status = getScheduleStatus(p.schedule);
+              const arrived = hasArrived(p.id);
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => router.push(`/players/${p.id}`)}
+                  className={`w-full flex items-center justify-between p-2 -mx-2 rounded-lg hover:bg-[var(--background-tertiary)] transition-colors ${
+                    status === 'live' ? 'bg-[var(--status-live)]/10' : ''
+                  } ${status === 'completed' ? 'opacity-50' : ''}`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="text-sm font-mono text-[var(--foreground-dim)] w-20">
+                      {p.schedule && formatTime(p.schedule.startTime)}
+                    </div>
+                    <div className="text-left">
+                      <div className="font-medium text-sm">{p.name}</div>
+                      <div className="text-xs text-[var(--foreground-dim)]">
+                        {p.position} • {p.team}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {arrived && (
+                      <span className="text-xs text-[var(--status-live)] flex items-center gap-1">
+                        <CheckIcon size={10} />
+                        Here
+                      </span>
+                    )}
+                    {status === 'live' && (
+                      <span className="text-xs font-bold text-[var(--status-live)]">LIVE</span>
+                    )}
+                    {status === 'upcoming' && (
+                      <span className="text-xs text-[var(--panini-yellow)]">{getTimeUntil(p.schedule)}</span>
+                    )}
+                    {status === 'completed' && (
+                      <span className="text-xs text-[var(--foreground-dim)]">Done</span>
+                    )}
+                    {!isEventDay && p.schedule && (
+                      <span className="text-xs text-[var(--foreground-dim)]">{p.schedule.day}</span>
+                    )}
+                  </div>
+                </button>
               );
             })}
           </div>
