@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
 import {
   Station,
@@ -11,7 +12,7 @@ import {
   formatTime
 } from '@/types';
 import { useToast } from '@/components/Toast';
-import { ChevronDownIcon, ChevronUpIcon } from '@/components/Icons';
+import { ChevronDownIcon, ChevronUpIcon, ChevronRightIcon } from '@/components/Icons';
 
 interface StationData {
   station: Station;
@@ -31,6 +32,7 @@ const STATION_DESCRIPTIONS: Record<Station, string> = {
 };
 
 export default function StationsPage() {
+  const router = useRouter();
   const { players } = useAppStore();
   const { showToast, ToastComponent } = useToast();
   const [, setTick] = useState(0);
@@ -173,16 +175,24 @@ export default function StationsPage() {
           </div>
           <div className="space-y-2">
             {livePlayers.map(p => (
-              <div key={p.id} className="flex items-center justify-between">
+              <button
+                key={p.id}
+                onClick={() => router.push(`/players/${p.id}`)}
+                className="flex items-center justify-between w-full p-2 -mx-2 rounded-lg hover:bg-[var(--background-tertiary)] transition-colors"
+              >
                 <span className="font-medium">{p.name}</span>
                 <span className="text-xs text-[var(--status-live)]">LIVE NOW</span>
-              </div>
+              </button>
             ))}
             {upcomingPlayers.map(p => (
-              <div key={p.id} className="flex items-center justify-between">
+              <button
+                key={p.id}
+                onClick={() => router.push(`/players/${p.id}`)}
+                className="flex items-center justify-between w-full p-2 -mx-2 rounded-lg hover:bg-[var(--background-tertiary)] transition-colors"
+              >
                 <span className="font-medium text-[var(--foreground-muted)]">{p.name}</span>
                 <span className="text-xs text-[var(--panini-yellow)]">UP NEXT</span>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -282,19 +292,25 @@ export default function StationsPage() {
 
                   {/* Show player info if assigned */}
                   {assignedPlayer && (
-                    <div className="mb-4 p-3 bg-[var(--background)] rounded-lg">
+                    <button
+                      onClick={() => router.push(`/players/${assignedPlayer.id}`)}
+                      className="mb-4 p-3 bg-[var(--background)] rounded-lg w-full text-left hover:bg-[var(--background-tertiary)] transition-colors"
+                    >
                       <div className="flex items-center gap-3">
                         <div className="avatar w-10 h-10 text-sm">
                           {assignedPlayer.name.charAt(0)}
                         </div>
-                        <div>
+                        <div className="flex-1">
                           <div className="font-semibold">{assignedPlayer.name}</div>
                           <div className="text-sm text-[var(--foreground-muted)]">
                             {assignedPlayer.position} • {assignedPlayer.team}
                           </div>
                         </div>
+                        <div className="text-[var(--foreground-dim)]">
+                          <ChevronRightIcon size={18} />
+                        </div>
                       </div>
-                    </div>
+                    </button>
                   )}
 
                   {/* Commitment Type */}

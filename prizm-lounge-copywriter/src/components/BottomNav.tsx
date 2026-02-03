@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
-import { HomeIcon, UsersIcon, CalendarIcon, ClipboardIcon, SearchIcon } from './Icons';
+import { HomeIcon, UsersIcon, CalendarIcon, LayersIcon, SearchIcon } from './Icons';
 
 interface NavItem {
   href: string;
@@ -14,7 +14,7 @@ const navItems: NavItem[] = [
   { href: '/', label: 'Home', icon: HomeIcon },
   { href: '/schedule', label: 'Schedule', icon: CalendarIcon },
   { href: '/players', label: 'Players', icon: UsersIcon },
-  { href: '/deliverables', label: 'Deliverables', icon: ClipboardIcon },
+  { href: '/stations', label: 'Stations', icon: LayersIcon },
 ];
 
 export default function BottomNav() {

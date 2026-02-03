@@ -9,7 +9,8 @@ import {
   QuoteIcon,
   TrashIcon,
   PlusIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
+  LayersIcon
 } from '@/components/Icons';
 import { useToast } from '@/components/Toast';
 import { interviewQuestions } from '@/data/checklist';
@@ -141,6 +142,16 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
             </div>
             <div className={`status-dot ${status} scale-150`} />
           </div>
+          {(status === 'live' || status === 'upcoming') && (
+            <button
+              onClick={() => router.push('/stations')}
+              className="mt-3 w-full btn btn-secondary gap-2 !py-3"
+            >
+              <LayersIcon size={18} />
+              <span>Go to Stations</span>
+              <ChevronRightIcon size={18} />
+            </button>
+          )}
         </div>
       )}
 

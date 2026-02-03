@@ -4,17 +4,12 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
 import { getScheduleStatus, getTimeUntil, formatTime } from '@/types';
-import { CalendarIcon, UsersIcon, ClipboardIcon } from '@/components/Icons';
+import { CalendarIcon, UsersIcon, LayersIcon } from '@/components/Icons';
 
 export default function Home() {
   const router = useRouter();
-  const { players, deliverables, initializeDeliverables } = useAppStore();
+  const { players } = useAppStore();
   const [, setTick] = useState(0);
-
-  // Initialize deliverables on first load
-  useEffect(() => {
-    initializeDeliverables();
-  }, [initializeDeliverables]);
 
   // Update every minute for countdown timers
   useEffect(() => {
@@ -23,11 +18,6 @@ export default function Home() {
     }, 60000);
     return () => clearInterval(interval);
   }, []);
-
-  // Get today's schedule
-  const today = new Date();
-  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const currentDayName = dayNames[today.getDay()];
 
   // Find live/upcoming players
   const livePlayer = players.find(p => getScheduleStatus(p.schedule) === 'live');
@@ -42,10 +32,6 @@ export default function Home() {
       return a.schedule.startTime.localeCompare(b.schedule.startTime);
     })
     .slice(0, 3);
-
-  // Calculate deliverables progress
-  const deliverablesComplete = deliverables.filter(d => d.status === 'completed' || d.status === 'delivered').length;
-  const deliverablesTotal = deliverables.length;
 
   return (
     <div className="space-y-8">
@@ -105,14 +91,14 @@ export default function Home() {
           <div className="stat-label">Players</div>
         </button>
         <button
-          onClick={() => router.push('/deliverables')}
+          onClick={() => router.push('/stations')}
           className="stat-card col-span-2 md:col-span-1"
         >
           <div className="stat-icon">
-            <ClipboardIcon size={28} className="mx-auto text-[var(--status-live)]" />
+            <LayersIcon size={28} className="mx-auto text-[var(--status-live)]" />
           </div>
-          <div className="stat-value">{deliverablesComplete}/{deliverablesTotal}</div>
-          <div className="stat-label">Deliverables</div>
+          <div className="stat-value">5</div>
+          <div className="stat-label">Stations</div>
         </button>
       </div>
 
@@ -195,11 +181,11 @@ export default function Home() {
           <span className="font-semibold text-base">Schedule</span>
         </button>
         <button
-          onClick={() => router.push('/deliverables')}
+          onClick={() => router.push('/stations')}
           className="card p-5 flex items-center gap-4 col-span-2 md:col-span-2"
         >
-          <ClipboardIcon size={24} className="text-[var(--status-live)]" />
-          <span className="font-semibold text-base">Deliverables</span>
+          <LayersIcon size={24} className="text-[var(--status-live)]" />
+          <span className="font-semibold text-base">Stations</span>
         </button>
       </div>
     </div>
