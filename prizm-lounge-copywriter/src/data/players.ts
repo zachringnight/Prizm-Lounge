@@ -1,7 +1,8 @@
 import { Player } from '@/types';
 
 export const players: Player[] = [
-  // CURRENT NFL STARS
+  // THURSDAY
+
   {
     id: 'jahmyr-gibbs',
     name: 'Jahmyr Gibbs',
@@ -9,15 +10,15 @@ export const players: Player[] = [
     team: 'Detroit Lions',
     position: 'RB',
     keyStats: [
-      '2025 Pro Bowl selection',
-      'Dynamic, big-play running back',
-      'Explosive burst and instant scoring upside',
+      '2025: 1,223 rushing yards, 13 rushing TDs',
+      'Explosive, home-run RB',
+      'One of the league\'s most feared space players',
       '#12 overall pick, 2023 NFL Draft'
     ],
     definingMoments: [
-      'Key piece of Lions historic offense',
-      'Multiple 100+ yard rushing games',
-      'Elite pass-catching ability out of backfield',
+      'Huge 2025 production year',
+      'Turns short touches into highlights',
+      'Modern weapon who makes collectors chase the next big insert moment',
       '"Lightning" role in Lions offense'
     ],
     cardHistory: [
@@ -34,8 +35,9 @@ export const players: Player[] = [
       'Built for modern NFL offense'
     ],
     paniniContentBeats: [
-      'Speed and separation',
-      '"Lightning" role in Lions offense',
+      '"New-school NFL star" energy: speed, burst, and highlight finishes',
+      'His game translates perfectly to Prizm-style action shots',
+      'Downtown-level moments',
       'What a "big moment" feels like on-field versus pulling a big card'
     ],
     schedule: {
@@ -52,15 +54,15 @@ export const players: Player[] = [
     team: 'Detroit Lions',
     position: 'OT',
     keyStats: [
-      'Multiple Pro Bowl selections',
-      'Anchor right tackle for the Lions',
-      'Tone-setter who defines Detroit identity',
+      'Franchise cornerstone OT',
+      'Face of the league\'s new era of elite linemen',
+      'Tone-setter for a top offense',
       '#7 overall pick, 2021 NFL Draft'
     ],
     definingMoments: [
-      'Moved from left to right tackle seamlessly as rookie',
+      'Nasty, athletic, respected across the NFL',
+      '"Built different" protector and run-game enforcer',
       'Key blocker for Lions record-setting offense',
-      'Youngest starting OT in NFL at draft',
       'Face of league\'s new-school OL dominance'
     ],
     cardHistory: [
@@ -74,11 +76,12 @@ export const players: Player[] = [
       'Samoan heritage',
       '#7 overall pick 2021',
       'American Samoa native',
-      'Youngest first-round OT in draft history'
+      'SIGNING ONLY - NO MEDIA'
     ],
     paniniContentBeats: [
-      'Protector mentality',
-      'Leadership without the spotlight',
+      'A premium "trenches" autograph that serious collectors love',
+      'Paired with team success',
+      '"This is the guy who makes the highlight happen"',
       'What collectors miss when they only chase skill positions'
     ],
     schedule: {
@@ -89,15 +92,194 @@ export const players: Player[] = [
     }
   },
   {
+    id: 'quinn-ewers',
+    name: 'Quinn Ewers',
+    category: 'Current',
+    team: 'Miami Dolphins',
+    position: 'QB',
+    keyStats: [
+      '2025 NFL Draft: Round 7, Pick 231',
+      'QB prospect with big-stage pedigree',
+      'Chip-on-shoulder storyline',
+      'Panini-exclusive autograph partner'
+    ],
+    definingMoments: [
+      'Led Texas to back-to-back CFP appearances',
+      'Beat Oklahoma in Red River Rivalry',
+      'Clutch performances in SEC play',
+      'Making the jump from college to NFL'
+    ],
+    cardHistory: [
+      'Panini-exclusive autograph partner',
+      'Texas Longhorns cards always premium',
+      'Part of Panini story from Texas days into NFL',
+      'College parallels still strong'
+    ],
+    personalDetails: [
+      'Miami Dolphins quarterback',
+      'Former Texas Longhorns star',
+      'Former #1 overall recruit',
+      'Southlake, Texas native',
+      'Panini family from college days'
+    ],
+    paniniContentBeats: [
+      '"Upside + belief" is the collector hook',
+      'Classic "get in early" QB auto for fans who want to be right before the breakout',
+      '"First NFL card" moment',
+      'How he wants his story told'
+    ],
+    schedule: {
+      day: 'Thursday',
+      date: 'Feb 6',
+      startTime: '14:30',
+      endTime: '16:30'
+    }
+  },
+  {
+    id: 'matt-leinart',
+    name: 'Matt Leinart',
+    category: 'Legend',
+    team: 'Arizona Cardinals',
+    position: 'QB',
+    keyStats: [
+      '2004 Heisman Trophy winner',
+      '2x National Champion at USC (2003, 2004)',
+      '#10 overall pick, 2006 NFL Draft',
+      'College football icon and former NFL QB'
+    ],
+    definingMoments: [
+      'Led USC to back-to-back National Championships',
+      'Part of one of college football\'s greatest dynasties',
+      'The Bush Push game vs Notre Dame',
+      'Stays culturally relevant as a media personality'
+    ],
+    cardHistory: [
+      '2006 Donruss rookie cards',
+      'USC college cards highly collectible',
+      'Heisman Trophy parallels premium',
+      'Panini Contenders Draft Picks autos'
+    ],
+    personalDetails: [
+      'USC Trojans legend',
+      'Heisman Trophy winner 2004',
+      'Now college football analyst',
+      'Santa Ana, California native',
+      'Part of legendary Pete Carroll era'
+    ],
+    paniniContentBeats: [
+      '"Legacy ink" - perfect for nostalgic collectors',
+      'Premium collegiate products',
+      'Throwback storytelling around the hobby\'s eras',
+      'Recognizable name to both older collectors and USC glory years fans'
+    ],
+    schedule: {
+      day: 'Thursday',
+      date: 'Feb 6',
+      startTime: '14:00',
+      endTime: '16:00'
+    }
+  },
+  {
+    id: 'cole-kmet',
+    name: 'Cole Kmet',
+    category: 'Current',
+    team: 'Chicago Bears',
+    position: 'TE',
+    keyStats: [
+      'Veteran TE for the Chicago Bears',
+      'Dependable, physical presence',
+      'Steady red-zone/chain-mover',
+      '#43 overall pick, 2020 NFL Draft'
+    ],
+    definingMoments: [
+      'Consistent production for Bears offense',
+      'Physical blocker and receiver',
+      'Key target in red zone situations',
+      'Growing into leadership role'
+    ],
+    cardHistory: [
+      '2020 Prizm rookie card',
+      'Notre Dame pedigree adds value',
+      'Bears team cards collectible',
+      'TE cards gaining hobby interest'
+    ],
+    personalDetails: [
+      'Notre Dame Fighting Irish standout',
+      '#43 overall pick 2020',
+      'Lake Barrington, Illinois native',
+      'Local Chicago product',
+      'SIGNING ONLY - NO MEDIA'
+    ],
+    paniniContentBeats: [
+      'A reliable NFL name collectors recognize',
+      'Especially valuable for Bears fans building team sets',
+      'Consistent production over flashy highlights',
+      'Hometown connection to Chicago'
+    ],
+    schedule: {
+      day: 'Thursday',
+      date: 'Feb 6',
+      startTime: '14:30',
+      endTime: '16:30'
+    }
+  },
+  {
+    id: 'kyle-hamilton',
+    name: 'Kyle Hamilton',
+    category: 'Current',
+    team: 'Baltimore Ravens',
+    position: 'S',
+    keyStats: [
+      'All-Pro level safety',
+      'League\'s highest-paid safety (after extension)',
+      'One of the most complete modern defenders',
+      '#14 overall pick, 2022 NFL Draft'
+    ],
+    definingMoments: [
+      'Size, instincts, versatility',
+      'Anchor of Ravens defensive identity',
+      'Elite coverage and run support',
+      'Game-changing plays in critical moments'
+    ],
+    cardHistory: [
+      '2022 Prizm rookie card',
+      'Notre Dame cards collectible',
+      'Ravens team success boosting cards',
+      'Defensive back cards gaining value'
+    ],
+    personalDetails: [
+      'Notre Dame Fighting Irish standout',
+      '#14 overall pick 2022',
+      'Atlanta, Georgia native',
+      'Elite size for safety position (6\'4")',
+      'SIGNING ONLY - NO MEDIA'
+    ],
+    paniniContentBeats: [
+      '"Defensive centerpiece" autograph',
+      'Plays huge with Ravens collectors',
+      'Serious hobby heads value complete defenders',
+      'Modern safety prototype'
+    ],
+    schedule: {
+      day: 'Thursday',
+      date: 'Feb 6',
+      startTime: '11:00',
+      endTime: '13:00'
+    }
+  },
+
+  // FRIDAY
+
+  {
     id: 'trevor-lawrence',
     name: 'Trevor Lawrence',
     category: 'Current',
     team: 'Jacksonville Jaguars',
     position: 'QB',
     keyStats: [
-      'Franchise quarterback for Jacksonville',
-      '2025 season: Top-tier production',
-      'Defining passer of his era',
+      '2025: 4,007 passing yards, 29 TDs',
+      'Franchise QB for Jacksonville',
+      'Pedigree and production to headline any football conversation',
       '#1 overall pick, 2021 NFL Draft'
     ],
     definingMoments: [
@@ -120,186 +302,16 @@ export const players: Player[] = [
       'Cartersville, Georgia native'
     ],
     paniniContentBeats: [
-      'Consistency and leadership',
-      'What "elite" looks like week-to-week',
-      'How he approaches highs and criticism'
+      'Clean "face of the franchise" positioning',
+      'Premium QB for collectors who value long-term relevance',
+      'Career arc potential',
+      'What "elite" looks like week-to-week'
     ],
     schedule: {
       day: 'Friday',
       date: 'Feb 7',
       startTime: '10:00',
       endTime: '11:30'
-    }
-  },
-  {
-    id: 'aidan-hutchinson',
-    name: 'Aidan Hutchinson',
-    category: 'Current',
-    team: 'Detroit Lions',
-    position: 'DE',
-    keyStats: [
-      'NFL headline defensive personality',
-      'Top-tier edge rusher conversation',
-      'Centerpiece of Detroit\'s identity',
-      '#2 overall pick, 2022 NFL Draft'
-    ],
-    definingMoments: [
-      '4.5 sack game vs Bucs in 2024 before injury',
-      'INT + sack vs Stafford and Rams',
-      'Anchor of Lions defensive identity',
-      'Comeback from leg injury that looked career-threatening'
-    ],
-    cardHistory: [
-      '2022 Prizm rookie card',
-      'Detroit hometown hero premium on all cards',
-      'Michigan Wolverines college cards valuable',
-      'Panini-exclusive autograph partner'
-    ],
-    personalDetails: [
-      'Michigan Man through and through',
-      '#2 overall pick 2022',
-      'House of Hutch charity foundation',
-      'Dad Chris played in the NFL',
-      'First defensive player signed to Panini exclusive deal'
-    ],
-    paniniContentBeats: [
-      'Motor and mindset',
-      '"City matches the player"',
-      'Defense as culture',
-      'What he wants collectors to feel when they pull his auto'
-    ],
-    schedule: {
-      day: 'Friday',
-      date: 'Feb 7',
-      startTime: '14:00',
-      endTime: '15:30'
-    }
-  },
-  {
-    id: 'rome-odunze',
-    name: 'Rome Odunze',
-    category: 'Current',
-    team: 'Chicago Bears',
-    position: 'WR',
-    keyStats: [
-      'High-profile young star',
-      'Polished, physical game',
-      '"Future centerpiece" trajectory',
-      '#9 overall pick, 2024 NFL Draft'
-    ],
-    definingMoments: [
-      'Washington Huskies star in CFP run',
-      'Helped lead Huskies to National Championship game',
-      'Instant impact as NFL rookie',
-      'Emerging as top target in Chicago'
-    ],
-    cardHistory: [
-      '2024 Prizm rookie card in demand',
-      'Panini-exclusive, multi-year trading card partner',
-      'Part of loaded 2024 WR class',
-      'Bears rebuild cards gaining momentum'
-    ],
-    personalDetails: [
-      'Washington Huskies standout',
-      '#9 overall pick 2024',
-      'Born in Nigeria, raised in Las Vegas',
-      'Panini family since Washington days',
-      'Part of Bears young core'
-    ],
-    paniniContentBeats: [
-      'The moment he realized he was "that guy"',
-      'Rookie-to-vet mindset shift',
-      'What he wants his card photo to communicate'
-    ],
-    schedule: {
-      day: 'Friday',
-      date: 'Feb 7',
-      startTime: '11:00',
-      endTime: '13:00'
-    }
-  },
-  {
-    id: 'will-anderson-jr',
-    name: 'Will Anderson Jr.',
-    category: 'Current',
-    team: 'Houston Texans',
-    position: 'EDGE',
-    keyStats: [
-      '2025 season: Elite impact stats',
-      'Premier league disruptor',
-      'Anchor of Texans defense',
-      '#3 overall pick, 2023 NFL Draft'
-    ],
-    definingMoments: [
-      'Alabama legend, 2x SEC DPOY',
-      'Key piece of Texans playoff run',
-      'Dominant pass rusher from day one',
-      'Part of Texans dramatic turnaround'
-    ],
-    cardHistory: [
-      '2023 Prizm rookie card',
-      'Alabama cards always in demand',
-      'Defensive players gaining hobby respect',
-      'Texans resurgence boosting team cards'
-    ],
-    personalDetails: [
-      'Alabama Crimson Tide legend',
-      '#3 overall pick 2023',
-      'Hampton, Georgia native',
-      '2x SEC Defensive Player of the Year',
-      'Building something special in Houston'
-    ],
-    paniniContentBeats: [
-      'Pass rush craft',
-      '"How sacks really happen"',
-      'Leadership on defense',
-      'What he\'s building in Houston'
-    ],
-    schedule: null
-  },
-
-  // CURRENT NFL STARS (ROOKIES)
-  {
-    id: 'quinn-ewers',
-    name: 'Quinn Ewers',
-    category: 'Current',
-    team: 'Miami Dolphins',
-    position: 'QB',
-    keyStats: [
-      'Round 7, 2025 NFL Draft',
-      'Already getting real reps and real headlines',
-      'Panini-exclusive autograph partner',
-      'From Texas spotlight to NFL pressure'
-    ],
-    definingMoments: [
-      'Led Texas to back-to-back CFP appearances',
-      'Beat Oklahoma in Red River Rivalry',
-      'Clutch performances in SEC play',
-      'Making the jump from college to NFL'
-    ],
-    cardHistory: [
-      'Panini-exclusive autograph partner',
-      'Texas Longhorns cards always premium',
-      'Part of Panini story from Texas days into NFL',
-      'College parallels still strong'
-    ],
-    personalDetails: [
-      'Miami Dolphins quarterback',
-      'Former Texas Longhorns star',
-      'Former #1 overall recruit',
-      'Southlake, Texas native',
-      'Panini family from college days'
-    ],
-    paniniContentBeats: [
-      'The jump from college spotlight to NFL pressure',
-      '"First NFL card" moment',
-      'How he wants his story told'
-    ],
-    schedule: {
-      day: 'Thursday',
-      date: 'Feb 6',
-      startTime: '14:30',
-      endTime: '16:30'
     }
   },
   {
@@ -310,9 +322,9 @@ export const players: Player[] = [
     position: 'QB',
     keyStats: [
       'New Orleans Saints quarterback',
-      'Major college program experience',
-      'Big-game experience translating to NFL',
-      'Earning his NFL opportunity and identity'
+      'Signed rookie deal as part of 2025 draft class',
+      'Fought through the long road and earned his shot',
+      'Major college program experience'
     ],
     definingMoments: [
       'College journey through major programs',
@@ -334,8 +346,9 @@ export const players: Player[] = [
       'Journeyman turned NFL opportunity'
     ],
     paniniContentBeats: [
-      'Reinvention',
-      'Earning the next shot',
+      '"Resilience + opportunity" story',
+      'Great for collectors who love "first-card as a pro" moments',
+      'Underdog trajectories',
       'What he wants collectors to know beyond the stat line'
     ],
     schedule: {
@@ -345,182 +358,136 @@ export const players: Player[] = [
       endTime: '11:30'
     }
   },
-  // PROSPECTS
   {
-    id: 'dante-moore',
-    name: 'Dante Moore',
-    category: 'Prospect',
-    team: 'Oregon Ducks',
-    position: 'QB',
-    keyStats: [
-      '2025: Major production',
-      'Oregon Ducks starting quarterback',
-      'Next-up QB spotlight',
-      'Officially on the roster and producing'
-    ],
-    definingMoments: [
-      'Beat Penn State in the whiteout game',
-      'Poised beyond his years under pressure',
-      'Transferred from UCLA, sat behind Dillon Gabriel',
-      'Emerged as best QB in college football'
-    ],
-    cardHistory: [
-      'Bowman University cards available now',
-      'Early Prizm Draft Picks—get in before the NFL hype',
-      'College parallels still affordable',
-      'Smart money is moving now before Draft'
-    ],
-    personalDetails: [
-      'Detroit native (MLK High School)',
-      'Pure passer with quiet confidence',
-      'Five-star recruit out of high school',
-      'Oregon\'s identity under his leadership',
-      'The next franchise QB'
-    ],
-    paniniContentBeats: [
-      'Next-up QB spotlight',
-      'Oregon\'s identity',
-      'How he handles the attention',
-      'What he wants his "era" to stand for'
-    ],
-    schedule: {
-      day: 'Friday',
-      date: 'Feb 7',
-      startTime: '16:30',
-      endTime: '18:00'
-    }
-  },
-
-  // LEGENDS
-  {
-    id: 'julian-edelman',
-    name: 'Julian Edelman',
-    category: 'Legend',
-    team: 'New England Patriots',
+    id: 'rome-odunze',
+    name: 'Rome Odunze',
+    category: 'Current',
+    team: 'Chicago Bears',
     position: 'WR',
     keyStats: [
-      '3x Super Bowl Champion',
-      'Super Bowl LIII MVP',
-      '620 career receptions',
-      'Definition of postseason reliability'
+      '2025: 44 catches, 661 yards, 6 TDs',
+      'Big-bodied, smooth WR with star upside',
+      'Real production already',
+      '#9 overall pick, 2024 NFL Draft'
     ],
     definingMoments: [
-      'THE CATCH vs Falcons in Super Bowl LI (28-3 comeback)',
-      'Super Bowl LIII MVP performance vs Rams',
-      'Most clutch postseason receiver of his generation',
-      '"Earned everything" career arc'
+      'Washington Huskies star in CFP run',
+      'Helped lead Huskies to National Championship game',
+      'Instant impact as NFL rookie',
+      'Emerging as top target in Chicago'
     ],
     cardHistory: [
-      'Undervalued for years—market is correcting',
-      'Super Bowl MVP cards are the chase',
-      'Playoff performance cards premium',
-      'Kent State cards for the deep collectors'
+      '2024 Prizm rookie card in demand',
+      'PANINI EXCLUSIVE trading card agreement',
+      'Part of loaded 2024 WR class',
+      'Bears rebuild cards gaining momentum'
     ],
     personalDetails: [
-      'Kent State QB converted to WR',
-      'Playoff legend, built for January',
-      'Now media personality and analyst',
-      'Redwood City, California native',
-      'Undrafted to icon'
+      'Washington Huskies standout',
+      '#9 overall pick 2024',
+      'Born in Nigeria, raised in Las Vegas',
+      'Panini family since Washington days',
+      'Part of Bears young core'
     ],
     paniniContentBeats: [
-      'Underdog to icon',
-      'Clutch moments',
-      'Grit as a brand',
-      'What "winning football" actually demands'
+      'PANINI PARTNER: Exclusive trading card agreement',
+      '"Panini family" moment: his biggest hobby hits are built with Panini',
+      'Bears collectors should be locked in early',
+      'What he wants his card photo to communicate'
     ],
     schedule: {
-      day: 'Saturday',
-      date: 'Feb 8',
+      day: 'Friday',
+      date: 'Feb 7',
+      startTime: '11:00',
+      endTime: '13:00'
+    }
+  },
+  {
+    id: 'ricky-williams',
+    name: 'Ricky Williams',
+    category: 'Legend',
+    team: 'Miami Dolphins',
+    position: 'RB',
+    keyStats: [
+      'Heisman Trophy winner 1998 (Texas)',
+      '10,009 career rushing yards',
+      'Former NFL rushing champion',
+      'One of the most iconic college RBs ever'
+    ],
+    definingMoments: [
+      'Broke Tony Dorsett\'s NCAA rushing record at Texas',
+      'Dreads and visor era in Miami—iconic look',
+      'One of the most electric backs ever',
+      'Saints traded entire 1999 draft to get him'
+    ],
+    cardHistory: [
+      'Longtime Panini relationship',
+      '"Old friend" energy with Panini',
+      'Panini HQ appearances and autograph sessions',
+      'Texas Longhorns cards highly collectible'
+    ],
+    personalDetails: [
+      'New Orleans Draft Day trade (entire draft for one pick)',
+      'Outspoken, unique personality',
+      'One of the most unique careers in football',
+      'San Diego, California native',
+      'Panini family member'
+    ],
+    paniniContentBeats: [
+      'PANINI PARTNER: Featured in Panini "Unwrapped" and HQ signings',
+      '"Legend ink" and "collector favorite"',
+      'Collegiate-focused fans love him',
+      'Timeless name for collectors across generations'
+    ],
+    schedule: {
+      day: 'Friday',
+      date: 'Feb 7',
+      startTime: '13:00',
+      endTime: '15:00'
+    }
+  },
+  {
+    id: 'aidan-hutchinson',
+    name: 'Aidan Hutchinson',
+    category: 'Current',
+    team: 'Detroit Lions',
+    position: 'DE',
+    keyStats: [
+      '2025: 14.5 sacks, 4 forced fumbles',
+      'NFL\'s premier young defensive playmaker',
+      'Edge star for the Detroit Lions',
+      '#2 overall pick, 2022 NFL Draft'
+    ],
+    definingMoments: [
+      '4.5 sack game vs Bucs in 2024 before injury',
+      'INT + sack vs Stafford and Rams',
+      'Anchor of Lions defensive identity',
+      'Comeback from leg injury that looked career-threatening'
+    ],
+    cardHistory: [
+      '2022 Prizm rookie card',
+      'Detroit hometown hero premium on all cards',
+      'Michigan Wolverines college cards valuable',
+      'PANINI-EXCLUSIVE autograph partner'
+    ],
+    personalDetails: [
+      'Michigan Man through and through',
+      '#2 overall pick 2022',
+      'House of Hutch charity foundation',
+      'Dad Chris played in the NFL',
+      'First defensive player signed to Panini exclusive deal'
+    ],
+    paniniContentBeats: [
+      'TOP-TIER PANINI PARTNER: First-ever defensive exclusive deal',
+      '"Panini family, defensive face of the hobby" status',
+      'Treat him like a headliner',
+      'What he wants collectors to feel when they pull his auto'
+    ],
+    schedule: {
+      day: 'Friday',
+      date: 'Feb 7',
       startTime: '14:00',
-      endTime: '16:00'
-    }
-  },
-  {
-    id: 'ty-law',
-    name: 'Ty Law',
-    category: 'Legend',
-    team: 'New England Patriots',
-    position: 'CB',
-    keyStats: [
-      '3x Super Bowl Champion',
-      '5x Pro Bowl selection',
-      '53 career interceptions',
-      'Pro Football Hall of Fame Class of 2019'
-    ],
-    definingMoments: [
-      '3 INTs vs Peyton Manning in 2003 AFC Championship',
-      'Defined the early Patriots dynasty defense',
-      'Known for swagger, physicality, championship details',
-      'Big-moment playoff performer'
-    ],
-    cardHistory: [
-      'Late 90s/early 2000s Panini inserts are the chase',
-      'HOF induction gave cards a bump',
-      'Donruss and Score from the dynasty era',
-      'Patriots dynasty cards always in demand'
-    ],
-    personalDetails: [
-      'Aliquippa, Pennsylvania product',
-      'Hall of Fame Class of 2019',
-      'Lockdown corner who changed the game',
-      'Michigan Wolverine',
-      '#23 overall pick, 1995'
-    ],
-    paniniContentBeats: [
-      'Mentality',
-      'Clutch DNA',
-      'Rivalries',
-      'What separates "good" from "championship"'
-    ],
-    schedule: {
-      day: 'Friday',
-      date: 'Feb 7',
-      startTime: '12:00',
-      endTime: '14:00'
-    }
-  },
-  {
-    id: 'champ-bailey',
-    name: 'Champ Bailey',
-    category: 'Legend',
-    team: 'Denver Broncos',
-    position: 'CB',
-    keyStats: [
-      '12x Pro Bowl selection',
-      '3x First-Team All-Pro',
-      '52 career interceptions',
-      'Pro Football Hall of Fame Class of 2019'
-    ],
-    definingMoments: [
-      '100-yard INT return vs Tom Brady in 2005 AFC Championship (called back but iconic)',
-      'Shutdown corner for a decade',
-      'Elite technique and consistency',
-      'Greatest cover corner of his generation'
-    ],
-    cardHistory: [
-      'Early 2000s Donruss and Playoff inserts',
-      'Hall of Fame spike in 2019',
-      'Broncos and Redskins cards both collectible',
-      'Prizm legacy cards highly valued'
-    ],
-    personalDetails: [
-      'Georgia Bulldogs legend',
-      '#7 overall pick, 1999',
-      'Greatest cover corner of his generation',
-      'Universally respected for elite technique',
-      'Folkston, Georgia native'
-    ],
-    paniniContentBeats: [
-      'The art of defense',
-      '"Eras" in football',
-      'What young DBs still get wrong'
-    ],
-    schedule: {
-      day: 'Friday',
-      date: 'Feb 7',
-      startTime: '12:00',
-      endTime: '14:00'
+      endTime: '15:30'
     }
   },
   {
@@ -555,8 +522,9 @@ export const players: Player[] = [
       'Panini family relationship'
     ],
     paniniContentBeats: [
-      '"Old-school tough" versus today\'s game',
-      'Playoff moments',
+      'PANINI PARTNER: Featured at Panini National VIP Party',
+      '"Hall of Fame ink, hobby royalty"',
+      'Instant recognition for Bills fans and vintage collectors',
       'What makes a card feel iconic'
     ],
     schedule: {
@@ -567,179 +535,227 @@ export const players: Player[] = [
     }
   },
   {
-    id: 'matt-leinart',
-    name: 'Matt Leinart',
+    id: 'champ-bailey',
+    name: 'Champ Bailey',
     category: 'Legend',
-    team: 'Arizona Cardinals',
-    position: 'QB',
+    team: 'Denver Broncos',
+    position: 'CB',
     keyStats: [
-      '2004 Heisman Trophy winner',
-      '2x National Champion at USC (2003, 2004)',
-      '#10 overall pick, 2006 NFL Draft',
-      'Most recognizable college-to-pro name of 2000s'
+      '12x Pro Bowl selection',
+      '3x First-Team All-Pro',
+      '52 career interceptions',
+      'Pro Football Hall of Fame Class of 2019'
     ],
     definingMoments: [
-      'Led USC to back-to-back National Championships',
-      'Part of one of college football\'s greatest dynasties',
-      'The Bush Push game vs Notre Dame',
-      'Instant credibility on legacy and big games'
+      '100-yard INT return vs Tom Brady in 2005 AFC Championship (called back but iconic)',
+      'Shutdown corner for a decade',
+      'Elite technique and consistency',
+      'Greatest cover corner of his generation'
     ],
     cardHistory: [
-      '2006 Donruss rookie cards',
-      'USC college cards highly collectible',
-      'Heisman Trophy parallels premium',
-      'Panini Contenders Draft Picks autos'
+      'Early 2000s Donruss and Playoff inserts',
+      'Hall of Fame spike in 2019',
+      'Broncos and Redskins cards both collectible',
+      'Prizm legacy cards highly valued'
     ],
     personalDetails: [
-      'USC Trojans legend',
-      'Heisman Trophy winner 2004',
-      'Now college football analyst',
-      'Santa Ana, California native',
-      'Part of legendary Pete Carroll era'
+      'Georgia Bulldogs legend',
+      '#7 overall pick, 1999',
+      'Greatest cover corner of his generation',
+      'Universally respected for elite technique',
+      'Folkston, Georgia native'
     ],
     paniniContentBeats: [
-      'Legacy and collectibles',
-      'What he\'d tell today\'s young QBs about expectations',
-      '"Iconic college card" versus "pro card" identity'
+      'All-time elite cover corner and HOF defensive icon',
+      '"Premium autograph" to serious collectors',
+      'Defensive legend autos are always scarce-feeling in the hobby',
+      'Great for high-end football collectors and Hall of Fame chasers'
     ],
-    schedule: null
+    schedule: {
+      day: 'Friday',
+      date: 'Feb 7',
+      startTime: '12:00',
+      endTime: '14:00'
+    }
   },
   {
-    id: 'ricky-williams',
-    name: 'Ricky Williams',
-    category: 'Legend',
-    team: 'Miami Dolphins',
-    position: 'RB',
-    keyStats: [
-      'Heisman Trophy winner 1998 (Texas)',
-      '10,009 career rushing yards',
-      'Former NFL rushing champion',
-      'One of the most unique careers in football history'
-    ],
-    definingMoments: [
-      'Broke Tony Dorsett\'s NCAA rushing record at Texas',
-      'Dreads and visor era in Miami—iconic look',
-      'One of the most electric backs ever',
-      'Saints traded entire 1999 draft to get him'
-    ],
-    cardHistory: [
-      'Longtime Panini relationship',
-      '"Old friend" energy with Panini',
-      'Panini HQ appearances and autograph sessions',
-      'Texas Longhorns cards highly collectible'
-    ],
-    personalDetails: [
-      'New Orleans Draft Day trade (entire draft for one pick)',
-      'Outspoken, unique personality',
-      'One of the most unique careers in football',
-      'San Diego, California native',
-      'Panini family member'
-    ],
-    paniniContentBeats: [
-      'Individuality',
-      'Legacy and pressure',
-      'What he wishes collectors understood about the person behind the card'
-    ],
-    schedule: null
-  },
-  {
-    id: 'malcolm-butler',
-    name: 'Malcolm Butler',
+    id: 'ty-law',
+    name: 'Ty Law',
     category: 'Legend',
     team: 'New England Patriots',
     position: 'CB',
     keyStats: [
-      '2x Super Bowl Champion',
-      'Pro Bowl selection',
-      'Super Bowl XLIX hero',
-      'Made the most iconic play in Super Bowl history'
+      '3x Super Bowl Champion',
+      '5x Pro Bowl selection',
+      '53 career interceptions',
+      'Pro Football Hall of Fame Class of 2019'
     ],
     definingMoments: [
-      'THE INTERCEPTION—goal line pick to seal Super Bowl XLIX vs Seahawks',
-      'Most iconic play in Super Bowl history',
-      'Read the play, jumped the route, saved the game',
-      'From undrafted to legend in one play'
+      '3 INTs vs Peyton Manning in 2003 AFC Championship',
+      'Defined the early Patriots dynasty defense',
+      'Known for swagger, physicality, championship details',
+      'Big-moment playoff performer'
     ],
     cardHistory: [
-      'Cards spiked immediately after that play',
-      'Remains a moment card forever',
-      'Super Bowl insert cards are the grail',
-      'Value tied to one of sports\' greatest moments'
+      'Late 90s/early 2000s Panini inserts are the chase',
+      'HOF induction gave cards a bump',
+      'Donruss and Score from the dynasty era',
+      'Patriots dynasty cards always in demand'
     ],
     personalDetails: [
-      'Undrafted free agent',
-      'Worked at Popeyes before the NFL',
-      'Ultimate underdog story',
-      'Vicksburg, Mississippi native',
-      'From unknown to immortal'
+      'Aliquippa, Pennsylvania product',
+      'Hall of Fame Class of 2019',
+      'Lockdown corner who changed the game',
+      'Michigan Wolverine',
+      '#23 overall pick, 1995'
     ],
-    schedule: null
+    paniniContentBeats: [
+      'Championship-era legend and HOF DB',
+      'Huge nostalgia pull for peak Patriots football collectors',
+      '"Big-game legacy" - his signature reads like history',
+      'Fits perfectly in premium sets'
+    ],
+    schedule: {
+      day: 'Friday',
+      date: 'Feb 7',
+      startTime: '12:00',
+      endTime: '14:00'
+    }
   },
   {
-    id: 'eli-manning',
-    name: 'Eli Manning',
-    category: 'Legend',
-    team: 'New York Giants',
+    id: 'will-anderson-jr',
+    name: 'Will Anderson Jr.',
+    category: 'Current',
+    team: 'Houston Texans',
+    position: 'EDGE',
+    keyStats: [
+      '2025: 12 sacks',
+      'Defensive star for the Houston Texans',
+      'Weekly problem for offensive lines',
+      '#3 overall pick, 2023 NFL Draft'
+    ],
+    definingMoments: [
+      'Alabama legend, 2x SEC DPOY',
+      'Key piece of Texans playoff run',
+      'Dominant pass rusher from day one',
+      'Part of Texans dramatic turnaround'
+    ],
+    cardHistory: [
+      '2023 Prizm rookie card',
+      'Alabama cards always in demand',
+      'Defensive players gaining hobby respect',
+      'Texans resurgence boosting team cards'
+    ],
+    personalDetails: [
+      'Alabama Crimson Tide legend',
+      '#3 overall pick 2023',
+      'Hampton, Georgia native',
+      '2x SEC Defensive Player of the Year',
+      'Building something special in Houston'
+    ],
+    paniniContentBeats: [
+      'Modern defensive pillar with long runway',
+      'Great for collectors who build around young pass rushers like they do WR1s',
+      'Pass rush craft',
+      'What he\'s building in Houston'
+    ],
+    schedule: {
+      day: 'Friday',
+      date: 'Feb 7',
+      startTime: '12:30',
+      endTime: '14:30'
+    }
+  },
+  {
+    id: 'dante-moore',
+    name: 'Dante Moore',
+    category: 'Prospect',
+    team: 'Oregon Ducks',
     position: 'QB',
     keyStats: [
-      '2x Super Bowl Champion',
-      '2x Super Bowl MVP',
-      '57,023 career passing yards',
-      '366 career touchdown passes'
+      'Oregon Ducks QB on 2025 roster',
+      'High recruiting pedigree',
+      'Real collector base already',
+      'Next-up QB spotlight'
     ],
     definingMoments: [
-      'Helmet Catch drive in Super Bowl XLII',
-      'Manningham sideline throw in Super Bowl XLVI',
-      'Beat the undefeated Patriots',
-      'Beat the Patriots again four years later'
+      'Beat Penn State in the whiteout game',
+      'Poised beyond his years under pressure',
+      'Transferred from UCLA, sat behind Dillon Gabriel',
+      'Emerged as best QB in college football'
     ],
     cardHistory: [
-      '2004 rookie class with Big Ben and Rivers',
-      'Super Bowl MVP cards are iconic',
-      'Giants jersey cards premium',
-      'Canton-bound, prices will rise'
+      'Bowman University cards available now',
+      'Early Prizm Draft Picks—get in before the NFL hype',
+      'College parallels still affordable',
+      'Smart money is moving now before Draft'
     ],
     personalDetails: [
-      'The Manning family legacy',
-      'Canton bound, no question',
-      'Clutch gene personified',
-      'Now beloved for his humor',
-      'New Orleans native—hometown hero'
+      'Detroit native (MLK High School)',
+      'Pure passer with quiet confidence',
+      'Five-star recruit out of high school',
+      'Oregon\'s identity under his leadership',
+      'The next franchise QB'
     ],
-    schedule: null
+    paniniContentBeats: [
+      'College QB collectibles move fast when the hype cycle hits',
+      'Great for "future NFL guy" positioning',
+      'Campus-driven collector energy',
+      'What he wants his "era" to stand for'
+    ],
+    schedule: {
+      day: 'Friday',
+      date: 'Feb 7',
+      startTime: '16:30',
+      endTime: '18:00'
+    }
   },
+
+  // SATURDAY
+
   {
-    id: 'garrett-wilson',
-    name: 'Garrett Wilson',
-    category: 'Current',
-    team: 'New York Jets',
+    id: 'julian-edelman',
+    name: 'Julian Edelman',
+    category: 'Legend',
+    team: 'New England Patriots',
     position: 'WR',
     keyStats: [
-      '2025: Shut down mid-season (knee)',
-      '$130M contract extension',
-      'On pace for 1,100+ yards and 11 TDs before injury',
-      'Back-to-back-to-back 1,000 yard seasons to start career'
+      '3x Super Bowl Champion',
+      'Super Bowl LIII MVP',
+      '620 career receptions',
+      'Championship-era icon'
     ],
     definingMoments: [
-      '2022 Offensive Rookie of the Year',
-      'Three consecutive 1,000 yard seasons',
-      'Elite route runner with best hands in the game',
-      'Became Jets WR1 from day one'
+      'THE CATCH vs Falcons in Super Bowl LI (28-3 comeback)',
+      'Super Bowl LIII MVP performance vs Rams',
+      'Most clutch postseason receiver of his generation',
+      'One of the defining playoff performers of his generation'
     ],
     cardHistory: [
-      '2022 Prizm rookie card',
-      'Ohio State pedigree adds value',
-      'OROY cards got massive bump',
-      'Watch for 2026 comeback narrative to spike prices'
+      'Undervalued for years—market is correcting',
+      'Super Bowl MVP cards are the chase',
+      'Playoff performance cards premium',
+      'Kent State cards for the deep collectors'
     ],
     personalDetails: [
-      'Ohio State Buckeye',
-      '#10 overall pick 2022',
-      'Elite hands, even better routes',
-      'Columbus, Ohio native',
-      '"Watch this in 2026" energy'
+      'Kent State QB converted to WR',
+      'Playoff legend, built for January',
+      'Now media personality and analyst',
+      'Redwood City, California native',
+      'Undrafted to icon'
     ],
-    schedule: null
+    paniniContentBeats: [
+      '"Postseason legend" autos play extremely well',
+      'Collectors building Super Bowl, Patriots, or clutch-moment PCs',
+      'The name still makes collectors perk up',
+      'The moments were so big'
+    ],
+    schedule: {
+      day: 'Saturday',
+      date: 'Feb 8',
+      startTime: '14:00',
+      endTime: '16:00'
+    }
   },
   {
     id: 'keisean-henderson',
@@ -748,10 +764,10 @@ export const players: Player[] = [
     team: 'Houston Cougars',
     position: 'QB',
     keyStats: [
-      '#1 overall recruit in Class of 2026',
-      '5-star quarterback, 6\'4" 180 lbs',
-      'Highest-rated offensive commit in Houston history',
-      '2025 Navy All-American Bowl MVP (first junior ever)'
+      'Blue-chip QB recruit',
+      'University of Houston commitment',
+      'National attention and early star potential',
+      'Panini NIL partner'
     ],
     definingMoments: [
       'Senior season start: 1,119 yards, 12 TDs in just 2 games',
@@ -760,10 +776,10 @@ export const players: Player[] = [
       'Navy All-American Bowl MVP as a junior (historic first)'
     ],
     cardHistory: [
+      'PANINI NIL PARTNER',
       'Bowman University cards will be highly sought',
       'Early Prizm Draft Picks—get in before the NFL hype',
-      'Houston commit adds local collector interest',
-      '#1 recruit status drives premium on all parallels'
+      'Houston commit adds local collector interest'
     ],
     personalDetails: [
       'Legacy School of Sport Sciences (Spring, Texas)',
@@ -773,17 +789,173 @@ export const players: Player[] = [
       'Enrolling at Houston January 2026'
     ],
     paniniContentBeats: [
-      'Playing for his hometown—Houston pride',
-      'The WR-to-QB transition and what it taught him',
-      'What being #1 recruit means and how he handles pressure',
+      'PANINI NIL PARTNER: Signed NIL deal with Panini',
+      'Early-career collectible that can become a "first true card" grail',
+      'If the trajectory hits, collectors will be chasing',
       'His vision for Houston football'
     ],
     schedule: {
       day: 'Saturday',
-      date: 'Feb 7',
+      date: 'Feb 8',
       startTime: '11:00',
       endTime: '13:00'
     }
+  },
+
+  // DATE/TIME TBD (SIGNING ONLY, NO MEDIA)
+
+  {
+    id: 'cooper-kupp',
+    name: 'Cooper Kupp',
+    category: 'Current',
+    team: 'Seattle Seahawks',
+    position: 'WR',
+    keyStats: [
+      'Super Bowl MVP-level name',
+      'Massive hobby recognition',
+      'Veteran WR for the Seahawks',
+      'Triple Crown winner (2021)'
+    ],
+    definingMoments: [
+      'Super Bowl LVI MVP',
+      'Led league in receptions, yards, and TDs (2021)',
+      'Clutch Super Bowl-winning catch vs Bengals',
+      'Elite route runner and hands'
+    ],
+    cardHistory: [
+      '2017 Prizm rookie card',
+      'Super Bowl MVP cards are premium',
+      'Rams cards highly collectible',
+      'Now Seahawks team cards'
+    ],
+    personalDetails: [
+      'Eastern Washington standout',
+      'Yakima, Washington native',
+      'Family of football players',
+      'Known for incredible work ethic',
+      'SIGNING ONLY - NO MEDIA - DATE/TIME TBD'
+    ],
+    paniniContentBeats: [
+      'Premium veteran autograph with instant demand',
+      'Super Bowl MVP recognition',
+      'Elite production history',
+      'Now in Pacific Northwest'
+    ],
+    schedule: null
+  },
+  {
+    id: 'antonio-gibson',
+    name: 'Antonio Gibson',
+    category: 'Current',
+    team: 'New England Patriots',
+    position: 'RB',
+    keyStats: [
+      'RB for the New England Patriots',
+      'Versatile offensive weapon',
+      'Pass-catching ability',
+      'Former third-round pick'
+    ],
+    definingMoments: [
+      'Rookie year breakout with Washington',
+      'Dual-threat capabilities',
+      'Consistent production',
+      'Veteran presence in backfield'
+    ],
+    cardHistory: [
+      '2020 Prizm rookie card',
+      'Memphis college cards',
+      'Washington/Patriots team cards',
+      'Versatile player appeal'
+    ],
+    personalDetails: [
+      'Memphis Tigers standout',
+      'Converted WR to RB',
+      'Athletic versatility',
+      'SIGNING ONLY - NO MEDIA - DATE/TIME TBD'
+    ],
+    paniniContentBeats: [
+      'Solid name for team collectors and set builders',
+      'Patriots collector interest',
+      'Versatile player story',
+      'Value for team set builders'
+    ],
+    schedule: null
+  },
+  {
+    id: 'brian-robinson-jr',
+    name: 'Brian Robinson Jr.',
+    category: 'Current',
+    team: 'San Francisco 49ers',
+    position: 'RB',
+    keyStats: [
+      'RB for the San Francisco 49ers',
+      'Physical runner',
+      'Goal-line specialist',
+      'Tough, downhill style'
+    ],
+    definingMoments: [
+      'Inspiring comeback from shooting incident',
+      'Alabama national championship experience',
+      'Physical running style',
+      'Red zone threat'
+    ],
+    cardHistory: [
+      '2022 Prizm rookie card',
+      'Alabama cards collectible',
+      'Washington/49ers team cards',
+      'Inspiring story adds value'
+    ],
+    personalDetails: [
+      'Alabama Crimson Tide standout',
+      'Tuscaloosa, Alabama native',
+      'Overcame adversity',
+      'SIGNING ONLY - NO MEDIA - DATE/TIME TBD'
+    ],
+    paniniContentBeats: [
+      'Strong for 49ers collectors and RB room storylines',
+      'Inspiring comeback story',
+      'Alabama pedigree',
+      'Physical football appeal'
+    ],
+    schedule: null
+  },
+  {
+    id: 'trey-mcbride',
+    name: 'Trey McBride',
+    category: 'Current',
+    team: 'Arizona Cardinals',
+    position: 'TE',
+    keyStats: [
+      '2025: 126 catches, 1,239 yards, 11 TDs',
+      'True production monster',
+      'TE for the Arizona Cardinals',
+      'Elite stats across the board'
+    ],
+    definingMoments: [
+      'Breakout 2025 season',
+      'Became elite TE option',
+      'Consistent target in Cardinals offense',
+      'One of the most productive TEs in the league'
+    ],
+    cardHistory: [
+      '2022 Prizm rookie card',
+      'Colorado State cards',
+      'Cardinals team cards rising',
+      'TE position gaining hobby value'
+    ],
+    personalDetails: [
+      'Colorado State Rams standout',
+      'John Mackey Award finalist',
+      'Fort Morgan, Colorado native',
+      'SIGNING ONLY - NO MEDIA - DATE/TIME TBD'
+    ],
+    paniniContentBeats: [
+      'Elite stats = real hobby heat',
+      'Even signing-only, this is a "headline" caliber name',
+      'Modern collectors value production',
+      'Cardinals team collector favorite'
+    ],
+    schedule: null
   }
 ];
 
