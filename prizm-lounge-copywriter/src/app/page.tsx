@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
 import { getScheduleStatus, getTimeUntil, formatTime } from '@/types';
-import { CalendarIcon, UsersIcon, LayersIcon } from '@/components/Icons';
+import { CalendarIcon, UsersIcon, LayersIcon, SparklesIcon, HistoryIcon, GridIcon, SettingsIcon } from '@/components/Icons';
 
 export default function Home() {
   const router = useRouter();
@@ -187,6 +187,43 @@ export default function Home() {
           <LayersIcon size={24} className="text-[var(--status-live)]" />
           <span className="font-semibold text-base">Stations</span>
         </button>
+      </div>
+
+      {/* Crew Tools */}
+      <div className="pt-4 border-t border-[var(--background-tertiary)]">
+        <div className="section-header mb-4">
+          <span className="text-xs font-semibold text-[var(--foreground-dim)] uppercase tracking-wider">Crew Tools</span>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <button
+            onClick={() => router.push('/generate')}
+            className="card p-4 flex flex-col items-center gap-2 text-center hover:border-[var(--panini-red)] transition-colors"
+          >
+            <SparklesIcon size={24} className="text-[var(--panini-red)]" />
+            <span className="text-sm font-medium">Content Generator</span>
+          </button>
+          <button
+            onClick={() => router.push('/recap')}
+            className="card p-4 flex flex-col items-center gap-2 text-center hover:border-[var(--panini-yellow)] transition-colors"
+          >
+            <HistoryIcon size={24} className="text-[var(--panini-yellow)]" />
+            <span className="text-sm font-medium">Day Recap</span>
+          </button>
+          <button
+            onClick={() => router.push('/tracking')}
+            className="card p-4 flex flex-col items-center gap-2 text-center hover:border-[var(--foreground-muted)] transition-colors"
+          >
+            <GridIcon size={24} className="text-[var(--foreground-muted)]" />
+            <span className="text-sm font-medium">Content Tracking</span>
+          </button>
+          <button
+            onClick={() => router.push('/admin')}
+            className="card p-4 flex flex-col items-center gap-2 text-center hover:border-[var(--foreground-muted)] transition-colors"
+          >
+            <SettingsIcon size={24} className="text-[var(--foreground-muted)]" />
+            <span className="text-sm font-medium">Admin</span>
+          </button>
+        </div>
       </div>
     </div>
   );
