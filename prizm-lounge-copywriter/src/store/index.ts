@@ -14,7 +14,12 @@ import {
   AppearanceSchedule,
   ChecklistItem,
   Deliverable,
-  DeliverableStatus
+  DeliverableStatus,
+  Station,
+  StationStatus,
+  CommitmentType,
+  PlayerArrival,
+  STATIONS
 } from '@/types';
 import { players as initialPlayers } from '@/data/players';
 import { defaultChecklist, defaultDeliverables } from '@/data/checklist';
@@ -92,6 +97,18 @@ interface AppState {
   updateDeliverableStatus: (id: string, status: DeliverableStatus) => void;
   addDeliverableNote: (id: string, note: string) => void;
   initializeDeliverables: () => void;
+
+  // Stations
+  stations: StationStatus[];
+  updateStation: (station: Station, updates: Partial<StationStatus>) => void;
+  initializeStations: () => void;
+
+  // Player Arrivals
+  playerArrivals: PlayerArrival[];
+  markPlayerArrived: (playerId: string) => void;
+  markPlayerDeparted: (playerId: string) => void;
+  getPlayerArrival: (playerId: string) => PlayerArrival | undefined;
+  getElapsedTime: (playerId: string) => number | null;
 
   // Reset
   resetUIState: () => void;
@@ -303,6 +320,65 @@ export const useAppStore = create<AppState>()(
         });
       },
 
+      // Stations
+      stations: [],
+      updateStation: (station, updates) => set(state => ({
+        stations: state.stations.map(s =>
+          s.station === station ? { ...s, ...updates } : s
+        )
+      })),
+      initializeStations: () => {
+        const { stations } = get();
+        if (stations.length > 0) {
+          return;
+        }
+        set({
+          stations: STATIONS.map(station => ({
+            station,
+            currentPlayer: null,
+            currentCommitment: null,
+            status: 'idle' as const,
+            notes: ''
+          }))
+        });
+      },
+
+      // Player Arrivals
+      playerArrivals: [],
+      markPlayerArrived: (playerId) => set(state => {
+        // Check if already arrived
+        const existing = state.playerArrivals.find(a => a.playerId === playerId && !a.departedAt);
+        if (existing) return {};
+
+        return {
+          playerArrivals: [...state.playerArrivals, {
+            playerId,
+            arrivedAt: Date.now()
+          }]
+        };
+      }),
+      markPlayerDeparted: (playerId) => set(state => ({
+        playerArrivals: state.playerArrivals.map(a => {
+          if (a.playerId === playerId && !a.departedAt) {
+            const departedAt = Date.now();
+            return {
+              ...a,
+              departedAt,
+              actualDuration: Math.round((departedAt - a.arrivedAt) / (1000 * 60))
+            };
+          }
+          return a;
+        })
+      })),
+      getPlayerArrival: (playerId) => {
+        return get().playerArrivals.find(a => a.playerId === playerId && !a.departedAt);
+      },
+      getElapsedTime: (playerId) => {
+        const arrival = get().playerArrivals.find(a => a.playerId === playerId && !a.departedAt);
+        if (!arrival) return null;
+        return Math.round((Date.now() - arrival.arrivedAt) / (1000 * 60));
+      },
+
       // Reset
       resetUIState: () => set({
         selectedPlayerId: null,
@@ -330,6 +406,8 @@ export const useAppStore = create<AppState>()(
         dayRecapCrowdNotes: state.dayRecapCrowdNotes,
         checklist: state.checklist,
         deliverables: state.deliverables,
+        stations: state.stations,
+        playerArrivals: state.playerArrivals,
         largeTextMode: state.largeTextMode
       })
     }

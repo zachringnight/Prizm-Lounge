@@ -4,17 +4,12 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
 import { getScheduleStatus, getTimeUntil, formatTime } from '@/types';
-import { CalendarIcon, UsersIcon, ClipboardIcon } from '@/components/Icons';
+import { CalendarIcon, UsersIcon, LayersIcon, SparklesIcon, HistoryIcon, GridIcon, SettingsIcon } from '@/components/Icons';
 
 export default function Home() {
   const router = useRouter();
-  const { players, deliverables, initializeDeliverables } = useAppStore();
+  const { players } = useAppStore();
   const [, setTick] = useState(0);
-
-  // Initialize deliverables on first load
-  useEffect(() => {
-    initializeDeliverables();
-  }, [initializeDeliverables]);
 
   // Update every minute for countdown timers
   useEffect(() => {
@@ -23,11 +18,6 @@ export default function Home() {
     }, 60000);
     return () => clearInterval(interval);
   }, []);
-
-  // Get today's schedule
-  const today = new Date();
-  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const currentDayName = dayNames[today.getDay()];
 
   // Find live/upcoming players
   const livePlayer = players.find(p => getScheduleStatus(p.schedule) === 'live');
@@ -42,10 +32,6 @@ export default function Home() {
       return a.schedule.startTime.localeCompare(b.schedule.startTime);
     })
     .slice(0, 3);
-
-  // Calculate deliverables progress
-  const deliverablesComplete = deliverables.filter(d => d.status === 'completed' || d.status === 'delivered').length;
-  const deliverablesTotal = deliverables.length;
 
   return (
     <div className="space-y-8">
@@ -105,14 +91,14 @@ export default function Home() {
           <div className="stat-label">Players</div>
         </button>
         <button
-          onClick={() => router.push('/deliverables')}
+          onClick={() => router.push('/stations')}
           className="stat-card col-span-2 md:col-span-1"
         >
           <div className="stat-icon">
-            <ClipboardIcon size={28} className="mx-auto text-[var(--status-live)]" />
+            <LayersIcon size={28} className="mx-auto text-[var(--status-live)]" />
           </div>
-          <div className="stat-value">{deliverablesComplete}/{deliverablesTotal}</div>
-          <div className="stat-label">Deliverables</div>
+          <div className="stat-value">5</div>
+          <div className="stat-label">Stations</div>
         </button>
       </div>
 
@@ -195,12 +181,49 @@ export default function Home() {
           <span className="font-semibold text-base">Schedule</span>
         </button>
         <button
-          onClick={() => router.push('/deliverables')}
+          onClick={() => router.push('/stations')}
           className="card p-5 flex items-center gap-4 col-span-2 md:col-span-2"
         >
-          <ClipboardIcon size={24} className="text-[var(--status-live)]" />
-          <span className="font-semibold text-base">Deliverables</span>
+          <LayersIcon size={24} className="text-[var(--status-live)]" />
+          <span className="font-semibold text-base">Stations</span>
         </button>
+      </div>
+
+      {/* Crew Tools */}
+      <div className="pt-4 border-t border-[var(--background-tertiary)]">
+        <div className="section-header mb-4">
+          <span className="text-xs font-semibold text-[var(--foreground-dim)] uppercase tracking-wider">Crew Tools</span>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <button
+            onClick={() => router.push('/generate')}
+            className="card p-4 flex flex-col items-center gap-2 text-center hover:border-[var(--panini-red)] transition-colors"
+          >
+            <SparklesIcon size={24} className="text-[var(--panini-red)]" />
+            <span className="text-sm font-medium">Content Generator</span>
+          </button>
+          <button
+            onClick={() => router.push('/recap')}
+            className="card p-4 flex flex-col items-center gap-2 text-center hover:border-[var(--panini-yellow)] transition-colors"
+          >
+            <HistoryIcon size={24} className="text-[var(--panini-yellow)]" />
+            <span className="text-sm font-medium">Day Recap</span>
+          </button>
+          <button
+            onClick={() => router.push('/tracking')}
+            className="card p-4 flex flex-col items-center gap-2 text-center hover:border-[var(--foreground-muted)] transition-colors"
+          >
+            <GridIcon size={24} className="text-[var(--foreground-muted)]" />
+            <span className="text-sm font-medium">Content Tracking</span>
+          </button>
+          <button
+            onClick={() => router.push('/admin')}
+            className="card p-4 flex flex-col items-center gap-2 text-center hover:border-[var(--foreground-muted)] transition-colors"
+          >
+            <SettingsIcon size={24} className="text-[var(--foreground-muted)]" />
+            <span className="text-sm font-medium">Admin</span>
+          </button>
+        </div>
       </div>
     </div>
   );
