@@ -246,7 +246,7 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
               {signingExpanded && (
                 <div className="border-t border-[var(--background-tertiary)] p-4 md:p-6">
                   {/* Mobile: Compact list */}
-                  <div className="md:hidden space-y-3">
+                  <div className="questions-container md:hidden space-y-3">
                     {stationQuestions.signing.map((q, i) => (
                       <div key={i} className="text-sm text-[var(--foreground)] py-2 border-b border-[var(--background-tertiary)] last:border-0">
                         <span className="text-[var(--panini-yellow)] font-bold mr-2">{i + 1}.</span>
@@ -255,7 +255,7 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
                     ))}
                   </div>
                   {/* Desktop: Larger text with more spacing */}
-                  <div className="hidden md:block space-y-4">
+                  <div className="questions-container hidden md:block space-y-4">
                     {stationQuestions.signing.map((q, i) => (
                       <div key={i} className="text-base text-[var(--foreground)] py-3 border-b border-[var(--background-tertiary)] last:border-0">
                         <span className="text-[var(--panini-yellow)] font-bold mr-3 text-lg">{i + 1}.</span>
@@ -290,7 +290,7 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
               {packRipsExpanded && (
                 <div className="border-t border-[var(--background-tertiary)] p-4 md:p-6">
                   {/* Mobile: Compact list */}
-                  <div className="md:hidden space-y-3">
+                  <div className="questions-container md:hidden space-y-3">
                     {stationQuestions.packRips.map((q, i) => (
                       <div key={i} className="text-sm text-[var(--foreground)] py-2 border-b border-[var(--background-tertiary)] last:border-0">
                         <span className="text-[var(--panini-red)] font-bold mr-2">{i + 1}.</span>
@@ -299,7 +299,7 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
                     ))}
                   </div>
                   {/* Desktop: Larger text with more spacing */}
-                  <div className="hidden md:block space-y-4">
+                  <div className="questions-container hidden md:block space-y-4">
                     {stationQuestions.packRips.map((q, i) => (
                       <div key={i} className="text-base text-[var(--foreground)] py-3 border-b border-[var(--background-tertiary)] last:border-0">
                         <span className="text-[var(--panini-red)] font-bold mr-3 text-lg">{i + 1}.</span>
