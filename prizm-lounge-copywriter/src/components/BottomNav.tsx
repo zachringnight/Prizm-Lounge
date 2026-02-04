@@ -2,19 +2,33 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
-import { HomeIcon, UsersIcon, CalendarIcon, LayersIcon, SearchIcon } from './Icons';
+import { HomeIcon, UsersIcon, CalendarIcon, LayersIcon, SearchIcon, SparklesIcon, HistoryIcon } from './Icons';
 
 interface NavItem {
   href: string;
   label: string;
   icon: React.ComponentType<{ className?: string; size?: number }>;
+  highlight?: boolean;
 }
 
-const navItems: NavItem[] = [
+const mobileNavItems: NavItem[] = [
   { href: '/', label: 'Home', icon: HomeIcon },
+  { href: '/stations', label: 'Stations', icon: LayersIcon },
+  { href: '/generate', label: 'Generate', icon: SparklesIcon, highlight: true },
   { href: '/schedule', label: 'Schedule', icon: CalendarIcon },
   { href: '/players', label: 'Players', icon: UsersIcon },
+];
+
+const desktopNavItems: NavItem[] = [
+  { href: '/', label: 'Home', icon: HomeIcon },
   { href: '/stations', label: 'Stations', icon: LayersIcon },
+  { href: '/schedule', label: 'Schedule', icon: CalendarIcon },
+  { href: '/players', label: 'Players', icon: UsersIcon },
+];
+
+const desktopToolItems: NavItem[] = [
+  { href: '/generate', label: 'Generate', icon: SparklesIcon, highlight: true },
+  { href: '/recap', label: 'Recap', icon: HistoryIcon },
 ];
 
 export default function BottomNav() {
@@ -23,7 +37,6 @@ export default function BottomNav() {
   const { largeTextMode, toggleLargeTextMode } = useAppStore();
 
   const handleNavClick = (href: string) => {
-    // Trigger haptic feedback if available
     if ('vibrate' in navigator) {
       navigator.vibrate(10);
     }
@@ -31,7 +44,6 @@ export default function BottomNav() {
   };
 
   const openSearch = () => {
-    // Dispatch a keyboard event to trigger the global search
     const event = new KeyboardEvent('keydown', {
       key: 'k',
       metaKey: true,
@@ -43,8 +55,8 @@ export default function BottomNav() {
   return (
     <>
       {/* Mobile Bottom Navigation */}
-      <nav className="bottom-nav md:hidden">
-        {navItems.map((item) => {
+      <nav className="mobile-nav md:hidden">
+        {mobileNavItems.map((item) => {
           const isActive = pathname === item.href ||
             (item.href !== '/' && pathname.startsWith(item.href));
           const Icon = item.icon;
@@ -53,9 +65,9 @@ export default function BottomNav() {
             <button
               key={item.href}
               onClick={() => handleNavClick(item.href)}
-              className={`nav-item ${isActive ? 'active' : ''}`}
+              className={`mobile-nav-item ${isActive ? 'active' : ''} ${item.highlight ? 'highlight' : ''}`}
             >
-              <Icon size={22} />
+              <Icon size={item.highlight ? 24 : 20} />
               <span>{item.label}</span>
             </button>
           );
@@ -64,12 +76,16 @@ export default function BottomNav() {
 
       {/* Desktop Top Navigation */}
       <nav className="desktop-nav hidden md:flex">
-        <div className="desktop-nav-brand">
+        <button
+          onClick={() => handleNavClick('/')}
+          className="desktop-nav-brand"
+        >
           <span className="text-[var(--panini-red)] font-bold">Prizm</span>{' '}
           <span className="text-[var(--panini-yellow)] font-bold">Lounge</span>
-        </div>
-        <div className="desktop-nav-links">
-          {navItems.map((item) => {
+        </button>
+
+        <div className="desktop-nav-center">
+          {desktopNavItems.map((item) => {
             const isActive = pathname === item.href ||
               (item.href !== '/' && pathname.startsWith(item.href));
             const Icon = item.icon;
@@ -85,22 +101,41 @@ export default function BottomNav() {
               </button>
             );
           })}
+        </div>
+
+        <div className="desktop-nav-right">
+          {/* Crew Tools */}
+          {desktopToolItems.map((item) => {
+            const isActive = pathname === item.href ||
+              (item.href !== '/' && pathname.startsWith(item.href));
+            const Icon = item.icon;
+
+            return (
+              <button
+                key={item.href}
+                onClick={() => handleNavClick(item.href)}
+                className={`desktop-tool-item ${isActive ? 'active' : ''} ${item.highlight ? 'highlight' : ''}`}
+              >
+                <Icon size={16} />
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
 
           {/* Search Trigger */}
           <button
             onClick={openSearch}
-            className="search-trigger ml-4"
+            className="desktop-search"
             title="Search (Cmd+K)"
           >
             <SearchIcon size={16} />
-            <span className="hidden lg:inline">Search</span>
             <kbd>⌘K</kbd>
           </button>
 
           {/* Large Text Mode Toggle */}
           <button
             onClick={toggleLargeTextMode}
-            className={`text-size-toggle ml-2 ${largeTextMode ? 'active' : ''}`}
+            className={`text-size-toggle ${largeTextMode ? 'active' : ''}`}
             title="Toggle large text mode"
           >
             Aa
