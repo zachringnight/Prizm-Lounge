@@ -328,3 +328,25 @@ export function formatTime(time: string): string {
   const displayHours = hours % 12 || 12;
   return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
 }
+
+// Clip marker for videographers to mark great moments
+export interface ClipMarker {
+  id: string;
+  station: Station;
+  playerId: string | null;  // The athlete at the station when marker was pressed
+  playerName: string | null; // Denormalized for quick display
+  timestamp: number;         // When the marker was pressed (Date.now())
+  note?: string;             // Optional note about the clip
+  markedBy?: string;         // Optional: who marked it (videographer name)
+}
+
+// Format timestamp for display
+export function formatClipTimestamp(timestamp: number): string {
+  const date = new Date(timestamp);
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+  const period = hours >= 12 ? 'PM' : 'AM';
+  const displayHours = hours % 12 || 12;
+  return `${displayHours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} ${period}`;
+}

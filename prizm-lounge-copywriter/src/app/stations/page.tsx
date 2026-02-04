@@ -15,6 +15,7 @@ import {
 import { useToast } from '@/components/Toast';
 import { ChevronDownIcon, ChevronUpIcon, ChevronRightIcon, ClockIcon, CheckIcon } from '@/components/Icons';
 import { getPlayerQuestions } from '@/data/players';
+import ClipMarkerButton from '@/components/ClipMarkerButton';
 
 const ALL_STATIONS: Station[] = ['LED Wall', 'Signing', 'PR Interview', 'Pack Rips', 'Free'];
 
@@ -50,7 +51,8 @@ const StationCard = memo(function StationCard({
   elapsedTime,
   onToggle,
   onUpdate,
-  onPlayerClick
+  onPlayerClick,
+  onClipMarked
 }: {
   station: Station;
   status: 'active' | 'idle' | 'setup';
@@ -65,6 +67,7 @@ const StationCard = memo(function StationCard({
   onToggle: () => void;
   onUpdate: (updates: { status?: 'active' | 'idle' | 'setup'; currentPlayer?: string | null; currentCommitment?: CommitmentType | null; notes?: string }) => void;
   onPlayerClick: (playerId: string) => void;
+  onClipMarked: () => void;
 }) {
   const playerQuestions = assignedPlayer ? getPlayerQuestions(assignedPlayer.id) : null;
   const showSigningQuestions =
@@ -105,6 +108,16 @@ const StationCard = memo(function StationCard({
       {/* Expanded Content */}
       {expanded && (
         <div className="station-card-content">
+          {/* Clip Marker Button - Primary action for videographers */}
+          {station !== 'Free' && (
+            <ClipMarkerButton
+              station={station}
+              playerId={currentPlayer}
+              playerName={assignedPlayer?.name || null}
+              onMarked={onClipMarked}
+            />
+          )}
+
           {/* Status Toggle */}
           <div className="station-status-toggle">
             {(['idle', 'setup', 'active'] as const).map(s => (
@@ -253,7 +266,8 @@ export default function StationsPage() {
     initializeStations,
     playerArrivals,
     markPlayerArrived,
-    markPlayerDeparted
+    markPlayerDeparted,
+    clipMarkers
   } = useAppStore();
   const { showToast, ToastComponent } = useToast();
   const [expandedStations, setExpandedStations] = useState<Set<Station>>(new Set(['LED Wall']));
@@ -334,6 +348,13 @@ export default function StationsPage() {
     }
   }, [players, hasArrived, markPlayerArrived, markPlayerDeparted, showToast]);
 
+  const handleClipMarked = useCallback((station: string, playerName: string | null) => {
+    const msg = playerName
+      ? `Clip marked for ${playerName} at ${station}!`
+      : `Clip marked at ${station}!`;
+    showToast(msg, 'success');
+  }, [showToast]);
+
   // Find live and upcoming players
   const livePlayers = players.filter(p => getScheduleStatus(p.schedule) === 'live');
   const upcomingPlayers = players
@@ -393,6 +414,15 @@ export default function StationsPage() {
           </p>
         </div>
         <div className="stations-controls">
+          {clipMarkers.length > 0 && (
+            <button
+              onClick={() => router.push('/clip-markers')}
+              className="stations-control-btn"
+              style={{ color: 'var(--panini-yellow)' }}
+            >
+              🎬 {clipMarkers.length} Clips
+            </button>
+          )}
           <button onClick={collapseAll} className="stations-control-btn">
             Collapse All
           </button>
@@ -529,6 +559,7 @@ export default function StationsPage() {
                 onToggle={() => toggleStation(data.station)}
                 onUpdate={(updates) => handleUpdate(data.station, updates)}
                 onPlayerClick={(id) => router.push(`/players/${id}`)}
+                onClipMarked={() => handleClipMarked(data.station, assignedPlayer?.name || null)}
               />
             </div>
           );
