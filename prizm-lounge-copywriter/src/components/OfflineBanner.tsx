@@ -1,32 +1,42 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { useAppStore } from '@/store';
 import { WifiOffIcon } from './Icons';
 
+// Subscribe to online/offline events
+function subscribe(callback: () => void) {
+  window.addEventListener('online', callback);
+  window.addEventListener('offline', callback);
+  return () => {
+    window.removeEventListener('online', callback);
+    window.removeEventListener('offline', callback);
+  };
+}
+
+function getSnapshot() {
+  return navigator.onLine;
+}
+
+function getServerSnapshot() {
+  return true; // Assume online during SSR
+}
+
 export default function OfflineBanner() {
-  const { isOffline, setIsOffline } = useAppStore();
-  const [mounted, setMounted] = useState(false);
+  const { setIsOffline } = useAppStore();
+  const isOnline = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const isOffline = !isOnline;
+  const hasInitialized = useRef(false);
 
+  // Sync with store only when value changes (not on initial render)
   useEffect(() => {
-    setMounted(true);
+    if (hasInitialized.current) {
+      setIsOffline(isOffline);
+    }
+    hasInitialized.current = true;
+  }, [isOffline, setIsOffline]);
 
-    const handleOnline = () => setIsOffline(false);
-    const handleOffline = () => setIsOffline(true);
-
-    // Check initial state
-    setIsOffline(!navigator.onLine);
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, [setIsOffline]);
-
-  if (!mounted || !isOffline) return null;
+  if (!isOffline) return null;
 
   return (
     <div className="offline-banner flex items-center justify-center gap-2">

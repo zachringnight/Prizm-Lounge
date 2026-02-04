@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
 import { getScheduleStatus, formatTime, Player } from '@/types';
@@ -16,17 +16,23 @@ export default function GlobalSearch() {
   const resultsRef = useRef<HTMLDivElement>(null);
 
   // Filter players based on search query
-  const filteredPlayers = query.trim()
-    ? players.filter(player => {
-        const searchLower = query.toLowerCase();
-        return (
-          player.name.toLowerCase().includes(searchLower) ||
-          player.team.toLowerCase().includes(searchLower) ||
-          player.position.toLowerCase().includes(searchLower) ||
-          player.category.toLowerCase().includes(searchLower)
-        );
-      })
-    : [];
+  const filteredPlayers = useMemo(() => {
+    if (!query.trim()) return [];
+    const searchLower = query.toLowerCase();
+    return players.filter(player =>
+      player.name.toLowerCase().includes(searchLower) ||
+      player.team.toLowerCase().includes(searchLower) ||
+      player.position.toLowerCase().includes(searchLower) ||
+      player.category.toLowerCase().includes(searchLower)
+    );
+  }, [query, players]);
+
+  // Close handler that also resets state
+  const closeSearch = useCallback(() => {
+    setIsOpen(false);
+    setQuery('');
+    setSelectedIndex(0);
+  }, []);
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -40,24 +46,26 @@ export default function GlobalSearch() {
       // Close with Escape
       if (e.key === 'Escape' && isOpen) {
         e.preventDefault();
-        setIsOpen(false);
+        closeSearch();
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen]);
+  }, [isOpen, closeSearch]);
 
   // Focus input when opening
   useEffect(() => {
     if (isOpen && inputRef.current) {
       inputRef.current.focus();
     }
-    if (!isOpen) {
-      setQuery('');
-      setSelectedIndex(0);
-    }
   }, [isOpen]);
+
+  // Navigate to player detail page
+  const navigateToPlayer = useCallback((player: Player) => {
+    router.push(`/players/${player.id}`);
+    closeSearch();
+  }, [router, closeSearch]);
 
   // Handle navigation within results
   const handleKeyNavigation = useCallback((e: React.KeyboardEvent) => {
@@ -79,7 +87,7 @@ export default function GlobalSearch() {
         navigateToPlayer(filteredPlayers[selectedIndex]);
       }
     }
-  }, [filteredPlayers, selectedIndex]);
+  }, [filteredPlayers, selectedIndex, navigateToPlayer]);
 
   // Scroll selected item into view
   useEffect(() => {
@@ -90,11 +98,6 @@ export default function GlobalSearch() {
       }
     }
   }, [selectedIndex, filteredPlayers.length]);
-
-  const navigateToPlayer = (player: Player) => {
-    router.push(`/players/${player.id}`);
-    setIsOpen(false);
-  };
 
   const getStatusBadge = (player: Player) => {
     const status = getScheduleStatus(player.schedule);
@@ -113,7 +116,7 @@ export default function GlobalSearch() {
     <div
       className="command-palette-overlay"
       onClick={(e) => {
-        if (e.target === e.currentTarget) setIsOpen(false);
+        if (e.target === e.currentTarget) closeSearch();
       }}
     >
       <div className="command-palette">
@@ -133,7 +136,7 @@ export default function GlobalSearch() {
             className="command-palette-input"
           />
           <button
-            onClick={() => setIsOpen(false)}
+            onClick={closeSearch}
             className="command-palette-close"
           >
             <XIcon size={18} />
@@ -154,7 +157,7 @@ export default function GlobalSearch() {
           ) : filteredPlayers.length === 0 ? (
             <div className="command-palette-empty">
               <p className="text-[var(--foreground-muted)]">
-                No players found for "{query}"
+                No players found for &quot;{query}&quot;
               </p>
             </div>
           ) : (

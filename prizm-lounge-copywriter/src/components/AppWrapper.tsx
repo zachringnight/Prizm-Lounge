@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useAppStore } from '@/store';
+import ErrorBoundary from './ErrorBoundary';
 
 interface AppWrapperProps {
   children: React.ReactNode;
@@ -19,5 +20,5 @@ export default function AppWrapper({ children }: AppWrapperProps) {
     }
   }, [largeTextMode]);
 
-  return <>{children}</>;
+  return <ErrorBoundary>{children}</ErrorBoundary>;
 }

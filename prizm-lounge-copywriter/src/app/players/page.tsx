@@ -9,7 +9,7 @@ import { PlayerCategory } from '@/types';
 
 export default function PlayersPage() {
   const router = useRouter();
-  const { players, setSelectedPlayer } = useAppStore();
+  const { players } = useAppStore();
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<PlayerCategory | 'All'>('All');
 
@@ -78,7 +78,13 @@ export default function PlayersPage() {
       <div className="space-y-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4 md:space-y-0">
         {filteredPlayers.length === 0 ? (
           <div className="empty-state md:col-span-full">
-            <p className="text-lg">No players found</p>
+            <div className="empty-state-icon">🔍</div>
+            <h3>No players found</h3>
+            <p>
+              {search
+                ? `No results for "${search}"${categoryFilter !== 'All' ? ` in ${categoryFilter}` : ''}`
+                : `No ${categoryFilter !== 'All' ? categoryFilter.toLowerCase() : ''} players available`}
+            </p>
           </div>
         ) : (
           filteredPlayers.map(player => (

@@ -17,12 +17,52 @@ import {
   DeliverableStatus,
   Station,
   StationStatus,
-  CommitmentType,
   PlayerArrival,
   STATIONS
 } from '@/types';
 import { players as initialPlayers } from '@/data/players';
 import { defaultChecklist, defaultDeliverables } from '@/data/checklist';
+
+// Initialization flags to prevent race conditions
+let stationsInitialized = false;
+let checklistInitialized = false;
+let deliverablesInitialized = false;
+
+// Check if we're in browser environment
+const isBrowser = typeof window !== 'undefined';
+
+// Safe localStorage wrapper with quota handling and SSR support
+const safeLocalStorage = {
+  getItem: (name: string): string | null => {
+    if (!isBrowser) return null;
+    try {
+      return localStorage.getItem(name);
+    } catch (error) {
+      console.warn('Failed to read from localStorage:', error);
+      return null;
+    }
+  },
+  setItem: (name: string, value: string): void => {
+    if (!isBrowser) return;
+    try {
+      localStorage.setItem(name, value);
+    } catch (error) {
+      console.warn('Failed to write to localStorage:', error);
+      // If quota exceeded, try to clear old data
+      if (error instanceof DOMException && error.name === 'QuotaExceededError') {
+        console.warn('Storage quota exceeded. Consider clearing old data.');
+      }
+    }
+  },
+  removeItem: (name: string): void => {
+    if (!isBrowser) return;
+    try {
+      localStorage.removeItem(name);
+    } catch (error) {
+      console.warn('Failed to remove from localStorage:', error);
+    }
+  }
+};
 
 interface AppState {
   // Players (editable copy)
@@ -279,18 +319,24 @@ export const useAppStore = create<AppState>()(
             : item
         )
       })),
-      initializeChecklist: () => set(state => {
-        if (state.checklist.length === 0) {
-          return {
-            checklist: defaultChecklist.map(item => ({
-              ...item,
-              id: uuidv4(),
-              completed: false
-            }))
-          };
-        }
-        return {};
-      }),
+      initializeChecklist: () => {
+        // Prevent race condition with flag
+        if (checklistInitialized) return;
+        checklistInitialized = true;
+
+        set(state => {
+          if (state.checklist.length === 0) {
+            return {
+              checklist: defaultChecklist.map(item => ({
+                ...item,
+                id: uuidv4(),
+                completed: false
+              }))
+            };
+          }
+          return {};
+        });
+      },
 
       // Deliverables
       deliverables: [],
@@ -307,6 +353,10 @@ export const useAppStore = create<AppState>()(
         )
       })),
       initializeDeliverables: () => {
+        // Prevent race condition with flag
+        if (deliverablesInitialized) return;
+        deliverablesInitialized = true;
+
         const { deliverables } = get();
         if (deliverables.length > 0) {
           return;
@@ -328,6 +378,10 @@ export const useAppStore = create<AppState>()(
         )
       })),
       initializeStations: () => {
+        // Prevent race condition with flag
+        if (stationsInitialized) return;
+        stationsInitialized = true;
+
         const { stations } = get();
         if (stations.length > 0) {
           return;
@@ -392,7 +446,7 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: 'prizm-lounge-storage',
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => safeLocalStorage),
       partialize: (state) => ({
         // Persist everything except transient UI state
         players: state.players,
@@ -413,6 +467,23 @@ export const useAppStore = create<AppState>()(
     }
   )
 );
+
+// Cross-tab sync: Listen for storage changes from other tabs
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', (event) => {
+    if (event.key === 'prizm-lounge-storage' && event.newValue) {
+      try {
+        const newState = JSON.parse(event.newValue);
+        if (newState?.state) {
+          // Trigger store rehydration on cross-tab changes
+          useAppStore.setState(newState.state);
+        }
+      } catch (error) {
+        console.warn('Failed to sync state from other tab:', error);
+      }
+    }
+  });
+}
 
 // Selector hooks for common patterns
 export const useSelectedPlayer = () => {

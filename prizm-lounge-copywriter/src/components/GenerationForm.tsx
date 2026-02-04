@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useAppStore, useSelectedPlayer, usePlayerNotes } from '@/store';
+import { useState } from 'react';
+import { useAppStore, useSelectedPlayer } from '@/store';
 import {
   ContentMode,
   Platform,
@@ -140,15 +140,19 @@ export default function GenerationForm() {
       return;
     }
 
-    const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
-    const recognition = new SpeechRecognition();
+    const SpeechRecognitionClass = window.webkitSpeechRecognition || window.SpeechRecognition;
+    if (!SpeechRecognitionClass) {
+      showToast('Voice input not supported', 'error');
+      return;
+    }
+    const recognition = new SpeechRecognitionClass();
     recognition.continuous = false;
     recognition.interimResults = false;
 
     recognition.onstart = () => setIsListening(true);
     recognition.onend = () => setIsListening(false);
 
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
       const transcript = event.results[0][0].transcript;
       const newValue = contextInput ? `${contextInput} ${transcript}` : transcript;
       setContextInput(newValue);
@@ -194,7 +198,7 @@ export default function GenerationForm() {
 
       const data = await response.json();
 
-      const newVariations: GeneratedVariation[] = data.variations.map((v: any) => ({
+      const newVariations: GeneratedVariation[] = data.variations.map((v: { label: string; content: string; characterCount: number }) => ({
         id: uuidv4(),
         label: v.label,
         content: v.content,
@@ -221,8 +225,8 @@ export default function GenerationForm() {
       setContentId(id);
       showToast('Generated 3 variations', 'success');
 
-    } catch (error) {
-      console.error('Generation error:', error);
+    } catch (err) {
+      console.error('Generation error:', err);
       showToast('Generation failed. Check your connection.', 'error');
     } finally {
       setIsGenerating(false);
@@ -241,7 +245,7 @@ export default function GenerationForm() {
       }
 
       showToast('Copied to clipboard', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to copy', 'error');
     }
   };

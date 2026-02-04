@@ -62,7 +62,7 @@ export default function DayRecapForm() {
 
       const data = await response.json();
 
-      const newVariations: GeneratedVariation[] = data.variations.map((v: any) => ({
+      const newVariations: GeneratedVariation[] = data.variations.map((v: { label: string; content: string; characterCount: number }) => ({
         id: uuidv4(),
         label: v.label,
         content: v.content,
@@ -85,8 +85,8 @@ export default function DayRecapForm() {
 
       showToast('Generated 3 variations', 'success');
 
-    } catch (error) {
-      console.error('Generation error:', error);
+    } catch (err) {
+      console.error('Generation error:', err);
       showToast('Generation failed', 'error');
     } finally {
       setIsGenerating(false);
@@ -100,7 +100,7 @@ export default function DayRecapForm() {
       setTimeout(() => setCopiedId(null), 2000);
       if ('vibrate' in navigator) navigator.vibrate(10);
       showToast('Copied to clipboard', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to copy', 'error');
     }
   };

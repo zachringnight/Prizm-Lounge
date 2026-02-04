@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useAppStore } from '@/store';
-import { getScheduleStatus, getTimeUntil, formatTime, Player, AppearanceSchedule } from '@/types';
-import PlayerCard from '@/components/PlayerCard';
+import { getScheduleStatus, getTimeUntil, formatTime, AppearanceSchedule } from '@/types';
 import { ClockIcon, ArrowDownIcon } from '@/components/Icons';
 
 type DayFilter = 'All' | 'Thursday' | 'Friday' | 'Saturday';
@@ -35,7 +34,6 @@ function isCountdownUrgent(schedule: AppearanceSchedule | null): boolean {
 function getSmartStatus(): { type: 'pre-event' | 'lunch-break' | 'wrap' | 'active' | null; message: string; subMessage: string } {
   const now = new Date();
   const hour = now.getHours();
-  const dayOfWeek = now.getDay();
 
   // Event dates: Thu Feb 6, Fri Feb 7, Sat Feb 8 (2026)
   const eventDates = {
