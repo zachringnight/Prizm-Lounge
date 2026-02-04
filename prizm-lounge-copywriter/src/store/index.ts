@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage, StorageValue } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { v4 as uuidv4 } from 'uuid';
 import {
   Player,
@@ -17,7 +17,6 @@ import {
   DeliverableStatus,
   Station,
   StationStatus,
-  CommitmentType,
   PlayerArrival,
   STATIONS
 } from '@/types';

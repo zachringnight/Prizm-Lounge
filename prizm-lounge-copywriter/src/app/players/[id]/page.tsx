@@ -66,15 +66,19 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
       return;
     }
 
-    const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
-    const recognition = new SpeechRecognition();
+    const SpeechRecognitionClass = window.webkitSpeechRecognition || window.SpeechRecognition;
+    if (!SpeechRecognitionClass) {
+      showToast('Voice input not supported', 'error');
+      return;
+    }
+    const recognition = new SpeechRecognitionClass();
     recognition.continuous = false;
     recognition.interimResults = false;
 
     recognition.onstart = () => setIsListening(true);
     recognition.onend = () => setIsListening(false);
 
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
       const transcript = event.results[0][0].transcript;
       setNoteInput(prev => prev ? `${prev} ${transcript}` : transcript);
     };
