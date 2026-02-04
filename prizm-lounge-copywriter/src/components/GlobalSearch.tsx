@@ -59,6 +59,12 @@ export default function GlobalSearch() {
     }
   }, [isOpen]);
 
+  // Navigate to player detail page
+  const navigateToPlayer = useCallback((player: Player) => {
+    router.push(`/players/${player.id}`);
+    setIsOpen(false);
+  }, [router]);
+
   // Handle navigation within results
   const handleKeyNavigation = useCallback((e: React.KeyboardEvent) => {
     if (filteredPlayers.length === 0) return;
@@ -79,7 +85,7 @@ export default function GlobalSearch() {
         navigateToPlayer(filteredPlayers[selectedIndex]);
       }
     }
-  }, [filteredPlayers, selectedIndex]);
+  }, [filteredPlayers, selectedIndex, navigateToPlayer]);
 
   // Scroll selected item into view
   useEffect(() => {
@@ -90,11 +96,6 @@ export default function GlobalSearch() {
       }
     }
   }, [selectedIndex, filteredPlayers.length]);
-
-  const navigateToPlayer = (player: Player) => {
-    router.push(`/players/${player.id}`);
-    setIsOpen(false);
-  };
 
   const getStatusBadge = (player: Player) => {
     const status = getScheduleStatus(player.schedule);
@@ -154,7 +155,7 @@ export default function GlobalSearch() {
           ) : filteredPlayers.length === 0 ? (
             <div className="command-palette-empty">
               <p className="text-[var(--foreground-muted)]">
-                No players found for "{query}"
+                No players found for &quot;{query}&quot;
               </p>
             </div>
           ) : (
