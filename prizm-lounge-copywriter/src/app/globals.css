@@ -2622,6 +2622,330 @@ main {
   color: var(--panini-yellow);
 }
 
+/* ========================================
+   MOBILE LAYOUT FIXES
+   ======================================== */
+
+/* Very small screens (under 380px) */
+@media (max-width: 379px) {
+  /* Quick actions: 2 columns on very small screens */
+  .quick-actions-grid,
+  .quick-actions-grid.three-col {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .quick-action-card {
+    padding: 12px 6px;
+    font-size: 10px;
+  }
+
+  .quick-action-card svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Tabs: smaller on very small screens */
+  .tabs-enhanced {
+    gap: 4px;
+    padding: 4px;
+  }
+
+  .tab-enhanced {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  /* Page headers smaller */
+  .page-header h1 {
+    font-size: 22px;
+  }
+
+  .page-header p {
+    font-size: 13px;
+  }
+
+  /* Dashboard title smaller */
+  .dashboard-title {
+    font-size: 18px;
+  }
+
+  .dashboard-subtitle {
+    font-size: 11px;
+  }
+
+  /* Live card compact */
+  .live-card {
+    padding: 12px;
+  }
+
+  .live-player-name {
+    font-size: 17px;
+  }
+
+  .live-player-details {
+    font-size: 13px;
+  }
+
+  .live-card-actions {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* Next card compact */
+  .next-card {
+    padding: 12px;
+  }
+
+  .next-player-name {
+    font-size: 16px;
+  }
+
+  .next-countdown {
+    font-size: 14px;
+  }
+
+  /* Schedule cards */
+  .schedule-card {
+    padding: 14px;
+  }
+
+  .schedule-card .player-name {
+    font-size: 15px;
+  }
+
+  .schedule-card .time-display {
+    font-size: 14px;
+  }
+
+  /* Station cards */
+  .station-card-header {
+    padding: 12px;
+  }
+
+  .station-name {
+    font-size: 14px;
+  }
+
+  .station-card-content {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  /* Arrivals section */
+  .arrivals-section {
+    padding: 12px;
+  }
+
+  .arrival-item {
+    padding: 8px 10px;
+    flex-wrap: wrap;
+  }
+
+  .arrival-info {
+    flex: 1 1 100%;
+    margin-bottom: 8px;
+  }
+
+  .arrival-actions {
+    flex: 1 1 100%;
+    justify-content: space-between;
+  }
+
+  /* Schedule preview */
+  .schedule-preview {
+    padding: 12px;
+  }
+
+  .schedule-item {
+    padding: 8px 10px;
+  }
+
+  .schedule-time {
+    font-size: 11px;
+    min-width: 48px;
+  }
+
+  .schedule-name {
+    font-size: 13px;
+  }
+
+  /* Avatar smaller */
+  .avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+}
+
+/* Small screens (380px - 479px) */
+@media (min-width: 380px) and (max-width: 479px) {
+  .quick-actions-grid.three-col {
+    gap: 8px;
+  }
+
+  .quick-action-card {
+    padding: 12px 8px;
+    font-size: 11px;
+  }
+
+  .tab-enhanced {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .live-card-actions {
+    gap: 8px;
+  }
+
+  .arrival-btn,
+  .stations-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}
+
+/* Mobile screens (under 768px) - general improvements */
+@media (max-width: 767px) {
+  /* Better spacing for main content */
+  main {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  /* Ensure tabs don't overflow */
+  .tabs-enhanced {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    flex-wrap: nowrap;
+  }
+
+  .tabs-enhanced::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab-enhanced {
+    flex-shrink: 0;
+    min-width: auto;
+  }
+
+  /* Schedule card - prevent text overflow */
+  .schedule-card .player-name {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Better touch targets */
+  .arrival-btn,
+  .stations-btn {
+    min-height: 40px;
+  }
+
+  /* Station status toggle - stack on mobile */
+  .station-status-toggle {
+    flex-wrap: wrap;
+  }
+
+  .station-status-btn {
+    flex: 1 1 auto;
+    min-width: 60px;
+  }
+
+  /* Station questions - better readability */
+  .station-questions {
+    padding: 12px;
+  }
+
+  .question-item {
+    font-size: 13px;
+  }
+
+  /* Schedule item improvements */
+  .schedule-item-left {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .schedule-item-right {
+    flex-shrink: 0;
+  }
+
+  /* Next inline card - wrap on narrow screens */
+  .next-inline {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .next-inline-left,
+  .next-inline-right {
+    flex: 1 1 auto;
+  }
+
+  /* Improve page header */
+  .page-header {
+    margin-bottom: 16px;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+    line-height: 1.2;
+  }
+
+  .page-header p {
+    font-size: 14px;
+    margin-top: 4px;
+  }
+
+  /* Dashboard header improvements */
+  .dashboard-header {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* Status banner - compact on mobile */
+  .status-banner {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .status-banner-icon {
+    font-size: 20px;
+  }
+
+  .status-banner-content h3 {
+    font-size: 14px;
+  }
+
+  .status-banner-content p {
+    font-size: 12px;
+  }
+
+  /* Empty state improvements */
+  .empty-state,
+  .empty-dashboard {
+    padding: 32px 16px;
+  }
+
+  /* Badge sizing */
+  .badge {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+  /* Stations header */
+  .stations-header h1 {
+    font-size: 22px;
+  }
+
+  .stations-summary {
+    font-size: 12px;
+  }
+}
+
 /* Desktop Responsive */
 @media (min-width: 768px) {
   .stations-page {
