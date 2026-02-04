@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, memo, useMemo } from 'react';
+import { useState, useEffect, useCallback, memo, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
 import {
@@ -15,6 +15,8 @@ import {
 import { useToast } from '@/components/Toast';
 import { ChevronDownIcon, ChevronUpIcon, ChevronRightIcon, ClockIcon, CheckIcon } from '@/components/Icons';
 import { getPlayerQuestions } from '@/data/players';
+
+const ALL_STATIONS: Station[] = ['LED Wall', 'Signing', 'PR Interview', 'Pack Rips', 'Free'];
 
 const STATION_ICONS: Record<Station, string> = {
   'LED Wall': '📺',
@@ -256,6 +258,7 @@ export default function StationsPage() {
   const { showToast, ToastComponent } = useToast();
   const [expandedStations, setExpandedStations] = useState<Set<Station>>(new Set(['LED Wall']));
   const [, setTick] = useState(0);
+  const stationRefs = useRef<Record<Station, HTMLDivElement | null>>({} as Record<Station, HTMLDivElement | null>);
 
   useEffect(() => {
     initializeStations();
@@ -286,6 +289,27 @@ export default function StationsPage() {
       }
       return next;
     });
+  }, []);
+
+  const scrollToStation = useCallback((station: Station) => {
+    const ref = stationRefs.current[station];
+    if (ref) {
+      ref.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Expand the station if it's collapsed
+      setExpandedStations(prev => {
+        const next = new Set(prev);
+        next.add(station);
+        return next;
+      });
+    }
+  }, []);
+
+  const expandAll = useCallback(() => {
+    setExpandedStations(new Set(ALL_STATIONS));
+  }, []);
+
+  const collapseAll = useCallback(() => {
+    setExpandedStations(new Set());
   }, []);
 
   const handleUpdate = useCallback((station: Station, updates: Partial<{
@@ -351,10 +375,16 @@ export default function StationsPage() {
   const activeCount = stations.filter(s => s.status === 'active').length;
   const setupCount = stations.filter(s => s.status === 'setup').length;
 
+  // Get station status for quick-jump tabs
+  const getStationStatus = (station: Station) => {
+    const stationData = stations.find(s => s.station === station);
+    return stationData?.status || 'idle';
+  };
+
   return (
     <div className="stations-page">
-      {/* Header */}
-      <header className="stations-header">
+      {/* Header - desktop only */}
+      <header className="stations-header hidden md:flex">
         <div>
           <h1>Stations</h1>
           <p className="stations-summary">
@@ -362,7 +392,50 @@ export default function StationsPage() {
             {setupCount > 0 && <span className="setup"> • {setupCount} setup</span>}
           </p>
         </div>
+        <div className="stations-controls">
+          <button onClick={collapseAll} className="stations-control-btn">
+            Collapse All
+          </button>
+          <button onClick={expandAll} className="stations-control-btn">
+            Expand All
+          </button>
+        </div>
       </header>
+
+      {/* Mobile Quick-Jump Tabs */}
+      <div className="station-tabs md:hidden">
+        <div className="station-tabs-scroll">
+          {ALL_STATIONS.map(station => {
+            const status = getStationStatus(station);
+            return (
+              <button
+                key={station}
+                onClick={() => scrollToStation(station)}
+                className={`station-tab ${status}`}
+              >
+                <span className="station-tab-icon">{STATION_ICONS[station]}</span>
+                <span className="station-tab-name">{station.replace(' ', '\u00A0')}</span>
+                {status === 'active' && <span className="station-tab-dot live" />}
+                {status === 'setup' && <span className="station-tab-dot setup" />}
+              </button>
+            );
+          })}
+        </div>
+        <div className="station-tabs-actions">
+          <button onClick={collapseAll} className="station-tabs-action" title="Collapse All">
+            <ChevronUpIcon size={16} />
+          </button>
+          <button onClick={expandAll} className="station-tabs-action" title="Expand All">
+            <ChevronDownIcon size={16} />
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile summary bar */}
+      <div className="stations-mobile-summary md:hidden">
+        <span className="live">{activeCount} live</span>
+        {setupCount > 0 && <span className="setup"> • {setupCount} setup</span>}
+      </div>
 
       {/* Player Arrivals */}
       {(livePlayers.length > 0 || upcomingPlayers.length > 0) && (
@@ -437,22 +510,27 @@ export default function StationsPage() {
           const scheduledPlayers = stationPlayersMap.get(data.station) || [];
 
           return (
-            <StationCard
+            <div
               key={data.station}
-              station={data.station}
-              status={data.status}
-              currentPlayer={data.currentPlayer}
-              currentCommitment={data.currentCommitment}
-              notes={data.notes}
-              expanded={expandedStations.has(data.station)}
-              assignedPlayer={assignedPlayer}
-              players={players}
-              scheduledPlayers={scheduledPlayers}
-              elapsedTime={elapsed}
-              onToggle={() => toggleStation(data.station)}
-              onUpdate={(updates) => handleUpdate(data.station, updates)}
-              onPlayerClick={(id) => router.push(`/players/${id}`)}
-            />
+              ref={(el) => { stationRefs.current[data.station] = el; }}
+              className="station-card-wrapper"
+            >
+              <StationCard
+                station={data.station}
+                status={data.status}
+                currentPlayer={data.currentPlayer}
+                currentCommitment={data.currentCommitment}
+                notes={data.notes}
+                expanded={expandedStations.has(data.station)}
+                assignedPlayer={assignedPlayer}
+                players={players}
+                scheduledPlayers={scheduledPlayers}
+                elapsedTime={elapsed}
+                onToggle={() => toggleStation(data.station)}
+                onUpdate={(updates) => handleUpdate(data.station, updates)}
+                onPlayerClick={(id) => router.push(`/players/${id}`)}
+              />
+            </div>
           );
         })}
       </div>

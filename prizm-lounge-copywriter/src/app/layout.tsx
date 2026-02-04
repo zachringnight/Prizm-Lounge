@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import BottomNav from "@/components/BottomNav";
+import MobileHeader from "@/components/MobileHeader";
 import OfflineBanner from "@/components/OfflineBanner";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import GlobalSearch from "@/components/GlobalSearch";
@@ -41,7 +42,8 @@ export default function RootLayout({
           <ServiceWorkerRegister />
           <OfflineBanner />
           <GlobalSearch />
-          <main className="pb-24 md:pb-8 pt-4 md:pt-8 px-3 sm:px-4 md:px-8 lg:px-12 max-w-4xl mx-auto min-h-screen">
+          <MobileHeader />
+          <main className="pb-24 md:pb-8 pt-20 md:pt-8 px-3 sm:px-4 md:px-8 lg:px-12 max-w-4xl mx-auto min-h-screen">
             {children}
           </main>
           <BottomNav />
