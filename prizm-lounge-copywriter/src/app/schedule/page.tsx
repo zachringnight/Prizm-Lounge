@@ -260,10 +260,10 @@ export default function SchedulePage() {
                 key={player.id}
                 className={`schedule-card ${status === 'live' ? 'is-live' : ''}`}
               >
-                <div className="flex items-start gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="player-name truncate">{player.name}</span>
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <span className="player-name truncate max-w-[200px] sm:max-w-none">{player.name}</span>
                       <span className={`badge badge-${player.category.toLowerCase()}`}>
                         {player.category}
                       </span>
@@ -271,25 +271,26 @@ export default function SchedulePage() {
                         <span className="badge bg-[var(--status-live)] text-white">LIVE</span>
                       )}
                     </div>
-                    <div className="player-details">
+                    <div className="player-details text-sm">
                       {player.position} • {player.team}
                     </div>
                   </div>
 
-                  <div className="text-right flex-shrink-0">
+                  <div className="flex sm:flex-col sm:text-right items-center sm:items-end gap-3 sm:gap-0 flex-shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-[var(--background-tertiary)]">
                     {player.schedule && (
                       <>
-                        <div className="time-display text-lg">
+                        <div className="time-display text-base sm:text-lg font-semibold">
                           {formatTime(player.schedule.startTime)}
                         </div>
+                        <span className="text-[var(--foreground-dim)] sm:hidden">—</span>
                         <div className="text-sm text-[var(--foreground-dim)]">
-                          to {formatTime(player.schedule.endTime)}
+                          <span className="hidden sm:inline">to </span>{formatTime(player.schedule.endTime)}
                         </div>
-                        <div className="text-sm text-[var(--foreground-dim)] mt-1">
+                        <div className="text-sm text-[var(--foreground-dim)] sm:mt-1 ml-auto sm:ml-0">
                           {player.schedule.day}
                         </div>
                         {status === 'upcoming' && (
-                          <div className={`countdown text-base mt-2 ${isCountdownUrgent(player.schedule) ? 'countdown-urgent' : ''}`}>
+                          <div className={`countdown text-sm sm:text-base sm:mt-2 ml-2 sm:ml-0 ${isCountdownUrgent(player.schedule) ? 'countdown-urgent' : ''}`}>
                             {getTimeUntil(player.schedule)}
                           </div>
                         )}
