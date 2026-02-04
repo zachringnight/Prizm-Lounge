@@ -2189,3 +2189,472 @@ main {
     max-width: 1000px;
   }
 }
+
+/* ========================================
+   STATIONS PAGE STYLES
+   ======================================== */
+
+.stations-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.stations-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stations-header h1 {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+
+.stations-summary {
+  font-size: 13px;
+  color: var(--foreground-muted);
+}
+
+.stations-summary .live {
+  color: var(--status-live);
+  font-weight: 600;
+}
+
+.stations-summary .setup {
+  color: var(--panini-yellow);
+}
+
+/* Arrivals Section */
+.arrivals-section {
+  background: var(--background-secondary);
+  border: 1px solid var(--background-tertiary);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.arrivals-section h2 {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--foreground-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.arrivals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.arrival-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--background-tertiary);
+  border-radius: 10px;
+  gap: 12px;
+}
+
+.arrival-item.live {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid var(--status-live);
+}
+
+.arrival-info {
+  flex: 1;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.arrival-name {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.arrival-meta {
+  display: block;
+  font-size: 12px;
+  color: var(--foreground-dim);
+  margin-top: 2px;
+}
+
+.arrival-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.arrival-status {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.arrival-status.live {
+  color: var(--status-live);
+}
+
+.arrival-status.upcoming {
+  color: var(--panini-yellow);
+}
+
+.arrivals-section .arrival-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: var(--background-secondary);
+  border: none;
+  border-radius: 8px;
+  color: var(--foreground-muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.arrivals-section .arrival-btn:hover {
+  background: var(--panini-yellow);
+  color: var(--background);
+}
+
+.arrivals-section .arrival-btn.arrived {
+  background: var(--status-live);
+  color: white;
+}
+
+/* Stations Grid */
+.stations-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Station Card */
+.station-card {
+  background: var(--background-secondary);
+  border: 1px solid var(--background-tertiary);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.station-card.is-active {
+  border-color: var(--status-live);
+  box-shadow: 0 0 16px rgba(34, 197, 94, 0.1);
+}
+
+.station-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.station-card-header:hover {
+  background: var(--background-tertiary);
+}
+
+.station-card-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.station-icon {
+  font-size: 20px;
+}
+
+.station-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.station-player-preview {
+  font-size: 12px;
+  color: var(--foreground-muted);
+  margin-top: 2px;
+}
+
+.station-card-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.station-status-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+}
+
+.station-status-badge.active {
+  background: var(--status-live);
+  color: white;
+}
+
+.station-status-badge.setup {
+  background: var(--panini-yellow);
+  color: var(--background);
+}
+
+.station-status-badge.idle {
+  background: var(--foreground-dim);
+  color: white;
+}
+
+/* Station Card Content */
+.station-card-content {
+  padding: 16px;
+  border-top: 1px solid var(--background-tertiary);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.station-status-toggle {
+  display: flex;
+  gap: 6px;
+  background: var(--background);
+  padding: 4px;
+  border-radius: 10px;
+}
+
+.station-status-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: transparent;
+  color: var(--foreground-dim);
+}
+
+.station-status-btn.active {
+  color: white;
+}
+
+.station-status-btn.active.idle {
+  background: var(--foreground-dim);
+}
+
+.station-status-btn.active.setup {
+  background: var(--panini-yellow);
+  color: var(--background);
+}
+
+.station-status-btn.active.active {
+  background: var(--status-live);
+}
+
+.station-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.station-field label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--foreground-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.station-assigned-player {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--background);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.station-assigned-player:hover {
+  background: var(--background-tertiary);
+}
+
+/* Station Questions */
+.station-questions {
+  padding: 14px;
+  background: var(--background);
+  border-radius: 10px;
+  border-left: 4px solid var(--panini-yellow);
+}
+
+.station-questions.pack-rips {
+  border-left-color: var(--panini-red);
+}
+
+.station-questions h4 {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+  color: var(--panini-yellow);
+}
+
+.station-questions.pack-rips h4 {
+  color: var(--panini-red);
+}
+
+.questions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.question-item {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--foreground);
+  line-height: 1.5;
+}
+
+.question-num {
+  font-weight: 700;
+  color: var(--panini-yellow);
+  min-width: 20px;
+}
+
+.station-questions.pack-rips .question-num {
+  color: var(--panini-red);
+}
+
+/* Station Scheduled */
+.station-scheduled {
+  padding: 14px;
+  background: var(--background);
+  border-radius: 10px;
+}
+
+.station-scheduled h4 {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--foreground-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.scheduled-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.scheduled-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.scheduled-item:hover {
+  background: var(--background-tertiary);
+}
+
+.scheduled-item.is-live {
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.scheduled-time {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--foreground-dim);
+  min-width: 50px;
+  font-variant-numeric: tabular-nums;
+}
+
+.scheduled-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.scheduled-live {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--status-live);
+}
+
+.scheduled-countdown {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--panini-yellow);
+}
+
+/* Desktop Responsive */
+@media (min-width: 768px) {
+  .stations-page {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .stations-header h1 {
+    font-size: 28px;
+  }
+
+  .arrivals-section {
+    padding: 20px;
+  }
+
+  .station-card-content {
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .question-item {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .stations-page {
+    max-width: 900px;
+  }
+
+  .stations-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .station-card {
+    height: fit-content;
+  }
+}
