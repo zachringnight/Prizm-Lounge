@@ -2,33 +2,19 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
-import { HomeIcon, UsersIcon, CalendarIcon, LayersIcon, SearchIcon, SparklesIcon, HistoryIcon } from './Icons';
+import { HomeIcon, UsersIcon, CalendarIcon, LayersIcon, SearchIcon } from './Icons';
 
 interface NavItem {
   href: string;
   label: string;
   icon: React.ComponentType<{ className?: string; size?: number }>;
-  highlight?: boolean;
 }
 
-const mobileNavItems: NavItem[] = [
-  { href: '/', label: 'Home', icon: HomeIcon },
-  { href: '/stations', label: 'Stations', icon: LayersIcon },
-  { href: '/generate', label: 'Generate', icon: SparklesIcon, highlight: true },
-  { href: '/schedule', label: 'Schedule', icon: CalendarIcon },
-  { href: '/players', label: 'Players', icon: UsersIcon },
-];
-
-const desktopNavItems: NavItem[] = [
+const navItems: NavItem[] = [
   { href: '/', label: 'Home', icon: HomeIcon },
   { href: '/stations', label: 'Stations', icon: LayersIcon },
   { href: '/schedule', label: 'Schedule', icon: CalendarIcon },
   { href: '/players', label: 'Players', icon: UsersIcon },
-];
-
-const desktopToolItems: NavItem[] = [
-  { href: '/generate', label: 'Generate', icon: SparklesIcon, highlight: true },
-  { href: '/recap', label: 'Recap', icon: HistoryIcon },
 ];
 
 export default function BottomNav() {
@@ -56,7 +42,7 @@ export default function BottomNav() {
     <>
       {/* Mobile Bottom Navigation */}
       <nav className="mobile-nav md:hidden">
-        {mobileNavItems.map((item) => {
+        {navItems.map((item) => {
           const isActive = pathname === item.href ||
             (item.href !== '/' && pathname.startsWith(item.href));
           const Icon = item.icon;
@@ -65,9 +51,9 @@ export default function BottomNav() {
             <button
               key={item.href}
               onClick={() => handleNavClick(item.href)}
-              className={`mobile-nav-item ${isActive ? 'active' : ''} ${item.highlight ? 'highlight' : ''}`}
+              className={`mobile-nav-item ${isActive ? 'active' : ''}`}
             >
-              <Icon size={item.highlight ? 24 : 20} />
+              <Icon size={20} />
               <span>{item.label}</span>
             </button>
           );
@@ -85,7 +71,7 @@ export default function BottomNav() {
         </button>
 
         <div className="desktop-nav-center">
-          {desktopNavItems.map((item) => {
+          {navItems.map((item) => {
             const isActive = pathname === item.href ||
               (item.href !== '/' && pathname.startsWith(item.href));
             const Icon = item.icon;
@@ -104,24 +90,6 @@ export default function BottomNav() {
         </div>
 
         <div className="desktop-nav-right">
-          {/* Crew Tools */}
-          {desktopToolItems.map((item) => {
-            const isActive = pathname === item.href ||
-              (item.href !== '/' && pathname.startsWith(item.href));
-            const Icon = item.icon;
-
-            return (
-              <button
-                key={item.href}
-                onClick={() => handleNavClick(item.href)}
-                className={`desktop-tool-item ${isActive ? 'active' : ''} ${item.highlight ? 'highlight' : ''}`}
-              >
-                <Icon size={16} />
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
-
           {/* Search Trigger */}
           <button
             onClick={openSearch}

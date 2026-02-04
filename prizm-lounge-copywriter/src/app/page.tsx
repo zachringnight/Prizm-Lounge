@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
 import { getScheduleStatus, getTimeUntil, formatTime, Player, AppearanceSchedule } from '@/types';
-import { CalendarIcon, UsersIcon, LayersIcon, SparklesIcon, ChevronRightIcon, ClockIcon, CheckIcon, HistoryIcon } from '@/components/Icons';
+import { CalendarIcon, UsersIcon, LayersIcon, ChevronRightIcon, ClockIcon, CheckIcon } from '@/components/Icons';
 
 // Helper to check if countdown is urgent (< 5 minutes)
 function isCountdownUrgent(schedule: AppearanceSchedule | null): boolean {
@@ -86,7 +86,7 @@ export default function Home() {
 
   return (
     <div className="dashboard-container">
-      {/* Compact Header */}
+      {/* Header */}
       <div className="dashboard-header">
         <div>
           <h1 className="dashboard-title">
@@ -95,13 +95,6 @@ export default function Home() {
           </h1>
           <p className="dashboard-subtitle">Super Bowl LX • Feb 6-8</p>
         </div>
-        <button
-          onClick={() => router.push('/generate')}
-          className="btn btn-primary generate-btn"
-        >
-          <SparklesIcon size={18} />
-          <span>Generate</span>
-        </button>
       </div>
 
       {/* Live Player - Most Prominent */}
@@ -205,7 +198,7 @@ export default function Home() {
       )}
 
       {/* Quick Actions */}
-      <div className="quick-actions-grid">
+      <div className="quick-actions-grid three-col">
         <button onClick={() => router.push('/stations')} className="quick-action-card primary">
           <LayersIcon size={22} />
           <span>Stations</span>
@@ -217,10 +210,6 @@ export default function Home() {
         <button onClick={() => router.push('/players')} className="quick-action-card">
           <UsersIcon size={22} />
           <span>Players</span>
-        </button>
-        <button onClick={() => router.push('/recap')} className="quick-action-card">
-          <HistoryIcon size={22} />
-          <span>Recap</span>
         </button>
       </div>
 
