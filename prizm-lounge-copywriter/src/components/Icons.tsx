@@ -3,9 +3,11 @@
 interface IconProps {
   className?: string;
   size?: number;
+  /** Accessible label for the icon. If not provided, icon is marked as decorative. */
+  'aria-label'?: string;
 }
 
-export function HomeIcon({ className = '', size = 24 }: IconProps) {
+export function HomeIcon({ className = '', size = 24, 'aria-label': ariaLabel }: IconProps) {
   return (
     <svg
       width={size}
@@ -17,6 +19,9 @@ export function HomeIcon({ className = '', size = 24 }: IconProps) {
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
+      aria-hidden={ariaLabel ? undefined : true}
+      aria-label={ariaLabel}
+      role={ariaLabel ? 'img' : undefined}
     >
       <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
       <polyline points="9,22 9,12 15,12 15,22" />

@@ -1792,17 +1792,20 @@ main {
 
 .live-card-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-top: 16px;
 }
 
 .arrival-btn {
   flex: 1;
+  min-width: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 10px 16px;
+  padding: 12px 16px;
+  min-height: 44px;
   background: var(--background-tertiary);
   border: none;
   border-radius: 10px;
@@ -1899,6 +1902,9 @@ main {
   font-weight: 700;
   color: var(--foreground);
   margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .next-player-details {
@@ -2067,7 +2073,8 @@ main {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 12px;
+  padding: 12px 14px;
+  min-height: 48px;
   background: transparent;
   border: none;
   border-radius: 8px;
@@ -2103,6 +2110,9 @@ main {
   font-size: 14px;
   font-weight: 500;
   color: var(--foreground);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .schedule-arrived {
@@ -2510,7 +2520,8 @@ main {
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 6px 12px;
+  padding: 8px 12px;
+  min-height: 36px;
   background: var(--background-secondary);
   border: none;
   border-radius: 8px;
@@ -3180,4 +3191,156 @@ main {
   .station-card {
     height: fit-content;
   }
+}
+
+/* ========================================
+   ERROR BOUNDARY & ERROR STATES
+   ======================================== */
+
+.error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 24px;
+}
+
+.error-boundary-content {
+  text-align: center;
+  max-width: 400px;
+}
+
+.error-boundary-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--panini-red);
+  color: white;
+  font-size: 32px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.error-boundary-content h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.error-boundary-content p {
+  font-size: 14px;
+  color: var(--foreground-muted);
+  margin-bottom: 16px;
+}
+
+.error-boundary-details {
+  text-align: left;
+  margin-bottom: 16px;
+  font-size: 12px;
+}
+
+.error-boundary-details summary {
+  cursor: pointer;
+  color: var(--foreground-dim);
+}
+
+.error-boundary-details pre {
+  margin-top: 8px;
+  padding: 12px;
+  background: var(--background-secondary);
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 11px;
+  color: var(--panini-red);
+}
+
+.error-boundary-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.error-boundary-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-tertiary);
+  color: var(--foreground-dim);
+}
+
+.error-boundary-btn:hover {
+  background: var(--background-tertiary);
+  color: var(--foreground);
+}
+
+.error-boundary-btn.primary {
+  background: var(--panini-yellow);
+  border-color: var(--panini-yellow);
+  color: var(--background);
+}
+
+.error-boundary-btn.primary:hover {
+  background: var(--panini-yellow-dark);
+}
+
+/* 404 Page */
+.not-found-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  padding: 24px;
+}
+
+.not-found-page h1 {
+  font-size: 72px;
+  font-weight: 800;
+  color: var(--foreground-dim);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.not-found-page h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.not-found-page p {
+  font-size: 14px;
+  color: var(--foreground-muted);
+  margin-bottom: 24px;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--foreground-muted);
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--foreground-dim);
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  font-size: 14px;
 }

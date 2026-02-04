@@ -10,6 +10,9 @@ import {
   PlayerNote
 } from '@/types';
 
+// API timeout in milliseconds
+const API_TIMEOUT = 30000;
+
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || ''
 });
@@ -69,12 +72,17 @@ const BANNED_PHRASES = [
   'Collectors Edge'
 ];
 
+// Escape special regex characters to prevent ReDoS
+function escapeRegExp(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function applyBrandGuardrails(text: string): string {
   let result = text;
 
-  // Apply spelling corrections
+  // Apply spelling corrections (with escaped regex)
   Object.entries(SPELLING_CORRECTIONS).forEach(([wrong, right]) => {
-    result = result.replace(new RegExp(wrong, 'g'), right);
+    result = result.replace(new RegExp(escapeRegExp(wrong), 'g'), right);
   });
 
   // Check for banned phrases (these would need manual review)
@@ -85,6 +93,23 @@ function applyBrandGuardrails(text: string): string {
   });
 
   return result;
+}
+
+// Validate request body
+function validateRequest(body: unknown): body is GenerateRequest {
+  if (!body || typeof body !== 'object') return false;
+  const req = body as Record<string, unknown>;
+
+  // Required fields
+  if (!req.player || typeof req.player !== 'object') return false;
+  if (!req.mode || typeof req.mode !== 'string') return false;
+  if (!req.platform || typeof req.platform !== 'string') return false;
+
+  // Validate player has required fields
+  const player = req.player as Record<string, unknown>;
+  if (!player.name || !player.team || !player.position) return false;
+
+  return true;
 }
 
 interface GenerateRequest {
@@ -255,7 +280,23 @@ function parseVariations(response: string): { label: 'A' | 'B' | 'C'; content: s
 
 export async function POST(request: NextRequest) {
   try {
-    const body: GenerateRequest = await request.json();
+    // Parse and validate request body
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid JSON in request body' },
+        { status: 400 }
+      );
+    }
+
+    if (!validateRequest(body)) {
+      return NextResponse.json(
+        { error: 'Invalid request: missing required fields (player, mode, platform)' },
+        { status: 400 }
+      );
+    }
 
     if (!process.env.ANTHROPIC_API_KEY) {
       return NextResponse.json(
@@ -266,21 +307,44 @@ export async function POST(request: NextRequest) {
 
     const prompt = buildPrompt(body);
 
-    const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1024,
-      messages: [
-        {
-          role: 'user',
-          content: prompt
-        }
-      ]
-    });
+    // Create API call with timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
 
-    const responseText = message.content[0].type === 'text'
-      ? message.content[0].text
-      : '';
+    let message;
+    try {
+      message = await anthropic.messages.create({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1024,
+        messages: [
+          {
+            role: 'user',
+            content: prompt
+          }
+        ]
+      });
+    } finally {
+      clearTimeout(timeoutId);
+    }
 
+    // Handle empty or unexpected response
+    if (!message.content || message.content.length === 0) {
+      return NextResponse.json(
+        { error: 'Empty response from AI model' },
+        { status: 500 }
+      );
+    }
+
+    // Extract text content, handling different content types
+    const textContent = message.content.find(c => c.type === 'text');
+    if (!textContent || textContent.type !== 'text') {
+      return NextResponse.json(
+        { error: 'Unexpected response format from AI model' },
+        { status: 500 }
+      );
+    }
+
+    const responseText = textContent.text;
     const variations = parseVariations(responseText);
 
     if (variations.length === 0) {
@@ -299,8 +363,23 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Generation error:', error);
+
+    // Handle specific error types
+    if (error instanceof Error) {
+      if (error.name === 'AbortError') {
+        return NextResponse.json(
+          { error: 'Request timed out. Please try again.' },
+          { status: 504 }
+        );
+      }
+      return NextResponse.json(
+        { error: error.message },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Generation failed' },
+      { error: 'Generation failed' },
       { status: 500 }
     );
   }

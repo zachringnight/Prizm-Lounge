@@ -24,7 +24,12 @@ export default function Toast({ message, type = 'success', duration = 3000, onCl
   if (!visible) return null;
 
   return (
-    <div className={`toast ${type}`}>
+    <div
+      className={`toast ${type}`}
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >
       {message}
     </div>
   );

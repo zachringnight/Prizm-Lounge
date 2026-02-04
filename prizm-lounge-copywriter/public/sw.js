@@ -1,19 +1,24 @@
-const CACHE_NAME = 'prizm-lounge-v1';
+const CACHE_NAME = 'prizm-lounge-v2';
 const STATIC_ASSETS = [
   '/',
   '/players',
   '/schedule',
-  '/tracking',
-  '/admin'
+  '/stations',
+  '/manifest.json'
 ];
 
 // Install event - cache static assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log('Caching static assets');
-      return cache.addAll(STATIC_ASSETS);
-    })
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('Caching static assets');
+        return cache.addAll(STATIC_ASSETS);
+      })
+      .catch((error) => {
+        console.error('Failed to cache static assets:', error);
+        // Continue with install even if caching fails
+      })
   );
   self.skipWaiting();
 });
