@@ -16,29 +16,12 @@ import { useToast } from '@/components/Toast';
 import { ChevronDownIcon, ChevronUpIcon, ChevronRightIcon, ClockIcon, CheckIcon } from '@/components/Icons';
 import { getPlayerQuestions } from '@/data/players';
 
-const STATION_DESCRIPTIONS: Record<Station, string> = {
-  'LED Wall': 'LED Wall content capture station (capacity: 1)',
-  'Signing': 'Autograph station for fan signings',
-  'PR Interview': 'PR/Media interview area (capacity: 1)',
-  'Pack Rips': 'Pack rip content station (capacity: 1)',
-  'Free': 'Buffer/break time (no station)'
-};
-
-// Memoized status color helper
-const getStatusColor = (status: 'active' | 'idle' | 'setup') => {
-  switch (status) {
-    case 'active': return 'var(--status-live)';
-    case 'setup': return 'var(--panini-yellow)';
-    case 'idle': return 'var(--foreground-dim)';
-  }
-};
-
-const getStatusLabel = (status: 'active' | 'idle' | 'setup') => {
-  switch (status) {
-    case 'active': return 'LIVE';
-    case 'setup': return 'SETUP';
-    case 'idle': return 'IDLE';
-  }
+const STATION_ICONS: Record<Station, string> = {
+  'LED Wall': '📺',
+  'Signing': '✍️',
+  'PR Interview': '🎤',
+  'Pack Rips': '📦',
+  'Free': '☕'
 };
 
 // Format elapsed time
@@ -50,45 +33,6 @@ const formatElapsedTime = (minutes: number) => {
   }
   return `${mins}m`;
 };
-
-// Memoized Player Card Component for performance
-const PlayerCard = memo(function PlayerCard({
-  player,
-  onClick,
-  elapsedTime
-}: {
-  player: { id: string; name: string; position: string; team: string };
-  onClick: () => void;
-  elapsedTime: number | null;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="mb-4 p-3 bg-[var(--background)] rounded-lg w-full text-left hover:bg-[var(--background-tertiary)] transition-colors"
-    >
-      <div className="flex items-center gap-3">
-        <div className="avatar w-10 h-10 text-sm">
-          {player.name.charAt(0)}
-        </div>
-        <div className="flex-1">
-          <div className="font-semibold">{player.name}</div>
-          <div className="text-sm text-[var(--foreground-muted)]">
-            {player.position} • {player.team}
-          </div>
-          {elapsedTime !== null && (
-            <div className="text-xs text-[var(--panini-yellow)] mt-1 flex items-center gap-1">
-              <ClockIcon size={12} />
-              On-site: {formatElapsedTime(elapsedTime)}
-            </div>
-          )}
-        </div>
-        <div className="text-[var(--foreground-dim)]">
-          <ChevronRightIcon size={18} />
-        </div>
-      </div>
-    </button>
-  );
-});
 
 // Memoized Station Card for performance
 const StationCard = memo(function StationCard({
@@ -120,8 +64,6 @@ const StationCard = memo(function StationCard({
   onUpdate: (updates: { status?: 'active' | 'idle' | 'setup'; currentPlayer?: string | null; currentCommitment?: CommitmentType | null; notes?: string }) => void;
   onPlayerClick: (playerId: string) => void;
 }) {
-
-  // Get questions for the assigned player if at Signing or Pack Rips
   const playerQuestions = assignedPlayer ? getPlayerQuestions(assignedPlayer.id) : null;
   const showSigningQuestions =
     (station === 'Signing' || currentCommitment === 'Signing') &&
@@ -129,78 +71,54 @@ const StationCard = memo(function StationCard({
   const showPackRipsQuestions =
     (station === 'Pack Rips' || currentCommitment === 'Pack Rips') &&
     ((playerQuestions?.packRips?.length ?? 0) > 0);
+
   return (
-    <div>
-      {/* Station Header - Clickable */}
-      <button
-        onClick={onToggle}
-        className={`station-header w-full ${expanded ? 'expanded' : ''}`}
-        style={{
-          borderColor: status === 'active' ? 'var(--status-live)' : undefined
-        }}
-      >
-        <div className="flex items-center gap-3">
-          <div
-            className="w-3 h-3 rounded-full flex-shrink-0"
-            style={{ backgroundColor: getStatusColor(status) }}
-          />
-          <div className="text-left">
-            <h3 className="font-semibold text-base">{station}</h3>
+    <div className={`station-card ${status === 'active' ? 'is-active' : ''}`}>
+      {/* Station Header */}
+      <button onClick={onToggle} className="station-card-header">
+        <div className="station-card-left">
+          <span className="station-icon">{STATION_ICONS[station]}</span>
+          <div>
+            <h3 className="station-name">{station}</h3>
             {!expanded && assignedPlayer && (
-              <p className="text-sm text-[var(--foreground-muted)]">
+              <p className="station-player-preview">
                 {assignedPlayer.name}
-                {elapsedTime !== null && ` • ${formatElapsedTime(elapsedTime)}`}
+                {elapsedTime !== null && <span> • {formatElapsedTime(elapsedTime)}</span>}
               </p>
             )}
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <div
-            className="px-3 py-1 rounded-full text-xs font-bold"
-            style={{
-              backgroundColor: getStatusColor(status),
-              color: status === 'idle' ? 'white' : 'var(--background)'
-            }}
-          >
-            {getStatusLabel(status)}
-          </div>
+        <div className="station-card-right">
+          <span className={`station-status-badge ${status}`}>
+            {status === 'active' ? 'LIVE' : status === 'setup' ? 'SETUP' : 'IDLE'}
+          </span>
           {expanded ? (
-            <ChevronUpIcon size={20} className="text-[var(--foreground-muted)]" />
+            <ChevronUpIcon size={18} className="text-[var(--foreground-dim)]" />
           ) : (
-            <ChevronDownIcon size={20} className="text-[var(--foreground-muted)]" />
+            <ChevronDownIcon size={18} className="text-[var(--foreground-dim)]" />
           )}
         </div>
       </button>
 
-      {/* Station Content - Expandable */}
+      {/* Expanded Content */}
       {expanded && (
-        <div className="station-content">
-          <p className="text-xs text-[var(--foreground-dim)] mb-4">
-            {STATION_DESCRIPTIONS[station]}
-          </p>
-
+        <div className="station-card-content">
           {/* Status Toggle */}
-          <div className="flex gap-2 mb-4">
+          <div className="station-status-toggle">
             {(['idle', 'setup', 'active'] as const).map(s => (
               <button
                 key={s}
                 onClick={() => onUpdate({ status: s })}
-                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors
-                  ${status === s
-                    ? 'bg-[var(--background-tertiary)] text-[var(--foreground)]'
-                    : 'bg-transparent text-[var(--foreground-dim)]'
-                  }`}
+                className={`station-status-btn ${status === s ? 'active' : ''} ${s}`}
               >
-                {s.charAt(0).toUpperCase() + s.slice(1)}
+                {s === 'active' ? 'Live' : s === 'setup' ? 'Setup' : 'Idle'}
               </button>
             ))}
           </div>
 
           {/* Player Assignment */}
-          <div className="mb-4">
-            <label className="text-xs text-[var(--foreground-muted)] mb-1 block">
-              Current Player
-            </label>
+          <div className="station-field">
+            <label>Current Player</label>
             <select
               value={currentPlayer || ''}
               onChange={(e) => onUpdate({ currentPlayer: e.target.value || null })}
@@ -213,20 +131,32 @@ const StationCard = memo(function StationCard({
             </select>
           </div>
 
-          {/* Show player info if assigned */}
+          {/* Show assigned player info */}
           {assignedPlayer && (
-            <PlayerCard
-              player={assignedPlayer}
+            <button
               onClick={() => onPlayerClick(assignedPlayer.id)}
-              elapsedTime={elapsedTime}
-            />
+              className="station-assigned-player"
+            >
+              <div className="avatar w-10 h-10 text-sm">{assignedPlayer.name.charAt(0)}</div>
+              <div className="flex-1">
+                <div className="font-semibold">{assignedPlayer.name}</div>
+                <div className="text-sm text-[var(--foreground-muted)]">
+                  {assignedPlayer.position} • {assignedPlayer.team}
+                </div>
+                {elapsedTime !== null && (
+                  <div className="text-xs text-[var(--panini-yellow)] mt-1 flex items-center gap-1">
+                    <ClockIcon size={12} />
+                    On-site: {formatElapsedTime(elapsedTime)}
+                  </div>
+                )}
+              </div>
+              <ChevronRightIcon size={18} className="text-[var(--foreground-dim)]" />
+            </button>
           )}
 
-          {/* Commitment Type */}
-          <div className="mb-4">
-            <label className="text-xs text-[var(--foreground-muted)] mb-1 block">
-              Activity
-            </label>
+          {/* Activity */}
+          <div className="station-field">
+            <label>Activity</label>
             <select
               value={currentCommitment || ''}
               onChange={(e) => onUpdate({ currentCommitment: (e.target.value as CommitmentType) || null })}
@@ -240,106 +170,66 @@ const StationCard = memo(function StationCard({
           </div>
 
           {/* Notes */}
-          <div className="mb-4">
-            <label className="text-xs text-[var(--foreground-muted)] mb-1 block">
-              Notes
-            </label>
+          <div className="station-field">
+            <label>Notes</label>
             <input
               type="text"
               value={notes}
               onChange={(e) => onUpdate({ notes: e.target.value })}
-              placeholder="e.g., 200 autos remaining, ESPN at 3pm..."
+              placeholder="e.g., 200 autos remaining..."
               className="input"
             />
           </div>
 
-          {/* Questions for Signing Station */}
+          {/* Questions for Signing */}
           {showSigningQuestions && assignedPlayer && (
-            <div className="mt-4 p-4 md:p-5 bg-[var(--background)] rounded-lg border-l-4 border-l-[var(--panini-yellow)]">
-              <h4 className="text-sm md:text-base font-bold text-[var(--panini-yellow)] mb-3 uppercase tracking-wide">
-                Signing Questions for {assignedPlayer.name}
-              </h4>
-              {/* Mobile view */}
-              <div className="questions-container md:hidden space-y-2">
+            <div className="station-questions signing">
+              <h4>Signing Questions for {assignedPlayer.name}</h4>
+              <div className="questions-list">
                 {playerQuestions?.signing?.map((q, i) => (
-                  <div key={i} className="text-sm text-[var(--foreground)] py-2 border-b border-[var(--background-tertiary)] last:border-0">
-                    <span className="text-[var(--panini-yellow)] font-bold mr-2">{i + 1}.</span>
-                    {q}
-                  </div>
-                ))}
-              </div>
-              {/* Desktop view */}
-              <div className="questions-container hidden md:block space-y-3">
-                {playerQuestions?.signing?.map((q, i) => (
-                  <div key={i} className="text-base text-[var(--foreground)] py-3 border-b border-[var(--background-tertiary)] last:border-0">
-                    <span className="text-[var(--panini-yellow)] font-bold mr-3 text-lg">{i + 1}.</span>
-                    {q}
+                  <div key={i} className="question-item">
+                    <span className="question-num">{i + 1}</span>
+                    <span>{q}</span>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Questions for Pack Rips Station */}
+          {/* Questions for Pack Rips */}
           {showPackRipsQuestions && assignedPlayer && (
-            <div className="mt-4 p-4 md:p-5 bg-[var(--background)] rounded-lg border-l-4 border-l-[var(--panini-red)]">
-              <h4 className="text-sm md:text-base font-bold text-[var(--panini-red)] mb-3 uppercase tracking-wide">
-                Pack Rips Questions for {assignedPlayer.name}
-              </h4>
-              {/* Mobile view */}
-              <div className="questions-container md:hidden space-y-2">
+            <div className="station-questions pack-rips">
+              <h4>Pack Rips Questions for {assignedPlayer.name}</h4>
+              <div className="questions-list">
                 {playerQuestions?.packRips?.map((q, i) => (
-                  <div key={i} className="text-sm text-[var(--foreground)] py-2 border-b border-[var(--background-tertiary)] last:border-0">
-                    <span className="text-[var(--panini-red)] font-bold mr-2">{i + 1}.</span>
-                    {q}
-                  </div>
-                ))}
-              </div>
-              {/* Desktop view */}
-              <div className="questions-container hidden md:block space-y-3">
-                {playerQuestions?.packRips?.map((q, i) => (
-                  <div key={i} className="text-base text-[var(--foreground)] py-3 border-b border-[var(--background-tertiary)] last:border-0">
-                    <span className="text-[var(--panini-red)] font-bold mr-3 text-lg">{i + 1}.</span>
-                    {q}
+                  <div key={i} className="question-item">
+                    <span className="question-num">{i + 1}</span>
+                    <span>{q}</span>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Scheduled Players for this station */}
+          {/* Scheduled Players */}
           {scheduledPlayers.length > 0 && (
-            <div className="mt-4 p-4 md:p-5 bg-[var(--background)] rounded-lg">
-              <h4 className="text-xs md:text-sm font-semibold text-[var(--foreground-muted)] mb-3 uppercase tracking-wide">
-                Scheduled at this Station
-              </h4>
-              <div className="space-y-2 md:space-y-3">
-                {scheduledPlayers.map(({ player, startTime }, i) => {
-                  const dayLabel = player.schedule?.day || '';
+            <div className="station-scheduled">
+              <h4>Scheduled at this Station</h4>
+              <div className="scheduled-list">
+                {scheduledPlayers.slice(0, 5).map(({ player, startTime }, i) => {
                   const playerStatus = getScheduleStatus(player.schedule);
                   return (
                     <button
                       key={`${player.id}-${i}`}
                       onClick={() => onPlayerClick(player.id)}
-                      className={`w-full flex items-center justify-between p-2 md:p-3 rounded hover:bg-[var(--background-tertiary)] transition-colors ${
-                        playerStatus === 'live' ? 'bg-[var(--status-live)]/10' : ''
-                      }`}
+                      className={`scheduled-item ${playerStatus === 'live' ? 'is-live' : ''}`}
                     >
-                      <div className="flex items-center gap-2 md:gap-3 text-left">
-                        <span className="text-xs md:text-sm text-[var(--foreground-dim)] font-mono w-12 md:w-16">
-                          {formatTime(startTime).replace(' ', '')}
-                        </span>
-                        <span className="text-sm md:text-base font-medium">{player.name}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs md:text-sm text-[var(--foreground-dim)]">{dayLabel}</span>
-                        {playerStatus === 'live' && (
-                          <span className="text-xs md:text-sm font-bold text-[var(--status-live)]">LIVE</span>
-                        )}
-                        {playerStatus === 'upcoming' && (
-                          <span className="text-xs md:text-sm text-[var(--panini-yellow)]">{getTimeUntil(player.schedule)}</span>
-                        )}
-                      </div>
+                      <span className="scheduled-time">{formatTime(startTime).replace(' ', '')}</span>
+                      <span className="scheduled-name">{player.name}</span>
+                      {playerStatus === 'live' && <span className="scheduled-live">LIVE</span>}
+                      {playerStatus === 'upcoming' && (
+                        <span className="scheduled-countdown">{getTimeUntil(player.schedule)}</span>
+                      )}
                     </button>
                   );
                 })}
@@ -367,25 +257,21 @@ export default function StationsPage() {
   const [expandedStations, setExpandedStations] = useState<Set<Station>>(new Set(['LED Wall']));
   const [, setTick] = useState(0);
 
-  // Initialize stations on mount
   useEffect(() => {
     initializeStations();
   }, [initializeStations]);
 
-  // Auto-refresh every 10 seconds for elapsed time updates
   useEffect(() => {
     const interval = setInterval(() => setTick(t => t + 1), 10000);
     return () => clearInterval(interval);
   }, []);
 
-  // Get elapsed time for a player
   const getElapsedTime = useCallback((playerId: string): number | null => {
     const arrival = playerArrivals.find(a => a.playerId === playerId && !a.departedAt);
     if (!arrival) return null;
     return Math.round((Date.now() - arrival.arrivedAt) / (1000 * 60));
   }, [playerArrivals]);
 
-  // Check if player has arrived
   const hasArrived = useCallback((playerId: string): boolean => {
     return playerArrivals.some(a => a.playerId === playerId && !a.departedAt);
   }, [playerArrivals]);
@@ -402,14 +288,6 @@ export default function StationsPage() {
     });
   }, []);
 
-  const expandAll = useCallback(() => {
-    setExpandedStations(new Set(stations.map(s => s.station)));
-  }, [stations]);
-
-  const collapseAll = useCallback(() => {
-    setExpandedStations(new Set());
-  }, []);
-
   const handleUpdate = useCallback((station: Station, updates: Partial<{
     status: 'active' | 'idle' | 'setup';
     currentPlayer: string | null;
@@ -424,52 +302,25 @@ export default function StationsPage() {
     if (player) {
       if (hasArrived(playerId)) {
         markPlayerDeparted(playerId);
-        showToast(`${player.name} marked as departed`, 'info');
+        showToast(`${player.name} departed`, 'info');
       } else {
         markPlayerArrived(playerId);
-        showToast(`${player.name} has arrived!`, 'success');
+        showToast(`${player.name} arrived!`, 'success');
       }
     }
   }, [players, hasArrived, markPlayerArrived, markPlayerDeparted, showToast]);
 
-  const allExpanded = expandedStations.size === stations.length;
-
-  // Find currently live players
+  // Find live and upcoming players
   const livePlayers = players.filter(p => getScheduleStatus(p.schedule) === 'live');
-  const upcomingPlayers = players.filter(p => getScheduleStatus(p.schedule) === 'upcoming');
+  const upcomingPlayers = players
+    .filter(p => getScheduleStatus(p.schedule) === 'upcoming')
+    .slice(0, 3);
 
-  // Get today's scheduled players (including scheduled status)
-  const now = new Date();
-  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const eventDays = ['Thursday', 'Friday', 'Saturday'];
-  const currentDayName = dayNames[now.getDay()];
-  const isEventDay = eventDays.includes(currentDayName);
-
-  const todaySchedule = players
-    .filter(p => {
-      if (!p.schedule) return false;
-      // Show all players scheduled for today (or all if not an event day for testing)
-      return isEventDay ? p.schedule.day === currentDayName : true;
-    })
-    .sort((a, b) => {
-      if (!a.schedule || !b.schedule) return 0;
-      // Sort by day first, then time
-      const dayOrder = { 'Thursday': 0, 'Friday': 1, 'Saturday': 2 };
-      const dayDiff = (dayOrder[a.schedule.day] || 0) - (dayOrder[b.schedule.day] || 0);
-      if (dayDiff !== 0) return dayDiff;
-      return a.schedule.startTime.localeCompare(b.schedule.startTime);
-    });
-
-  // Memoize station-to-players mapping to avoid recomputing on every render
+  // Station-to-players mapping
   const stationPlayersMap = useMemo(() => {
     const map = new Map<Station, { player: Player; startTime: string; endTime: string }[]>();
-    
-    // Initialize empty arrays for each station
-    stations.forEach(s => {
-      map.set(s.station, []);
-    });
-    
-    // Build the map by iterating through players once
+    stations.forEach(s => map.set(s.station, []));
+
     players.forEach(player => {
       if (player.schedule?.commitments) {
         player.schedule.commitments.forEach(commitment => {
@@ -484,8 +335,7 @@ export default function StationsPage() {
         });
       }
     });
-    
-    // Sort each station's players by day and time
+
     const dayOrder: Record<string, number> = { 'Thursday': 0, 'Friday': 1, 'Saturday': 2 };
     map.forEach(stationPlayers => {
       stationPlayers.sort((a, b) => {
@@ -494,109 +344,53 @@ export default function StationsPage() {
         return a.startTime.localeCompare(b.startTime);
       });
     });
-    
+
     return map;
   }, [players, stations]);
 
+  const activeCount = stations.filter(s => s.status === 'active').length;
+  const setupCount = stations.filter(s => s.status === 'setup').length;
+
   return (
-    <div className="space-y-6">
-      <header className="flex items-center justify-between">
+    <div className="stations-page">
+      {/* Header */}
+      <header className="stations-header">
         <div>
-          <h1 className="text-2xl font-bold mb-1">Stations</h1>
-          <p className="text-sm text-[var(--foreground-muted)]">
-            Manage activation stations
+          <h1>Stations</h1>
+          <p className="stations-summary">
+            <span className="live">{activeCount} live</span>
+            {setupCount > 0 && <span className="setup"> • {setupCount} setup</span>}
           </p>
         </div>
-        <button
-          onClick={allExpanded ? collapseAll : expandAll}
-          className="expand-collapse-all"
-        >
-          {allExpanded ? (
-            <>
-              <ChevronUpIcon size={16} />
-              <span>Collapse All</span>
-            </>
-          ) : (
-            <>
-              <ChevronDownIcon size={16} />
-              <span>Expand All</span>
-            </>
-          )}
-        </button>
       </header>
 
-      {/* Quick Status */}
-      <div className="grid grid-cols-3 gap-2">
-        <div className="card p-3 text-center">
-          <div className="text-lg font-bold text-[var(--status-live)]">
-            {stations.filter(s => s.status === 'active').length}
-          </div>
-          <div className="text-xs text-[var(--foreground-muted)]">Active</div>
-        </div>
-        <div className="card p-3 text-center">
-          <div className="text-lg font-bold text-[var(--panini-yellow)]">
-            {stations.filter(s => s.status === 'setup').length}
-          </div>
-          <div className="text-xs text-[var(--foreground-muted)]">Setup</div>
-        </div>
-        <div className="card p-3 text-center">
-          <div className="text-lg font-bold">
-            {stations.filter(s => s.status === 'idle').length}
-          </div>
-          <div className="text-xs text-[var(--foreground-muted)]">Idle</div>
-        </div>
-      </div>
-
-      {/* Live/Upcoming Players Quick Reference with Arrival Buttons */}
+      {/* Player Arrivals */}
       {(livePlayers.length > 0 || upcomingPlayers.length > 0) && (
-        <div className="card p-4">
-          <div className="text-xs font-semibold text-[var(--foreground-muted)] uppercase mb-3">
-            Player Arrivals
-          </div>
-          <div className="space-y-2">
+        <div className="arrivals-section">
+          <h2>Player Arrivals</h2>
+          <div className="arrivals-list">
             {livePlayers.map(p => {
               const arrived = hasArrived(p.id);
               const elapsed = getElapsedTime(p.id);
               return (
-                <div
-                  key={p.id}
-                  className="flex items-center justify-between p-2 -mx-2 rounded-lg"
-                >
+                <div key={p.id} className="arrival-item live">
                   <button
                     onClick={() => router.push(`/players/${p.id}`)}
-                    className="flex-1 text-left hover:text-[var(--panini-yellow)] transition-colors"
+                    className="arrival-info"
                   >
-                    <div className="font-medium">{p.name}</div>
-                    <div className="text-xs text-[var(--foreground-dim)] flex items-center gap-2">
-                      {p.schedule && (
-                        <span>{formatTime(p.schedule.startTime)} - {formatTime(p.schedule.endTime)}</span>
-                      )}
-                      {arrived && elapsed !== null && (
-                        <span className="text-[var(--panini-yellow)]">• {formatElapsedTime(elapsed)} on-site</span>
-                      )}
-                    </div>
+                    <span className="arrival-name">{p.name}</span>
+                    <span className="arrival-meta">
+                      {p.schedule && `${formatTime(p.schedule.startTime)} - ${formatTime(p.schedule.endTime)}`}
+                      {arrived && elapsed !== null && ` • ${formatElapsedTime(elapsed)}`}
+                    </span>
                   </button>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-[var(--status-live)]">LIVE</span>
+                  <div className="arrival-actions">
+                    <span className="arrival-status live">LIVE</span>
                     <button
                       onClick={() => handlePlayerArrival(p.id)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors ${
-                        arrived
-                          ? 'bg-[var(--status-live)] text-white'
-                          : 'bg-[var(--background-tertiary)] text-[var(--foreground-muted)] hover:bg-[var(--panini-yellow)] hover:text-black'
-                      }`}
+                      className={`arrival-btn ${arrived ? 'arrived' : ''}`}
                     >
-                      {arrived ? (
-                        <>
-                          <CheckIcon size={12} />
-                          <span>Here</span>
-                        </>
-                      ) : (
-                        <>
-                          <ClockIcon size={12} />
-                          <span>Arrived</span>
-                        </>
-                      )}
+                      {arrived ? <><CheckIcon size={14} /> Here</> : <><ClockIcon size={14} /> Mark</>}
                     </button>
                   </div>
                 </div>
@@ -604,51 +398,26 @@ export default function StationsPage() {
             })}
             {upcomingPlayers.map(p => {
               const arrived = hasArrived(p.id);
-              const elapsed = getElapsedTime(p.id);
-              const countdown = getTimeUntil(p.schedule);
               return (
-                <div
-                  key={p.id}
-                  className="flex items-center justify-between p-2 -mx-2 rounded-lg"
-                >
+                <div key={p.id} className="arrival-item upcoming">
                   <button
                     onClick={() => router.push(`/players/${p.id}`)}
-                    className="flex-1 text-left hover:text-[var(--panini-yellow)] transition-colors"
+                    className="arrival-info"
                   >
-                    <div className="font-medium text-[var(--foreground-muted)]">{p.name}</div>
-                    <div className="text-xs text-[var(--foreground-dim)] flex items-center gap-2">
-                      {p.schedule && (
-                        <span>{formatTime(p.schedule.startTime)}</span>
-                      )}
-                      {countdown && (
-                        <span className="text-[var(--panini-yellow)]">in {countdown}</span>
-                      )}
-                      {arrived && elapsed !== null && (
-                        <span className="text-[var(--status-live)]">• here early!</span>
-                      )}
-                    </div>
+                    <span className="arrival-name">{p.name}</span>
+                    <span className="arrival-meta">
+                      {p.schedule && formatTime(p.schedule.startTime)}
+                      {' • '}{getTimeUntil(p.schedule)}
+                      {arrived && ' • here early!'}
+                    </span>
                   </button>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-[var(--panini-yellow)]">UP NEXT</span>
+                  <div className="arrival-actions">
+                    <span className="arrival-status upcoming">NEXT</span>
                     <button
                       onClick={() => handlePlayerArrival(p.id)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors ${
-                        arrived
-                          ? 'bg-[var(--status-live)] text-white'
-                          : 'bg-[var(--background-tertiary)] text-[var(--foreground-muted)] hover:bg-[var(--panini-yellow)] hover:text-black'
-                      }`}
+                      className={`arrival-btn ${arrived ? 'arrived' : ''}`}
                     >
-                      {arrived ? (
-                        <>
-                          <CheckIcon size={12} />
-                          <span>Here</span>
-                        </>
-                      ) : (
-                        <>
-                          <ClockIcon size={12} />
-                          <span>Arrived</span>
-                        </>
-                      )}
+                      {arrived ? <><CheckIcon size={14} /> Here</> : <><ClockIcon size={14} /> Mark</>}
                     </button>
                   </div>
                 </div>
@@ -658,64 +427,8 @@ export default function StationsPage() {
         </div>
       )}
 
-      {/* Today's Schedule */}
-      {todaySchedule.length > 0 && (
-        <div className="card p-4">
-          <div className="text-xs font-semibold text-[var(--foreground-muted)] uppercase mb-3">
-            {isEventDay ? `${currentDayName}'s Schedule` : 'Full Schedule'}
-          </div>
-          <div className="space-y-1">
-            {todaySchedule.map(p => {
-              const status = getScheduleStatus(p.schedule);
-              const arrived = hasArrived(p.id);
-              return (
-                <button
-                  key={p.id}
-                  onClick={() => router.push(`/players/${p.id}`)}
-                  className={`w-full flex items-center justify-between p-2 -mx-2 rounded-lg hover:bg-[var(--background-tertiary)] transition-colors ${
-                    status === 'live' ? 'bg-[var(--status-live)]/10' : ''
-                  } ${status === 'completed' ? 'opacity-50' : ''}`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="text-sm font-mono text-[var(--foreground-dim)] w-20">
-                      {p.schedule && formatTime(p.schedule.startTime)}
-                    </div>
-                    <div className="text-left">
-                      <div className="font-medium text-sm">{p.name}</div>
-                      <div className="text-xs text-[var(--foreground-dim)]">
-                        {p.position} • {p.team}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {arrived && (
-                      <span className="text-xs text-[var(--status-live)] flex items-center gap-1">
-                        <CheckIcon size={10} />
-                        Here
-                      </span>
-                    )}
-                    {status === 'live' && (
-                      <span className="text-xs font-bold text-[var(--status-live)]">LIVE</span>
-                    )}
-                    {status === 'upcoming' && (
-                      <span className="text-xs text-[var(--panini-yellow)]">{getTimeUntil(p.schedule)}</span>
-                    )}
-                    {status === 'completed' && (
-                      <span className="text-xs text-[var(--foreground-dim)]">Done</span>
-                    )}
-                    {!isEventDay && p.schedule && (
-                      <span className="text-xs text-[var(--foreground-dim)]">{p.schedule.day}</span>
-                    )}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
       {/* Station Cards */}
-      <div className="space-y-3">
+      <div className="stations-grid">
         {stations.map(data => {
           const assignedPlayer = data.currentPlayer
             ? players.find(p => p.id === data.currentPlayer) || null

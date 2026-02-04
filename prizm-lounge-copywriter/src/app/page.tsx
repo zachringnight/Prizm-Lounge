@@ -3,228 +3,271 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
-import { getScheduleStatus, getTimeUntil, formatTime } from '@/types';
-import { CalendarIcon, UsersIcon, LayersIcon, SparklesIcon, HistoryIcon, GridIcon, SettingsIcon } from '@/components/Icons';
+import { getScheduleStatus, getTimeUntil, formatTime, Player, AppearanceSchedule } from '@/types';
+import { CalendarIcon, UsersIcon, LayersIcon, ChevronRightIcon, ClockIcon, CheckIcon } from '@/components/Icons';
+
+// Helper to check if countdown is urgent (< 5 minutes)
+function isCountdownUrgent(schedule: AppearanceSchedule | null): boolean {
+  if (!schedule) return false;
+  const eventDates: Record<string, string> = {
+    'Thursday': '2026-02-06',
+    'Friday': '2026-02-07',
+    'Saturday': '2026-02-08'
+  };
+  const dateStr = eventDates[schedule.day];
+  if (!dateStr) return false;
+  const startDateTime = new Date(`${dateStr}T${schedule.startTime}:00-08:00`);
+  const now = new Date();
+  if (now >= startDateTime) return false;
+  const diffMs = startDateTime.getTime() - now.getTime();
+  const diffMins = diffMs / (1000 * 60);
+  return diffMins > 0 && diffMins <= 5;
+}
 
 export default function Home() {
   const router = useRouter();
-  const { players } = useAppStore();
+  const { players, playerArrivals, markPlayerArrived, markPlayerDeparted } = useAppStore();
   const [, setTick] = useState(0);
 
-  // Update every minute for countdown timers
+  // Update every 30 seconds for countdown timers
   useEffect(() => {
     const interval = setInterval(() => {
       setTick(t => t + 1);
-    }, 60000);
+    }, 30000);
     return () => clearInterval(interval);
   }, []);
 
   // Find live/upcoming players
   const livePlayer = players.find(p => getScheduleStatus(p.schedule) === 'live');
   const upcomingPlayers = players
-    .filter(p => getScheduleStatus(p.schedule) === 'upcoming' || getScheduleStatus(p.schedule) === 'scheduled')
-    .filter(p => p.schedule)
+    .filter(p => getScheduleStatus(p.schedule) === 'upcoming')
     .sort((a, b) => {
       if (!a.schedule || !b.schedule) return 0;
-      const dayOrder = { 'Thursday': 0, 'Friday': 1, 'Saturday': 2 };
-      const dayDiff = dayOrder[a.schedule.day] - dayOrder[b.schedule.day];
+      return a.schedule.startTime.localeCompare(b.schedule.startTime);
+    });
+
+  const nextPlayer = upcomingPlayers[0];
+
+  // Today's remaining schedule
+  const now = new Date();
+  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const eventDays = ['Thursday', 'Friday', 'Saturday'];
+  const currentDayName = dayNames[now.getDay()];
+  const isEventDay = eventDays.includes(currentDayName);
+
+  const todaySchedule = players
+    .filter(p => {
+      if (!p.schedule) return false;
+      const status = getScheduleStatus(p.schedule);
+      if (status === 'completed') return false;
+      return isEventDay ? p.schedule.day === currentDayName : true;
+    })
+    .sort((a, b) => {
+      if (!a.schedule || !b.schedule) return 0;
+      const dayOrder: Record<string, number> = { 'Thursday': 0, 'Friday': 1, 'Saturday': 2 };
+      const dayDiff = (dayOrder[a.schedule.day] ?? 0) - (dayOrder[b.schedule.day] ?? 0);
       if (dayDiff !== 0) return dayDiff;
       return a.schedule.startTime.localeCompare(b.schedule.startTime);
     })
-    .slice(0, 3);
+    .slice(0, 6);
+
+  // Check arrival status
+  const hasArrived = (playerId: string): boolean => {
+    return playerArrivals.some(a => a.playerId === playerId && !a.departedAt);
+  };
+
+  const handleArrival = (player: Player) => {
+    if (hasArrived(player.id)) {
+      markPlayerDeparted(player.id);
+    } else {
+      markPlayerArrived(player.id);
+    }
+  };
 
   return (
-    <div className="space-y-8">
-      {/* Hero Section */}
-      <div className="hero-section">
-        <div className="brand-text">Panini America</div>
-        <h1>
-          <span className="text-[var(--panini-red)]">Prizm</span>{' '}
-          <span className="text-[var(--panini-yellow)]">Lounge</span>
-        </h1>
-        <p className="event-info">Super Bowl LX • San Francisco</p>
-        <p className="event-dates">February 6-8, 2026</p>
+    <div className="dashboard-container">
+      {/* Header */}
+      <div className="dashboard-header">
+        <div>
+          <h1 className="dashboard-title">
+            <span className="text-[var(--panini-red)]">Prizm</span>{' '}
+            <span className="text-[var(--panini-yellow)]">Lounge</span>
+          </h1>
+          <p className="dashboard-subtitle">Super Bowl LX • Feb 6-8</p>
+        </div>
       </div>
 
-      {/* Live Now Banner */}
+      {/* Live Player - Most Prominent */}
       {livePlayer && (
-        <button
-          onClick={() => router.push(`/players/${livePlayer.id}`)}
-          className="card card-live p-5 w-full text-left"
-        >
-          <div className="flex items-center gap-3 mb-3">
-            <div className="status-dot live animate-pulse-live scale-125" />
-            <span className="text-sm font-bold text-[var(--status-live)] tracking-wide">LIVE NOW</span>
-          </div>
-          <div className="font-bold text-xl mb-1">{livePlayer.name}</div>
-          <div className="text-base text-[var(--foreground-muted)]">
-            {livePlayer.position} • {livePlayer.team}
-          </div>
-          {livePlayer.schedule && (
-            <div className="text-sm text-[var(--foreground-dim)] mt-2">
-              Until {formatTime(livePlayer.schedule.endTime)}
+        <div className="live-card">
+          <div className="live-card-header">
+            <div className="live-indicator">
+              <div className="status-dot live animate-pulse-live" />
+              <span>LIVE NOW</span>
             </div>
-          )}
+            {livePlayer.schedule && (
+              <span className="live-until">
+                until {formatTime(livePlayer.schedule.endTime)}
+              </span>
+            )}
+          </div>
+          <button
+            onClick={() => router.push(`/players/${livePlayer.id}`)}
+            className="live-card-content"
+          >
+            <div className="avatar">{livePlayer.name.split(' ').map(n => n[0]).join('').slice(0, 2)}</div>
+            <div className="live-card-info">
+              <div className="live-player-name">{livePlayer.name}</div>
+              <div className="live-player-details">
+                {livePlayer.position} • {livePlayer.team}
+              </div>
+            </div>
+            <ChevronRightIcon size={20} className="text-[var(--foreground-dim)]" />
+          </button>
+          <div className="live-card-actions">
+            <button
+              onClick={() => handleArrival(livePlayer)}
+              className={`arrival-btn ${hasArrived(livePlayer.id) ? 'arrived' : ''}`}
+            >
+              {hasArrived(livePlayer.id) ? <CheckIcon size={16} /> : <ClockIcon size={16} />}
+              {hasArrived(livePlayer.id) ? 'On Site' : 'Mark Arrived'}
+            </button>
+            <button
+              onClick={() => router.push('/stations')}
+              className="stations-btn"
+            >
+              <LayersIcon size={16} />
+              Go to Stations
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Up Next - Secondary Prominence */}
+      {nextPlayer && !livePlayer && (
+        <button
+          onClick={() => router.push(`/players/${nextPlayer.id}`)}
+          className="next-card"
+        >
+          <div className="next-card-header">
+            <div className="next-indicator">
+              <div className="status-dot upcoming" />
+              <span>UP NEXT</span>
+            </div>
+            {nextPlayer.schedule && (
+              <span className="next-time">
+                {formatTime(nextPlayer.schedule.startTime)}
+              </span>
+            )}
+          </div>
+          <div className="next-card-content">
+            <div className="avatar">{nextPlayer.name.split(' ').map(n => n[0]).join('').slice(0, 2)}</div>
+            <div className="next-card-info">
+              <div className="next-player-name">{nextPlayer.name}</div>
+              <div className="next-player-details">
+                {nextPlayer.position} • {nextPlayer.team}
+              </div>
+            </div>
+            <div className={`next-countdown ${isCountdownUrgent(nextPlayer.schedule) ? 'urgent' : ''}`}>
+              {getTimeUntil(nextPlayer.schedule)}
+            </div>
+          </div>
         </button>
       )}
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+      {/* Also show next when live */}
+      {nextPlayer && livePlayer && (
         <button
-          onClick={() => router.push('/schedule')}
-          className="stat-card"
+          onClick={() => router.push(`/players/${nextPlayer.id}`)}
+          className="next-inline"
         >
-          <div className="stat-icon">
-            <CalendarIcon size={28} className="mx-auto text-[var(--panini-yellow)]" />
+          <div className="next-inline-left">
+            <div className="status-dot upcoming" />
+            <span className="next-inline-label">NEXT</span>
+            <span className="next-inline-name">{nextPlayer.name}</span>
           </div>
-          <div className="stat-value">{players.filter(p => p.schedule).length}</div>
-          <div className="stat-label">Scheduled</div>
+          <div className="next-inline-right">
+            <span className="next-inline-time">
+              {nextPlayer.schedule && formatTime(nextPlayer.schedule.startTime)}
+            </span>
+            <span className={`next-inline-countdown ${isCountdownUrgent(nextPlayer.schedule) ? 'urgent' : ''}`}>
+              {getTimeUntil(nextPlayer.schedule)}
+            </span>
+          </div>
         </button>
-        <button
-          onClick={() => router.push('/players')}
-          className="stat-card"
-        >
-          <div className="stat-icon">
-            <UsersIcon size={28} className="mx-auto text-[var(--panini-red)]" />
-          </div>
-          <div className="stat-value">{players.length}</div>
-          <div className="stat-label">Players</div>
+      )}
+
+      {/* Quick Actions */}
+      <div className="quick-actions-grid three-col">
+        <button onClick={() => router.push('/stations')} className="quick-action-card primary">
+          <LayersIcon size={22} />
+          <span>Stations</span>
         </button>
-        <button
-          onClick={() => router.push('/stations')}
-          className="stat-card col-span-2 md:col-span-1"
-        >
-          <div className="stat-icon">
-            <LayersIcon size={28} className="mx-auto text-[var(--status-live)]" />
-          </div>
-          <div className="stat-value">5</div>
-          <div className="stat-label">Stations</div>
+        <button onClick={() => router.push('/schedule')} className="quick-action-card">
+          <CalendarIcon size={22} />
+          <span>Schedule</span>
+        </button>
+        <button onClick={() => router.push('/players')} className="quick-action-card">
+          <UsersIcon size={22} />
+          <span>Players</span>
         </button>
       </div>
 
-      {/* Upcoming Players */}
-      <div>
-        <div className="section-header">
-          <span className="section-title">Coming Up</span>
-          <button
-            onClick={() => router.push('/schedule')}
-            className="text-sm font-semibold text-[var(--panini-yellow)]"
-          >
-            View All →
-          </button>
-        </div>
-        <div className="space-y-3 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4 md:space-y-0">
-          {upcomingPlayers.length === 0 ? (
-            <div className="card p-6 text-center text-[var(--foreground-muted)] md:col-span-full">
-              No upcoming appearances
-            </div>
-          ) : (
-            upcomingPlayers.map(player => {
+      {/* Today's Schedule Preview */}
+      {todaySchedule.length > 0 && (
+        <div className="schedule-preview">
+          <div className="schedule-preview-header">
+            <span>{isEventDay ? "Today's Schedule" : 'Coming Up'}</span>
+            <button onClick={() => router.push('/schedule')}>
+              View All
+            </button>
+          </div>
+          <div className="schedule-list">
+            {todaySchedule.map(player => {
               const status = getScheduleStatus(player.schedule);
+              const arrived = hasArrived(player.id);
+
               return (
                 <button
                   key={player.id}
                   onClick={() => router.push(`/players/${player.id}`)}
-                  className="schedule-card w-full text-left"
+                  className={`schedule-item ${status === 'live' ? 'is-live' : ''}`}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-3 mb-1">
-                        <span className="player-name truncate">{player.name}</span>
-                        <span className={`badge badge-${player.category.toLowerCase()}`}>
-                          {player.category}
-                        </span>
-                      </div>
-                      <div className="player-details">
-                        {player.position} • {player.team}
-                      </div>
-                    </div>
-                    <div className="text-right ml-4">
-                      {player.schedule && (
-                        <>
-                          <div className="time-display">
-                            {formatTime(player.schedule.startTime)}
-                          </div>
-                          <div className="text-sm text-[var(--foreground-dim)]">
-                            {player.schedule.day}
-                          </div>
-                          {status === 'upcoming' && (
-                            <div className="countdown text-base mt-1">
-                              {getTimeUntil(player.schedule)}
-                            </div>
-                          )}
-                        </>
-                      )}
-                    </div>
+                  <div className="schedule-item-left">
+                    <span className="schedule-time">
+                      {player.schedule && formatTime(player.schedule.startTime).replace(' ', '')}
+                    </span>
+                    <span className="schedule-name">{player.name}</span>
+                    {arrived && <CheckIcon size={12} className="schedule-arrived" />}
+                  </div>
+                  <div className="schedule-item-right">
+                    {status === 'live' && <span className="schedule-status live">LIVE</span>}
+                    {status === 'upcoming' && (
+                      <span className={`schedule-countdown ${isCountdownUrgent(player.schedule) ? 'urgent' : ''}`}>
+                        {getTimeUntil(player.schedule)}
+                      </span>
+                    )}
+                    {!isEventDay && player.schedule && (
+                      <span className="schedule-day">{player.schedule.day.slice(0, 3)}</span>
+                    )}
                   </div>
                 </button>
               );
-            })
-          )}
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Quick Links */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <button
-          onClick={() => router.push('/players')}
-          className="card p-5 flex items-center gap-4"
-        >
-          <UsersIcon size={24} className="text-[var(--panini-yellow)]" />
-          <span className="font-semibold text-base">Player Info</span>
-        </button>
-        <button
-          onClick={() => router.push('/schedule')}
-          className="card p-5 flex items-center gap-4"
-        >
-          <CalendarIcon size={24} className="text-[var(--panini-red)]" />
-          <span className="font-semibold text-base">Schedule</span>
-        </button>
-        <button
-          onClick={() => router.push('/stations')}
-          className="card p-5 flex items-center gap-4 col-span-2 md:col-span-2"
-        >
-          <LayersIcon size={24} className="text-[var(--status-live)]" />
-          <span className="font-semibold text-base">Stations</span>
-        </button>
-      </div>
-
-      {/* Crew Tools */}
-      <div className="pt-4 border-t border-[var(--background-tertiary)]">
-        <div className="section-header mb-4">
-          <span className="text-xs font-semibold text-[var(--foreground-dim)] uppercase tracking-wider">Crew Tools</span>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <button
-            onClick={() => router.push('/generate')}
-            className="card p-4 flex flex-col items-center gap-2 text-center hover:border-[var(--panini-red)] transition-colors"
-          >
-            <SparklesIcon size={24} className="text-[var(--panini-red)]" />
-            <span className="text-sm font-medium">Content Generator</span>
-          </button>
-          <button
-            onClick={() => router.push('/recap')}
-            className="card p-4 flex flex-col items-center gap-2 text-center hover:border-[var(--panini-yellow)] transition-colors"
-          >
-            <HistoryIcon size={24} className="text-[var(--panini-yellow)]" />
-            <span className="text-sm font-medium">Day Recap</span>
-          </button>
-          <button
-            onClick={() => router.push('/tracking')}
-            className="card p-4 flex flex-col items-center gap-2 text-center hover:border-[var(--foreground-muted)] transition-colors"
-          >
-            <GridIcon size={24} className="text-[var(--foreground-muted)]" />
-            <span className="text-sm font-medium">Content Tracking</span>
-          </button>
-          <button
-            onClick={() => router.push('/admin')}
-            className="card p-4 flex flex-col items-center gap-2 text-center hover:border-[var(--foreground-muted)] transition-colors"
-          >
-            <SettingsIcon size={24} className="text-[var(--foreground-muted)]" />
-            <span className="text-sm font-medium">Admin</span>
+      {/* Empty State */}
+      {!livePlayer && !nextPlayer && todaySchedule.length === 0 && (
+        <div className="empty-dashboard">
+          <CalendarIcon size={48} />
+          <p>No scheduled appearances</p>
+          <button onClick={() => router.push('/players')} className="btn btn-secondary">
+            View All Players
           </button>
         </div>
-      </div>
+      )}
     </div>
   );
 }
