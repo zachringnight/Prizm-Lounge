@@ -38,32 +38,6 @@ function isCountdownUrgent(schedule: AppearanceSchedule | null): boolean {
   return diffMins > 0 && diffMins <= 5;
 }
 
-// Format duration for display
-function formatDuration(minutes: number): string {
-  if (minutes >= 60) {
-    const h = Math.floor(minutes / 60);
-    const m = minutes % 60;
-    return m > 0 ? `${h}h ${m}m` : `${h}h`;
-  }
-  return `${minutes}m`;
-}
-
-// Format elapsed seconds into mm:ss
-function formatTimer(elapsedMs: number, durationMinutes: number): { display: string; isOver: boolean; pct: number } {
-  const totalSeconds = Math.floor(elapsedMs / 1000);
-  const targetSeconds = durationMinutes * 60;
-  const remainingSeconds = targetSeconds - totalSeconds;
-  const isOver = remainingSeconds <= 0;
-
-  const absSeconds = Math.abs(remainingSeconds);
-  const mins = Math.floor(absSeconds / 60);
-  const secs = absSeconds % 60;
-  const display = `${isOver ? '+' : ''}${mins}:${secs.toString().padStart(2, '0')}`;
-  const pct = Math.min((totalSeconds / targetSeconds) * 100, 100);
-
-  return { display, isOver, pct };
-}
-
 // Helper to get smart status message
 function getSmartStatus(): { type: 'pre-event' | 'lunch-break' | 'wrap' | 'active' | null; message: string; subMessage: string } {
   const now = new Date();
@@ -118,117 +92,53 @@ function getSmartStatus(): { type: 'pre-event' | 'lunch-break' | 'wrap' | 'activ
   return { type: null, message: '', subMessage: '' };
 }
 
-// Station checklist row component
+// Station checklist row component — simplified tap-to-complete
 function ChecklistRow({
   item,
-  playerId,
-  startedAt,
   completedAt,
-  onStart,
-  onComplete,
-  onReset,
-  now,
+  onToggle,
 }: {
   item: StationChecklistItem;
-  playerId: string;
-  startedAt?: number;
   completedAt?: number;
-  onStart: () => void;
-  onComplete: () => void;
-  onReset: () => void;
-  now: number;
+  onToggle: () => void;
 }) {
-  const isStarted = !!startedAt;
   const isCompleted = !!completedAt;
-
-  const elapsedMs = isStarted && !isCompleted ? now - startedAt : 0;
-  const timer = isStarted && !isCompleted
-    ? formatTimer(elapsedMs, item.durationMinutes)
-    : null;
+  const isPR = item.station === 'PR Interview';
 
   return (
-    <div
-      className={`flex items-center gap-3 p-3 rounded-lg border transition-all ${
+    <button
+      onClick={(e) => { e.stopPropagation(); onToggle(); }}
+      className={`flex items-center gap-3 w-full p-3 rounded-lg border transition-all text-left ${
         isCompleted
-          ? 'border-[var(--success)] bg-[var(--success)]/10 opacity-70'
-          : isStarted
-          ? timer?.isOver
-            ? 'border-[var(--error)] bg-[var(--error)]/10'
-            : 'border-[var(--panini-yellow)] bg-[var(--panini-yellow)]/10'
-          : 'border-[var(--background-tertiary)] bg-[var(--background-secondary)]'
+          ? 'border-[var(--success)]/40 bg-[var(--success)]/10'
+          : 'border-[var(--background-tertiary)] bg-[var(--background-secondary)] active:scale-[0.98]'
       }`}
     >
-      {/* Station icon and name */}
-      <div className="flex items-center gap-2 flex-1 min-w-0">
-        <span className="text-lg flex-shrink-0">{STATION_ICONS[item.station]}</span>
-        <div className="min-w-0">
-          <div className={`font-medium text-sm ${isCompleted ? 'line-through text-[var(--foreground-dim)]' : ''}`}>
-            {item.station}
-          </div>
-          {item.isPresetTime && item.presetStartTime && item.presetEndTime && (
-            <div className="text-xs text-[var(--panini-yellow)] font-medium">
-              {formatTime(item.presetStartTime)} - {formatTime(item.presetEndTime)}
-            </div>
-          )}
-          {item.notes && (
-            <div className="text-xs text-[var(--foreground-muted)] truncate">{item.notes}</div>
-          )}
-        </div>
+      {/* Checkbox */}
+      <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
+        isCompleted
+          ? 'border-[var(--success)] bg-[var(--success)]'
+          : 'border-[var(--foreground-dim)]'
+      }`}>
+        {isCompleted && <CheckIcon size={14} className="text-white" />}
       </div>
 
-      {/* Duration / Timer */}
-      <div className="flex items-center gap-2 flex-shrink-0">
-        {isCompleted ? (
-          <div className="flex items-center gap-1">
-            <span className="text-xs text-[var(--success)] font-medium">Done</span>
-            <button
-              onClick={(e) => { e.stopPropagation(); onReset(); }}
-              className="text-xs text-[var(--foreground-dim)] hover:text-[var(--foreground)] px-1"
-              title="Reset"
-            >
-              ↻
-            </button>
-          </div>
-        ) : isStarted ? (
-          <div className="flex items-center gap-2">
-            {/* Timer display */}
-            <div className="text-right">
-              <div className={`font-mono text-sm font-bold ${
-                timer?.isOver ? 'text-[var(--error)]' : 'text-[var(--panini-yellow)]'
-              }`}>
-                {timer?.display}
-              </div>
-              {/* Progress bar */}
-              <div className="w-16 h-1 bg-[var(--background-tertiary)] rounded-full mt-0.5 overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all ${
-                    timer?.isOver ? 'bg-[var(--error)]' : 'bg-[var(--panini-yellow)]'
-                  }`}
-                  style={{ width: `${timer?.pct ?? 0}%` }}
-                />
-              </div>
-            </div>
-            <button
-              onClick={(e) => { e.stopPropagation(); onComplete(); }}
-              className="w-8 h-8 rounded-full bg-[var(--success)] text-white flex items-center justify-center hover:opacity-90 transition-opacity"
-              title="Mark complete"
-            >
-              <CheckIcon size={16} />
-            </button>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-[var(--foreground-dim)]">{formatDuration(item.durationMinutes)}</span>
-            <button
-              onClick={(e) => { e.stopPropagation(); onStart(); }}
-              className="px-3 py-1.5 rounded-lg bg-[var(--panini-blue)] text-white text-xs font-medium hover:opacity-90 transition-opacity"
-            >
-              Start
-            </button>
+      {/* Station icon and name */}
+      <span className="text-base flex-shrink-0">{STATION_ICONS[item.station]}</span>
+      <div className="flex-1 min-w-0">
+        <div className={`font-medium text-sm ${isCompleted ? 'line-through text-[var(--foreground-dim)]' : ''}`}>
+          {item.station}
+        </div>
+        {isPR && item.isPresetTime && item.presetStartTime && item.presetEndTime && (
+          <div className="text-xs text-[var(--panini-yellow)] font-medium">
+            {formatTime(item.presetStartTime)} - {formatTime(item.presetEndTime)}
           </div>
         )}
+        {item.notes && (
+          <div className="text-xs text-[var(--foreground-muted)] truncate">{item.notes}</div>
+        )}
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -243,15 +153,15 @@ export default function SchedulePage() {
     resetAllPlayerChecklist,
   } = useAppStore();
   const [dayFilter, setDayFilter] = useState<DayFilter>('All');
-  const [now, setNow] = useState(Date.now());
+  const [, setTick] = useState(0);
   const [expandedPlayers, setExpandedPlayers] = useState<Set<string>>(new Set());
   const nowRef = useRef<HTMLDivElement>(null);
 
-  // Update every second for timers
+  // Update every 30 seconds for countdowns
   useEffect(() => {
     const interval = setInterval(() => {
-      setNow(Date.now());
-    }, 1000);
+      setTick(t => t + 1);
+    }, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -317,15 +227,6 @@ export default function SchedulePage() {
       return !!progress?.completedAt;
     }).length;
     return { completed, total: checklist.length };
-  };
-
-  // Check if any station is currently active (started but not completed) for a player
-  const hasActiveStation = (playerId: string, checklist?: StationChecklistItem[]) => {
-    if (!checklist) return false;
-    return checklist.some(item => {
-      const progress = getProgress(playerId, item.id);
-      return progress?.startedAt && !progress?.completedAt;
-    });
   };
 
   const smartStatus = getSmartStatus();
@@ -439,7 +340,6 @@ export default function SchedulePage() {
             const checklist = player.schedule?.stationChecklist;
             const { completed, total } = getCompletionCount(player.id, checklist);
             const isExpanded = expandedPlayers.has(player.id);
-            const isActive = hasActiveStation(player.id, checklist);
             const allDone = total > 0 && completed === total;
 
             return (
@@ -447,9 +347,7 @@ export default function SchedulePage() {
                 key={player.id}
                 className={`card overflow-hidden ${
                   status === 'live' ? 'card-live' : ''
-                } ${isActive ? 'border-[var(--panini-yellow)]' : ''} ${
-                  allDone ? 'border-[var(--success)]' : ''
-                }`}
+                } ${allDone ? 'border-[var(--success)]' : ''}`}
               >
                 {/* Player Header - clickable to expand */}
                 <button
@@ -466,9 +364,6 @@ export default function SchedulePage() {
                       </span>
                       {status === 'live' && (
                         <span className="badge bg-[var(--status-live)] text-white">LIVE</span>
-                      )}
-                      {isActive && (
-                        <span className="badge bg-[var(--panini-yellow)] text-black text-xs">IN PROGRESS</span>
                       )}
                     </div>
                     <div className="text-sm text-[var(--foreground-muted)]">
@@ -531,17 +426,21 @@ export default function SchedulePage() {
 
                     {checklist.map(item => {
                       const progress = getProgress(player.id, item.id);
+                      const isComplete = !!progress?.completedAt;
                       return (
                         <ChecklistRow
                           key={item.id}
                           item={item}
-                          playerId={player.id}
-                          startedAt={progress?.startedAt}
                           completedAt={progress?.completedAt}
-                          onStart={() => startStationChecklist(player.id, item.id)}
-                          onComplete={() => completeStationChecklist(player.id, item.id)}
-                          onReset={() => resetStationChecklist(player.id, item.id)}
-                          now={now}
+                          onToggle={() => {
+                            if (isComplete) {
+                              resetStationChecklist(player.id, item.id);
+                            } else {
+                              // Mark both started and completed in one tap
+                              startStationChecklist(player.id, item.id);
+                              completeStationChecklist(player.id, item.id);
+                            }
+                          }}
                         />
                       );
                     })}
