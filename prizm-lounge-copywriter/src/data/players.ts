@@ -452,7 +452,7 @@ export const players: Player[] = [
     ],
     schedule: {
       day: 'Thursday',
-      date: 'Feb 6',
+      date: 'Feb 5',
       startTime: '11:00',
       endTime: '13:00',
       commitments: [
@@ -503,7 +503,7 @@ export const players: Player[] = [
     ],
     schedule: {
       day: 'Thursday',
-      date: 'Feb 6',
+      date: 'Feb 5',
       startTime: '11:00',
       endTime: '13:00',
       commitments: [
@@ -550,7 +550,7 @@ export const players: Player[] = [
     ],
     schedule: {
       day: 'Thursday',
-      date: 'Feb 6',
+      date: 'Feb 5',
       startTime: '11:00',
       endTime: '13:00',
       commitments: [
@@ -597,7 +597,7 @@ export const players: Player[] = [
     ],
     schedule: {
       day: 'Thursday',
-      date: 'Feb 6',
+      date: 'Feb 5',
       startTime: '15:30',
       endTime: '16:30',
       commitments: [
@@ -647,7 +647,7 @@ export const players: Player[] = [
     ],
     schedule: {
       day: 'Thursday',
-      date: 'Feb 6',
+      date: 'Feb 5',
       startTime: '14:30',
       endTime: '16:30',
       commitments: [
@@ -697,7 +697,7 @@ export const players: Player[] = [
     ],
     schedule: {
       day: 'Thursday',
-      date: 'Feb 6',
+      date: 'Feb 5',
       startTime: '14:30',
       endTime: '16:30',
       commitments: [
@@ -786,7 +786,7 @@ export const players: Player[] = [
     ],
     schedule: {
       day: 'Friday',
-      date: 'Feb 7',
+      date: 'Feb 6',
       startTime: '10:00',
       endTime: '11:30',
       commitments: [
@@ -837,7 +837,7 @@ export const players: Player[] = [
     ],
     schedule: {
       day: 'Friday',
-      date: 'Feb 7',
+      date: 'Feb 6',
       startTime: '10:00',
       endTime: '11:30',
       commitments: [
@@ -887,7 +887,7 @@ export const players: Player[] = [
     ],
     schedule: {
       day: 'Friday',
-      date: 'Feb 7',
+      date: 'Feb 6',
       startTime: '11:00',
       endTime: '13:00',
       commitments: [
@@ -938,7 +938,7 @@ export const players: Player[] = [
     ],
     schedule: {
       day: 'Friday',
-      date: 'Feb 7',
+      date: 'Feb 6',
       startTime: '12:00',
       endTime: '14:00',
       commitments: [
@@ -985,7 +985,7 @@ export const players: Player[] = [
     ],
     schedule: {
       day: 'Friday',
-      date: 'Feb 7',
+      date: 'Feb 6',
       startTime: '12:00',
       endTime: '14:00',
       commitments: [
@@ -1035,7 +1035,7 @@ export const players: Player[] = [
     ],
     schedule: {
       day: 'Friday',
-      date: 'Feb 7',
+      date: 'Feb 6',
       startTime: '12:30',
       endTime: '14:30',
       commitments: [
@@ -1085,7 +1085,7 @@ export const players: Player[] = [
     ],
     schedule: {
       day: 'Friday',
-      date: 'Feb 7',
+      date: 'Feb 6',
       startTime: '13:00',
       endTime: '15:00',
       commitments: [
@@ -1135,7 +1135,7 @@ export const players: Player[] = [
     ],
     schedule: {
       day: 'Friday',
-      date: 'Feb 7',
+      date: 'Feb 6',
       startTime: '14:00',
       endTime: '15:30',
       commitments: [
@@ -1185,7 +1185,7 @@ export const players: Player[] = [
     ],
     schedule: {
       day: 'Friday',
-      date: 'Feb 7',
+      date: 'Feb 6',
       startTime: '14:30',
       endTime: '16:30',
       commitments: [
@@ -1235,7 +1235,7 @@ export const players: Player[] = [
     ],
     schedule: {
       day: 'Friday',
-      date: 'Feb 7',
+      date: 'Feb 6',
       startTime: '16:30',
       endTime: '18:00',
       commitments: [
@@ -1288,7 +1288,7 @@ export const players: Player[] = [
     ],
     schedule: {
       day: 'Saturday',
-      date: 'Feb 8',
+      date: 'Feb 7',
       startTime: '11:00',
       endTime: '13:00',
       commitments: [
@@ -1338,7 +1338,7 @@ export const players: Player[] = [
     ],
     schedule: {
       day: 'Saturday',
-      date: 'Feb 8',
+      date: 'Feb 7',
       startTime: '14:00',
       endTime: '16:00',
       commitments: [

@@ -11,10 +11,13 @@ import {
   PlusIcon,
   ChevronRightIcon,
   ChevronDownIcon,
-  LayersIcon
+  LayersIcon,
+  ClapperboardIcon
 } from '@/components/Icons';
 import { useToast } from '@/components/Toast';
 import { getPlayerQuestions } from '@/data/players';
+import ClipMarkerButton from '@/components/ClipMarkerButton';
+import { Station, STATIONS } from '@/types';
 
 export default function PlayerDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -34,6 +37,7 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
   const [isListening, setIsListening] = useState(false);
   const [signingExpanded, setSigningExpanded] = useState(true);
   const [packRipsExpanded, setPackRipsExpanded] = useState(true);
+  const [selectedStation, setSelectedStation] = useState<Station>('Signing');
   const { showToast, ToastComponent } = useToast();
 
   // Get station-specific questions for this player
@@ -147,6 +151,32 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
           )}
         </div>
       )}
+
+      {/* Clip Marker Section - Always visible for videographers */}
+      <div className="card p-4 md:p-6">
+        <div className="flex items-center gap-2 mb-3">
+          <ClapperboardIcon size={20} className="text-[var(--panini-yellow)]" />
+          <h3 className="font-semibold">Mark Clip</h3>
+        </div>
+        <div className="flex items-center gap-3 mb-3">
+          <label className="text-sm text-[var(--foreground-muted)]">Station:</label>
+          <select
+            value={selectedStation}
+            onChange={(e) => setSelectedStation(e.target.value as Station)}
+            className="input select flex-1"
+          >
+            {STATIONS.filter(s => s !== 'Free').map(s => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+        </div>
+        <ClipMarkerButton
+          station={selectedStation}
+          playerId={player.id}
+          playerName={player.name}
+          onMarked={() => showToast(`Clip marked for ${player.name}!`, 'success')}
+        />
+      </div>
 
       {/* Tabs */}
       <div className="tabs">

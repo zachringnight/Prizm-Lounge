@@ -267,9 +267,9 @@ export function getScheduleStatus(schedule: AppearanceSchedule | null): Schedule
 
   const now = new Date();
   const eventDates: Record<string, string> = {
-    'Thursday': '2026-02-06',
-    'Friday': '2026-02-07',
-    'Saturday': '2026-02-08'
+    'Thursday': '2026-02-05',
+    'Friday': '2026-02-06',
+    'Saturday': '2026-02-07'
   };
 
   const dateStr = eventDates[schedule.day];
@@ -293,9 +293,9 @@ export function getTimeUntil(schedule: AppearanceSchedule | null): string {
   if (!schedule) return '';
 
   const eventDates: Record<string, string> = {
-    'Thursday': '2026-02-06',
-    'Friday': '2026-02-07',
-    'Saturday': '2026-02-08'
+    'Thursday': '2026-02-05',
+    'Friday': '2026-02-06',
+    'Saturday': '2026-02-07'
   };
 
   const dateStr = eventDates[schedule.day];
