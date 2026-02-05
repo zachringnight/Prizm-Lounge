@@ -12,9 +12,9 @@ function isCountdownUrgent(schedule: AppearanceSchedule | null): boolean {
   if (!schedule) return false;
 
   const eventDates: Record<string, string> = {
-    'Thursday': '2026-02-06',
-    'Friday': '2026-02-07',
-    'Saturday': '2026-02-08'
+    'Thursday': '2026-02-05',
+    'Friday': '2026-02-06',
+    'Saturday': '2026-02-07'
   };
 
   const dateStr = eventDates[schedule.day];
@@ -35,10 +35,10 @@ function getSmartStatus(): { type: 'pre-event' | 'lunch-break' | 'wrap' | 'activ
   const now = new Date();
   const hour = now.getHours();
 
-  // Event dates: Thu Feb 6, Fri Feb 7, Sat Feb 8 (2026)
+  // Event dates: Thu Feb 5, Fri Feb 6, Sat Feb 7 (2026)
   const eventDates = {
-    start: new Date('2026-02-06T00:00:00-08:00'),
-    end: new Date('2026-02-08T23:59:59-08:00')
+    start: new Date('2026-02-05T00:00:00-08:00'),
+    end: new Date('2026-02-07T23:59:59-08:00')
   };
 
   // Before event starts
@@ -137,9 +137,9 @@ export default function SchedulePage() {
 
   const getDateDisplay = (day: 'Thursday' | 'Friday' | 'Saturday') => {
     switch (day) {
-      case 'Thursday': return 'Feb 6';
-      case 'Friday': return 'Feb 7';
-      case 'Saturday': return 'Feb 8';
+      case 'Thursday': return 'Feb 5';
+      case 'Friday': return 'Feb 6';
+      case 'Saturday': return 'Feb 7';
     }
   };
 

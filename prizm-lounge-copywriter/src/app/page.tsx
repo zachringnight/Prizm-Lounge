@@ -10,9 +10,9 @@ import { CalendarIcon, UsersIcon, LayersIcon, ChevronRightIcon, ClockIcon, Check
 function isCountdownUrgent(schedule: AppearanceSchedule | null): boolean {
   if (!schedule) return false;
   const eventDates: Record<string, string> = {
-    'Thursday': '2026-02-06',
-    'Friday': '2026-02-07',
-    'Saturday': '2026-02-08'
+    'Thursday': '2026-02-05',
+    'Friday': '2026-02-06',
+    'Saturday': '2026-02-07'
   };
   const dateStr = eventDates[schedule.day];
   if (!dateStr) return false;
@@ -93,7 +93,7 @@ export default function Home() {
             <span className="text-[var(--panini-red)]">Prizm</span>{' '}
             <span className="text-[var(--panini-yellow)]">Lounge</span>
           </h1>
-          <p className="dashboard-subtitle">Super Bowl LX • Feb 6-8</p>
+          <p className="dashboard-subtitle">Super Bowl LX • Feb 5-7</p>
         </div>
       </div>
 
