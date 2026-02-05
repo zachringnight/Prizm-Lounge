@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
-import { HomeIcon, UsersIcon, CalendarIcon, LayersIcon, SearchIcon } from './Icons';
+import { HomeIcon, UsersIcon, CalendarIcon, LayersIcon, SearchIcon, ClapperboardIcon } from './Icons';
 
 interface NavItem {
   href: string;
@@ -90,6 +90,16 @@ export default function BottomNav() {
         </div>
 
         <div className="desktop-nav-right">
+          {/* Clip Markers Link */}
+          <button
+            onClick={() => handleNavClick('/clip-markers')}
+            className={`desktop-tool-item ${pathname === '/clip-markers' ? 'active' : ''}`}
+            title="Clip Markers"
+          >
+            <ClapperboardIcon size={18} />
+            <span>Clips</span>
+          </button>
+
           {/* Search Trigger */}
           <button
             onClick={openSearch}

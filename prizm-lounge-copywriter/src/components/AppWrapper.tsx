@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useAppStore } from '@/store';
 import ErrorBoundary from './ErrorBoundary';
+import ClipMarkersSync from './ClipMarkersSync';
 
 interface AppWrapperProps {
   children: React.ReactNode;
@@ -20,5 +21,10 @@ export default function AppWrapper({ children }: AppWrapperProps) {
     }
   }, [largeTextMode]);
 
-  return <ErrorBoundary>{children}</ErrorBoundary>;
+  return (
+    <ErrorBoundary>
+      <ClipMarkersSync />
+      {children}
+    </ErrorBoundary>
+  );
 }

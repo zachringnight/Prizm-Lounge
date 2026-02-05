@@ -18,6 +18,7 @@ import {
   Station,
   StationStatus,
   PlayerArrival,
+  ClipMarker,
   STATIONS
 } from '@/types';
 import { players as initialPlayers } from '@/data/players';
@@ -149,6 +150,19 @@ interface AppState {
   markPlayerDeparted: (playerId: string) => void;
   getPlayerArrival: (playerId: string) => PlayerArrival | undefined;
   getElapsedTime: (playerId: string) => number | null;
+
+  // Clip Markers (for videographers)
+  clipMarkers: ClipMarker[];
+  clipMarkersLoaded: boolean;
+  addClipMarker: (station: Station, playerId: string | null, playerName: string | null, markedBy?: string) => string;
+  deleteClipMarker: (markerId: string) => void;
+  updateClipMarkerNote: (markerId: string, note: string) => void;
+  getClipMarkersForStation: (station: Station) => ClipMarker[];
+  getClipMarkersForPlayer: (playerId: string) => ClipMarker[];
+  getAllClipMarkers: () => ClipMarker[];
+  clearAllClipMarkers: () => void;
+  setClipMarkers: (markers: ClipMarker[]) => void;
+  initializeClipMarkers: () => Promise<void>;
 
   // Reset
   resetUIState: () => void;
@@ -433,6 +447,89 @@ export const useAppStore = create<AppState>()(
         return Math.round((Date.now() - arrival.arrivedAt) / (1000 * 60));
       },
 
+      // Clip Markers
+      clipMarkers: [],
+      clipMarkersLoaded: false,
+      addClipMarker: (station, playerId, playerName, markedBy) => {
+        const id = uuidv4();
+        const marker: ClipMarker = {
+          id,
+          station,
+          playerId,
+          playerName,
+          timestamp: Date.now(),
+          markedBy
+        };
+        set(state => ({
+          clipMarkers: [...state.clipMarkers, marker]
+        }));
+        // Sync to Supabase (async, non-blocking)
+        import('@/lib/clipMarkersSync').then(({ addClipMarkerToDb }) => {
+          addClipMarkerToDb(marker);
+        });
+        return id;
+      },
+      deleteClipMarker: (markerId) => {
+        set(state => ({
+          clipMarkers: state.clipMarkers.filter(m => m.id !== markerId)
+        }));
+        // Sync to Supabase (async, non-blocking)
+        import('@/lib/clipMarkersSync').then(({ deleteClipMarkerFromDb }) => {
+          deleteClipMarkerFromDb(markerId);
+        });
+      },
+      updateClipMarkerNote: (markerId, note) => {
+        set(state => ({
+          clipMarkers: state.clipMarkers.map(m =>
+            m.id === markerId ? { ...m, note } : m
+          )
+        }));
+        // Sync to Supabase (async, non-blocking)
+        import('@/lib/clipMarkersSync').then(({ updateClipMarkerNoteInDb }) => {
+          updateClipMarkerNoteInDb(markerId, note);
+        });
+      },
+      getClipMarkersForStation: (station) => {
+        return get().clipMarkers
+          .filter(m => m.station === station)
+          .sort((a, b) => b.timestamp - a.timestamp);
+      },
+      getClipMarkersForPlayer: (playerId) => {
+        return get().clipMarkers
+          .filter(m => m.playerId === playerId)
+          .sort((a, b) => b.timestamp - a.timestamp);
+      },
+      getAllClipMarkers: () => {
+        return get().clipMarkers.sort((a, b) => b.timestamp - a.timestamp);
+      },
+      clearAllClipMarkers: () => {
+        set({ clipMarkers: [] });
+        // Sync to Supabase (async, non-blocking)
+        import('@/lib/clipMarkersSync').then(({ clearAllClipMarkersFromDb }) => {
+          clearAllClipMarkersFromDb();
+        });
+      },
+      setClipMarkers: (markers) => set({ clipMarkers: markers, clipMarkersLoaded: true }),
+      initializeClipMarkers: async () => {
+        if (get().clipMarkersLoaded) return;
+        try {
+          const { fetchClipMarkers, isCloudSyncEnabled } = await import('@/lib/clipMarkersSync');
+          if (isCloudSyncEnabled()) {
+            const markers = await fetchClipMarkers();
+            if (markers.length > 0) {
+              set({ clipMarkers: markers, clipMarkersLoaded: true });
+            } else {
+              set({ clipMarkersLoaded: true });
+            }
+          } else {
+            set({ clipMarkersLoaded: true });
+          }
+        } catch (err) {
+          console.error('Failed to initialize clip markers:', err);
+          set({ clipMarkersLoaded: true });
+        }
+      },
+
       // Reset
       resetUIState: () => set({
         selectedPlayerId: null,
@@ -462,6 +559,7 @@ export const useAppStore = create<AppState>()(
         deliverables: state.deliverables,
         stations: state.stations,
         playerArrivals: state.playerArrivals,
+        clipMarkers: state.clipMarkers,
         largeTextMode: state.largeTextMode
       })
     }
