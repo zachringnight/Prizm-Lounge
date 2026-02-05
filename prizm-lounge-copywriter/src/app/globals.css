@@ -8,6 +8,7 @@
   --panini-yellow: #FFD100;
   --panini-yellow-dark: #E6BC00;
   --panini-yellow-light: #FFE033;
+  --panini-blue: #3B82F6;
 
   /* Dark theme base */
   --background: #0D0D0D;
@@ -43,6 +44,7 @@
   --color-panini-yellow: var(--panini-yellow);
   --color-panini-yellow-dark: var(--panini-yellow-dark);
   --color-panini-yellow-light: var(--panini-yellow-light);
+  --color-panini-blue: var(--panini-blue);
 
   --color-status-live: var(--status-live);
   --color-status-upcoming: var(--status-upcoming);
@@ -3013,6 +3015,12 @@ main {
 
   .schedule-card .time-display {
     font-size: 14px;
+  }
+
+  /* Jump to now button */
+  .jump-to-now-btn {
+    padding: 6px 10px;
+    font-size: 12px;
   }
 
   /* Station cards */

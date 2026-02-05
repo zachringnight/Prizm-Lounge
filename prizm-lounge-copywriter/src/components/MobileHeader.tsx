@@ -8,6 +8,11 @@ const PAGE_TITLES: Record<string, string> = {
   '/stations': 'Stations',
   '/schedule': 'Schedule',
   '/players': 'Players',
+  '/clip-markers': 'Clip Markers',
+  '/notes': 'Notes',
+  '/timer': 'Timer',
+  '/print': 'Print',
+  '/admin': 'Admin',
 };
 
 export default function MobileHeader() {
