@@ -74,8 +74,8 @@ export default function AdminPage() {
 
   return (
     <div className="admin-page">
-      {/* Header */}
-      <div className="admin-header">
+      {/* Header - hidden on mobile, MobileHeader shows title */}
+      <div className="admin-header hidden md:block">
         <h1>Admin Settings</h1>
       </div>
 

@@ -233,16 +233,16 @@ export default function SchedulePage() {
 
   return (
     <div className="space-y-5 md:space-y-8">
-      <header className="page-header">
+      <header className="page-header md:mb-6 mb-0">
         <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
+          <div className="min-w-0 hidden md:block">
             <h1>Schedule</h1>
             <p>Station checklist for each player</p>
           </div>
           {(livePlayer || upcomingPlayer) && (
             <button
               onClick={jumpToNow}
-              className="jump-to-now-btn flex-shrink-0"
+              className="jump-to-now-btn flex-shrink-0 md:ml-0 ml-auto"
             >
               <ArrowDownIcon size={18} />
               <span className="hidden sm:inline">Jump to Now</span>

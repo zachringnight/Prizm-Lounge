@@ -116,7 +116,7 @@ export default function NotesPage() {
     <div className="notes-page">
       {/* Header */}
       <div className="notes-header">
-        <h1>Notes & Issues</h1>
+        <h1 className="hidden md:block">Notes & Issues</h1>
         <div className="notes-stats">
           <div className="notes-stat">
             <span className="notes-stat-value">{openCount}</span>
@@ -133,8 +133,8 @@ export default function NotesPage() {
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="notes-filters">
+      {/* Filters - horizontally scrollable on mobile */}
+      <div className="notes-filters notes-filters-scroll">
         {/* Status Filter */}
         <button
           onClick={() => setStatusFilter('all')}
@@ -155,12 +155,12 @@ export default function NotesPage() {
       </div>
 
       {/* Category Filter */}
-      <div className="notes-filters" style={{ marginTop: '-12px' }}>
+      <div className="notes-filters notes-filters-scroll" style={{ marginTop: '-12px' }}>
         <button
           onClick={() => setCategoryFilter('all')}
           className={`notes-filter-btn ${categoryFilter === 'all' ? 'active' : ''}`}
         >
-          All Categories
+          All
         </button>
         {ISSUE_CATEGORIES.map(cat => (
           <button
