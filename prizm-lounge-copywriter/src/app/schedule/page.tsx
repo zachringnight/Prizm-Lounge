@@ -331,20 +331,21 @@ export default function SchedulePage() {
   const smartStatus = getSmartStatus();
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-5 md:space-y-8">
       <header className="page-header">
-        <div className="flex items-center justify-between">
-          <div>
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
             <h1>Schedule</h1>
             <p>Station checklist for each player</p>
           </div>
           {(livePlayer || upcomingPlayer) && (
             <button
               onClick={jumpToNow}
-              className="jump-to-now-btn"
+              className="jump-to-now-btn flex-shrink-0"
             >
               <ArrowDownIcon size={18} />
-              <span>Jump to Now</span>
+              <span className="hidden sm:inline">Jump to Now</span>
+              <span className="sm:hidden">Now</span>
             </button>
           )}
         </div>
@@ -457,7 +458,7 @@ export default function SchedulePage() {
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-1">
-                      <span className="font-bold text-base truncate max-w-[200px] sm:max-w-none">
+                      <span className="font-bold text-base truncate max-w-[55vw] sm:max-w-none">
                         {player.name}
                       </span>
                       <span className={`badge badge-${player.category.toLowerCase()}`}>
