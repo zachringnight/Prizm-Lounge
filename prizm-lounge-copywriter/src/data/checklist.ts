@@ -26,8 +26,9 @@ export const defaultChecklist: Omit<ChecklistItem, 'id' | 'completed' | 'complet
   // Daily tasks - Thursday
   { category: 'player', title: 'Jahmyr Gibbs - arrival confirmed (11AM)', dueDay: 'Thursday' },
   { category: 'player', title: 'Penei Sewell - arrival confirmed (11AM)', dueDay: 'Thursday' },
+  { category: 'player', title: 'Kyle Hamilton - arrival confirmed (11AM)', dueDay: 'Thursday' },
   { category: 'player', title: 'Quinn Ewers - arrival confirmed (2:30PM)', dueDay: 'Thursday' },
-  { category: 'player', title: 'Matt Leinart - arrival confirmed (TBD)', dueDay: 'Thursday' },
+  { category: 'player', title: 'Matt Leinart - arrival confirmed (3:30PM)', dueDay: 'Thursday' },
 
   // Daily tasks - Friday
   { category: 'player', title: 'Trevor Lawrence - arrival confirmed (10AM)', dueDay: 'Friday' },
@@ -35,16 +36,22 @@ export const defaultChecklist: Omit<ChecklistItem, 'id' | 'completed' | 'complet
   { category: 'player', title: 'Rome Odunze - arrival confirmed (11AM)', dueDay: 'Friday' },
   { category: 'player', title: 'Ty Law - arrival confirmed (12PM)', dueDay: 'Friday' },
   { category: 'player', title: 'Champ Bailey - arrival confirmed (12PM)', dueDay: 'Friday' },
+  { category: 'player', title: 'Will Anderson Jr. - arrival confirmed (12:30PM)', dueDay: 'Friday' },
+  { category: 'player', title: 'Ricky Williams - arrival confirmed (1PM)', dueDay: 'Friday' },
   { category: 'player', title: 'Aidan Hutchinson - arrival confirmed (2PM)', dueDay: 'Friday' },
   { category: 'player', title: 'Andre Reed - arrival confirmed (2:30PM)', dueDay: 'Friday' },
   { category: 'player', title: 'Dante Moore - arrival confirmed (4:30PM)', dueDay: 'Friday' },
 
   // Daily tasks - Saturday
+  { category: 'player', title: 'Keisean Henderson - arrival confirmed (11AM)', dueDay: 'Saturday' },
   { category: 'player', title: 'Julian Edelman - arrival confirmed (2PM)', dueDay: 'Saturday' },
 
   // TBD players
-  { category: 'player', title: 'Ricky Williams - schedule TBD', description: 'Confirm date and time' },
-  { category: 'player', title: 'Will Anderson Jr. - schedule TBD', description: 'Confirm date and time' },
+  { category: 'player', title: 'Michael Penix Jr. - schedule TBD', description: 'Confirm date and time' },
+  { category: 'player', title: 'Cooper Kupp - schedule TBD', description: 'Confirm date and time' },
+  { category: 'player', title: 'Antonio Gibson - schedule TBD', description: 'Confirm date and time' },
+  { category: 'player', title: 'Brian Robinson Jr. - schedule TBD', description: 'Confirm date and time' },
+  { category: 'player', title: 'Trey McBride - schedule TBD', description: 'Confirm date and time' },
 
   // Teardown
   { category: 'teardown', title: 'Equipment inventory complete', dueDay: 'Saturday' },
