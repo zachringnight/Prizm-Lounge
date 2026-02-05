@@ -1,85 +1,174 @@
-# ZNew Repository
+# Prizm Lounge Production Hub
 
-This repository contains the Prizm Lounge Production Hub application.
+Full content production tool for Panini America's Prizm Lounge activation at Super Bowl LX in San Francisco.
 
-## Project Structure
+**Event Dates:** Thursday Feb 6 - Saturday Feb 8, 2026
 
+## Features
+
+### Core Functionality
+- **AI-Powered Content Generation** - Generate 3 variations for any player/mode/platform combination
+- **10 Confirmed Players** - Complete database with stats, moments, and Panini card history
+- **8 Content Modes** - Player Spotlight, Pack Reveal, Signing Session, and more
+- **4 Platforms** - Instagram, X (280 char), TikTok (150 char), Facebook
+- **Panini Product Integration** - All card references are Panini products only (Prizm, Select, National Treasures, etc.)
+
+### Brand Guardrails
+- **Panini-Only References** - System enforces only Panini products in all generated content
+- **Competitor Blocking** - Auto-detects and flags any non-Panini card brand mentions
+- **Spelling Protection** - Auto-corrects common misspellings (Prism→Prizm, etc.)
+
+### Player Database
+- Full bio, stats, and defining moments for each player
+- Card history and collector context
+- Personal details and talking points
+- Searchable by name, team, position, or category
+
+### Live Schedule
+- Player appearance times with countdown timers
+- Visual status indicators (Green = Live, Yellow = Up Next, Gray = Completed)
+- Editable via admin panel
+
+### Content Tracking
+- Track which content modes you've used per player
+- Content gap alerts ("You haven't done a Legend Tribute for Champ")
+- Session history with export to CSV
+
+### Real-Time Notes
+- Capture notes and quotes during player appearances
+- Voice-to-text input for speed
+- Notes automatically feed into generation prompts
+
+### Day Recap Generator
+- End-of-day wrap-up posts
+- Input highlights, autos signed, best pull, crowd notes
+- Generates platform-specific recap content
+
+### Offline Support
+- Service worker for offline functionality
+- Cached pages work without WiFi
+- Data persists locally
+
+### Mobile-First Design
+- Large tap targets for thumbs
+- Dark mode default
+- Bottom navigation
+- Works on any mobile device
+
+## Tech Stack
+
+- **Next.js 16** - React framework with App Router
+- **React 19** - Latest React features
+- **Tailwind CSS v4** - Styling
+- **Zustand** - State management with persistence
+- **Claude API** - AI content generation
+- **TypeScript** - Type safety
+
+## Setup
+
+### 1. Clone and Install
+
+```bash
+npm install
 ```
-.
-├── prizm-lounge-copywriter/    # Next.js application for Super Bowl LX content generation
-│   ├── src/                    # Application source code
-│   ├── public/                 # Static assets
-│   ├── package.json            # Dependencies
-│   └── vercel.json             # Vercel config with app-specific headers
-└── README.md                   # This file
+
+### 2. Configure API Key
+
+Create a `.env.local` file:
+
+```bash
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+```
+
+### 3. Run Development Server
+
+```bash
+npm run dev
+```
+
+### 4. Build for Production
+
+```bash
+npm run build
 ```
 
 ## Deploy to Vercel
 
-This project is ready to deploy to Vercel. Follow these steps:
+1. Push to GitHub
+2. Connect to Vercel
+3. Add `ANTHROPIC_API_KEY` environment variable
+4. Deploy
 
-### Option 1: Deploy via Vercel Dashboard (Recommended)
+## Project Structure
 
-1. **Import Project**
-   - Go to [Vercel Dashboard](https://vercel.com/new)
-   - Click "Import Project" or "Add New Project"
-   - Import your GitHub repository (for example: `<org>/<repo>`)
-
-2. **Configure Project Settings**
-   - **Root Directory**: `prizm-lounge-copywriter` (important!)
-   - **Framework Preset**: Next.js (should auto-detect)
-   - **Build Command**: `npm run build` (default)
-   - **Output Directory**: `.next` (default)
-   - **Install Command**: `npm install` (default)
-
-3. **Add Environment Variables**
-   - Add the following environment variable in the Vercel project settings:
-     - `ANTHROPIC_API_KEY`: Your Anthropic Claude API key
-   - Get your API key at: https://console.anthropic.com/
-
-4. **Deploy**
-   - Click "Deploy"
-   - Vercel will build and deploy your application
-
-### Option 2: Deploy via Vercel CLI
-
-```bash
-# Install Vercel CLI globally
-npm install -g vercel
-
-# Navigate to the application directory
-cd prizm-lounge-copywriter
-
-# Login to Vercel
-vercel login
-
-# Deploy (follow the prompts)
-vercel
-
-# For production deployment
-vercel --prod
+```
+src/
+├── app/                    # Next.js app router pages
+│   ├── page.tsx           # Main generation UI
+│   ├── players/           # Player list and detail pages
+│   ├── schedule/          # Live schedule view
+│   ├── tracking/          # Content tracking grid
+│   ├── admin/             # Admin panel
+│   ├── recap/             # Day recap generator
+│   └── api/               # API routes for Claude
+├── components/            # React components
+├── data/                  # Player database
+├── store/                 # Zustand state management
+└── types/                 # TypeScript types
 ```
 
-When prompted, make sure to:
-- Set the root directory to `prizm-lounge-copywriter`
-- Add your `ANTHROPIC_API_KEY` environment variable
+## Player Roster
 
-### Environment Variables
+### Current NFL Stars
+- Trevor Lawrence (QB, Jaguars)
+- Aidan Hutchinson (DE, Lions)
+- Garrett Wilson (WR, Jets)
 
-The application requires the following environment variable:
+### Prospect
+- Dante Moore (QB, Oregon)
 
-- `ANTHROPIC_API_KEY`: Your Anthropic Claude API key for AI content generation
+### Legends
+- Julian Edelman (WR, Patriots)
+- Ty Law (CB, Patriots)
+- Malcolm Butler (CB, Patriots)
+- Eli Manning (QB, Giants)
+- Ricky Williams (RB, Dolphins)
+- Champ Bailey (CB, Broncos)
 
-You can find a template in `prizm-lounge-copywriter/.env.example`
+## Content Modes
 
-## Local Development
+1. **Player Spotlight** - Feature posts celebrating any player
+2. **Pack Reveal / Hit** - Hyping card pulls
+3. **Signing Session** - Autograph event promo
+4. **Legend Tribute** - Career highlights for legends
+5. **Current Star Hype** - "Get in now" collector momentum
+6. **Event Promo** - FOMO-driving foot traffic content
+7. **Behind the Scenes** - Exclusive access feel
+8. **Day Recap** - End-of-day summary
 
-See [prizm-lounge-copywriter/README.md](./prizm-lounge-copywriter/README.md) for detailed information about the application and local development setup.
+## Tone Guidelines
 
-## Application Details
+- Everything positive - no criticism, no "what ifs"
+- Write like someone who watches football
+- Write like someone who collects cards
+- Casual but sharp, confident, not corporate
+- NO hashtags
+- NO emojis (unless requested)
 
-The Prizm Lounge Production Hub is a full content production tool for Panini America's Prizm Lounge activation at Super Bowl LX in San Francisco.
+## Admin Functions
 
-**Event Dates:** Thursday Feb 6 - Saturday Feb 8, 2026
+- Edit player schedule times
+- Export session history
+- Backup all data to JSON
+- Clear data (with confirmation)
 
-For more information about features, setup, and usage, see the [application README](./prizm-lounge-copywriter/README.md).
+## Offline Mode
+
+The app works offline with limited functionality:
+- Browse players and schedule
+- View notes and tracking
+- Content generation requires connection
+
+---
+
+Built for Super Bowl LX, San Francisco 2026
