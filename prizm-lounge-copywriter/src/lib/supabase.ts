@@ -25,10 +25,11 @@ export interface DbClipMarker {
   station: string;
   player_id: string | null;
   player_name: string | null;
-  timestamp: string; // ISO timestamp
+  timestamp: number; // Unix timestamp in milliseconds (BIGINT in DB)
   note: string | null;
   marked_by: string | null;
   created_at: string;
+  updated_at: string;
 }
 
 // Convert DB format to app format
@@ -38,7 +39,7 @@ export function dbToAppMarker(db: DbClipMarker) {
     station: db.station as 'LED Wall' | 'Signing' | 'PR Interview' | 'Pack Rips' | 'Free',
     playerId: db.player_id,
     playerName: db.player_name,
-    timestamp: new Date(db.timestamp).getTime(),
+    timestamp: db.timestamp,
     note: db.note || undefined,
     markedBy: db.marked_by || undefined
   };
@@ -53,13 +54,13 @@ export function appToDbMarker(marker: {
   timestamp: number;
   note?: string;
   markedBy?: string;
-}): Omit<DbClipMarker, 'created_at'> {
+}): Omit<DbClipMarker, 'created_at' | 'updated_at'> {
   return {
     id: marker.id,
     station: marker.station,
     player_id: marker.playerId,
     player_name: marker.playerName,
-    timestamp: new Date(marker.timestamp).toISOString(),
+    timestamp: marker.timestamp,
     note: marker.note || null,
     marked_by: marker.markedBy || null
   };
