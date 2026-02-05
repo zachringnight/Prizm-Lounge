@@ -1,4 +1,87 @@
-import { Player, PlayerQuestions } from '@/types';
+import { Player, PlayerQuestions, StationChecklistItem } from '@/types';
+
+// Helper to build standard station checklist for a player
+function buildChecklist(
+  playerId: string,
+  options: {
+    ledWall?: boolean;
+    signing?: boolean;
+    signingMinutes?: number;
+    packRips?: boolean;
+    prInterview?: { startTime: string; endTime: string; notes: string } | null;
+    kidReporter?: boolean;
+    customGifting?: boolean;
+    signingOnly?: boolean;
+  }
+): StationChecklistItem[] {
+  const items: StationChecklistItem[] = [];
+  let idx = 1;
+
+  if (options.ledWall !== false && !options.signingOnly) {
+    items.push({
+      id: `${playerId}-cl-${idx++}`,
+      station: 'LED Wall',
+      type: 'LED Wall',
+      durationMinutes: 15,
+      isPresetTime: false,
+    });
+  }
+
+  if (options.signing !== false) {
+    items.push({
+      id: `${playerId}-cl-${idx++}`,
+      station: 'Signing',
+      type: 'Signing',
+      durationMinutes: options.signingMinutes ?? 70,
+      isPresetTime: false,
+    });
+  }
+
+  if (options.packRips !== false && !options.signingOnly) {
+    items.push({
+      id: `${playerId}-cl-${idx++}`,
+      station: 'Pack Rips',
+      type: 'Pack Rips',
+      durationMinutes: 10,
+      isPresetTime: false,
+    });
+  }
+
+  if (options.kidReporter !== false && !options.signingOnly) {
+    items.push({
+      id: `${playerId}-cl-${idx++}`,
+      station: 'Kid Reporter',
+      type: 'Kid Reporter',
+      durationMinutes: 5,
+      isPresetTime: false,
+    });
+  }
+
+  if (options.customGifting !== false && !options.signingOnly) {
+    items.push({
+      id: `${playerId}-cl-${idx++}`,
+      station: 'Custom Gifting',
+      type: 'Custom Gifting',
+      durationMinutes: 5,
+      isPresetTime: false,
+    });
+  }
+
+  if (options.prInterview) {
+    items.push({
+      id: `${playerId}-cl-${idx++}`,
+      station: 'PR Interview',
+      type: 'PR Hold',
+      durationMinutes: 15,
+      isPresetTime: true,
+      presetStartTime: options.prInterview.startTime,
+      presetEndTime: options.prInterview.endTime,
+      notes: options.prInterview.notes,
+    });
+  }
+
+  return items;
+}
 
 // Questions bank for each player
 export const playerQuestions: Record<string, PlayerQuestions> = {
@@ -455,13 +538,10 @@ export const players: Player[] = [
       date: 'Feb 5',
       startTime: '11:00',
       endTime: '13:00',
-      commitments: [
-        { id: 'gibbs-1', type: 'LED Wall', station: 'LED Wall', startTime: '11:00', endTime: '11:15' },
-        { id: 'gibbs-2', type: 'Signing', station: 'Signing', startTime: '11:15', endTime: '12:25' },
-        { id: 'gibbs-3', type: 'Pack Rips', station: 'Pack Rips', startTime: '12:25', endTime: '12:35' },
-        { id: 'gibbs-4', type: 'Free', station: 'Free', startTime: '12:35', endTime: '12:45' },
-        { id: 'gibbs-5', type: 'PR Hold', station: 'PR Interview', startTime: '12:45', endTime: '13:00', notes: 'Fox News Digital (Sports) (Scott Thompson) | Call-in: 732-850-2940' }
-      ]
+      stationChecklist: buildChecklist('gibbs', {
+        signingMinutes: 70,
+        prInterview: { startTime: '12:45', endTime: '13:00', notes: 'Fox News Digital (Sports) (Scott Thompson) | Call-in: 732-850-2940' },
+      }),
     }
   },
   {
@@ -506,9 +586,10 @@ export const players: Player[] = [
       date: 'Feb 5',
       startTime: '11:00',
       endTime: '13:00',
-      commitments: [
-        { id: 'sewell-1', type: 'Signing', station: 'Signing', startTime: '11:00', endTime: '13:00' }
-      ]
+      stationChecklist: buildChecklist('sewell', {
+        signingMinutes: 120,
+        signingOnly: true,
+      }),
     }
   },
   {
@@ -553,9 +634,10 @@ export const players: Player[] = [
       date: 'Feb 5',
       startTime: '11:00',
       endTime: '13:00',
-      commitments: [
-        { id: 'hamilton-1', type: 'Signing', station: 'Signing', startTime: '11:00', endTime: '13:00' }
-      ]
+      stationChecklist: buildChecklist('hamilton', {
+        signingMinutes: 120,
+        signingOnly: true,
+      }),
     }
   },
   {
@@ -600,12 +682,10 @@ export const players: Player[] = [
       date: 'Feb 5',
       startTime: '15:30',
       endTime: '16:30',
-      commitments: [
-        { id: 'leinart-1', type: 'LED Wall', station: 'LED Wall', startTime: '15:30', endTime: '15:45' },
-        { id: 'leinart-2', type: 'PR Hold', station: 'PR Interview', startTime: '15:45', endTime: '16:00', notes: "Men's Journal (Kameron Duncan) | Call-in: 240-688-9648" },
-        { id: 'leinart-3', type: 'Pack Rips', station: 'Pack Rips', startTime: '16:00', endTime: '16:10' },
-        { id: 'leinart-4', type: 'Signing', station: 'Signing', startTime: '16:10', endTime: '16:30' }
-      ]
+      stationChecklist: buildChecklist('leinart', {
+        signingMinutes: 20,
+        prInterview: { startTime: '15:45', endTime: '16:00', notes: "Men's Journal (Kameron Duncan) | Call-in: 240-688-9648" },
+      }),
     }
   },
   {
@@ -650,12 +730,10 @@ export const players: Player[] = [
       date: 'Feb 5',
       startTime: '14:30',
       endTime: '16:30',
-      commitments: [
-        { id: 'ewers-1', type: 'LED Wall', station: 'LED Wall', startTime: '14:30', endTime: '14:45' },
-        { id: 'ewers-2', type: 'Signing', station: 'Signing', startTime: '14:45', endTime: '16:05' },
-        { id: 'ewers-3', type: 'Pack Rips', station: 'Pack Rips', startTime: '16:05', endTime: '16:15' },
-        { id: 'ewers-4', type: 'PR Hold', station: 'PR Interview', startTime: '16:15', endTime: '16:30', notes: 'SiriusXM Radio | Call-in: 1-866-603-8317' }
-      ]
+      stationChecklist: buildChecklist('ewers', {
+        signingMinutes: 80,
+        prInterview: { startTime: '16:15', endTime: '16:30', notes: 'SiriusXM Radio | Call-in: 1-866-603-8317' },
+      }),
     }
   },
   {
@@ -700,9 +778,10 @@ export const players: Player[] = [
       date: 'Feb 5',
       startTime: '14:30',
       endTime: '16:30',
-      commitments: [
-        { id: 'kmet-1', type: 'Signing', station: 'Signing', startTime: '14:30', endTime: '16:30' }
-      ]
+      stationChecklist: buildChecklist('kmet', {
+        signingMinutes: 120,
+        signingOnly: true,
+      }),
     }
   },
   {
@@ -789,13 +868,10 @@ export const players: Player[] = [
       date: 'Feb 6',
       startTime: '10:00',
       endTime: '11:30',
-      commitments: [
-        { id: 'lawrence-1', type: 'LED Wall', station: 'LED Wall', startTime: '10:00', endTime: '10:15' },
-        { id: 'lawrence-2', type: 'Signing', station: 'Signing', startTime: '10:15', endTime: '10:55' },
-        { id: 'lawrence-3', type: 'Pack Rips', station: 'Pack Rips', startTime: '10:55', endTime: '11:05' },
-        { id: 'lawrence-4', type: 'Free', station: 'Free', startTime: '11:05', endTime: '11:15' },
-        { id: 'lawrence-5', type: 'PR Hold', station: 'PR Interview', startTime: '11:15', endTime: '11:30', notes: 'The Mirror (US) (Damian Burchardt) | Call-in: TBD' }
-      ]
+      stationChecklist: buildChecklist('lawrence', {
+        signingMinutes: 40,
+        prInterview: { startTime: '11:15', endTime: '11:30', notes: 'The Mirror (US) (Damian Burchardt) | Call-in: TBD' },
+      }),
     }
   },
   {
@@ -840,12 +916,10 @@ export const players: Player[] = [
       date: 'Feb 6',
       startTime: '10:00',
       endTime: '11:30',
-      commitments: [
-        { id: 'shough-1', type: 'LED Wall', station: 'LED Wall', startTime: '10:15', endTime: '10:30' },
-        { id: 'shough-2', type: 'Signing', station: 'Signing', startTime: '10:30', endTime: '11:05' },
-        { id: 'shough-3', type: 'Pack Rips', station: 'Pack Rips', startTime: '11:05', endTime: '11:15' },
-        { id: 'shough-4', type: 'PR Hold', station: 'PR Interview', startTime: '11:15', endTime: '11:30', notes: 'Fox News Digital (Sports) (Scott Thompson) | Call-in: 732-850-2940' }
-      ]
+      stationChecklist: buildChecklist('shough', {
+        signingMinutes: 35,
+        prInterview: { startTime: '11:15', endTime: '11:30', notes: 'Fox News Digital (Sports) (Scott Thompson) | Call-in: 732-850-2940' },
+      }),
     }
   },
   {
@@ -890,13 +964,10 @@ export const players: Player[] = [
       date: 'Feb 6',
       startTime: '11:00',
       endTime: '13:00',
-      commitments: [
-        { id: 'odunze-1', type: 'LED Wall', station: 'LED Wall', startTime: '11:00', endTime: '11:15' },
-        { id: 'odunze-2', type: 'Signing', station: 'Signing', startTime: '11:15', endTime: '12:25' },
-        { id: 'odunze-3', type: 'Pack Rips', station: 'Pack Rips', startTime: '12:25', endTime: '12:35' },
-        { id: 'odunze-4', type: 'Free', station: 'Free', startTime: '12:35', endTime: '12:45' },
-        { id: 'odunze-5', type: 'PR Hold', station: 'PR Interview', startTime: '12:45', endTime: '13:00', notes: 'WestwoodOne Radio (John Lund) | Call-in: TBD' }
-      ]
+      stationChecklist: buildChecklist('odunze', {
+        signingMinutes: 70,
+        prInterview: { startTime: '12:45', endTime: '13:00', notes: 'WestwoodOne Radio (John Lund) | Call-in: TBD' },
+      }),
     }
   },
   {
@@ -941,9 +1012,10 @@ export const players: Player[] = [
       date: 'Feb 6',
       startTime: '12:00',
       endTime: '14:00',
-      commitments: [
-        { id: 'bailey-1', type: 'Signing', station: 'Signing', startTime: '12:00', endTime: '14:00' }
-      ]
+      stationChecklist: buildChecklist('bailey', {
+        signingMinutes: 120,
+        signingOnly: true,
+      }),
     }
   },
   {
@@ -988,12 +1060,10 @@ export const players: Player[] = [
       date: 'Feb 6',
       startTime: '12:00',
       endTime: '14:00',
-      commitments: [
-        { id: 'law-1', type: 'LED Wall', station: 'LED Wall', startTime: '12:00', endTime: '12:15' },
-        { id: 'law-2', type: 'Signing', station: 'Signing', startTime: '12:15', endTime: '13:35' },
-        { id: 'law-3', type: 'Pack Rips', station: 'Pack Rips', startTime: '13:35', endTime: '13:45' },
-        { id: 'law-4', type: 'PR Hold', station: 'PR Interview', startTime: '13:45', endTime: '14:00', notes: 'WestwoodOne Radio (John Lund) | Call-in: TBD' }
-      ]
+      stationChecklist: buildChecklist('law', {
+        signingMinutes: 80,
+        prInterview: { startTime: '13:45', endTime: '14:00', notes: 'WestwoodOne Radio (John Lund) | Call-in: TBD' },
+      }),
     }
   },
   {
@@ -1038,12 +1108,10 @@ export const players: Player[] = [
       date: 'Feb 6',
       startTime: '12:30',
       endTime: '14:30',
-      commitments: [
-        { id: 'anderson-1', type: 'LED Wall', station: 'LED Wall', startTime: '12:30', endTime: '12:45' },
-        { id: 'anderson-2', type: 'Signing', station: 'Signing', startTime: '12:45', endTime: '14:05' },
-        { id: 'anderson-3', type: 'Pack Rips', station: 'Pack Rips', startTime: '14:05', endTime: '14:15' },
-        { id: 'anderson-4', type: 'PR Hold', station: 'PR Interview', startTime: '14:15', endTime: '14:30', notes: 'ESPN Radio LIVE (Amber Wilson / Ian Fitzsimmons) | Call-in: TBD' }
-      ]
+      stationChecklist: buildChecklist('anderson', {
+        signingMinutes: 80,
+        prInterview: { startTime: '14:15', endTime: '14:30', notes: 'ESPN Radio LIVE (Amber Wilson / Ian Fitzsimmons) | Call-in: TBD' },
+      }),
     }
   },
   {
@@ -1088,12 +1156,10 @@ export const players: Player[] = [
       date: 'Feb 6',
       startTime: '13:00',
       endTime: '15:00',
-      commitments: [
-        { id: 'williams-1', type: 'LED Wall', station: 'LED Wall', startTime: '13:00', endTime: '13:15' },
-        { id: 'williams-2', type: 'Signing', station: 'Signing', startTime: '13:15', endTime: '14:35' },
-        { id: 'williams-3', type: 'Pack Rips', station: 'Pack Rips', startTime: '14:35', endTime: '14:45' },
-        { id: 'williams-4', type: 'Free', station: 'Free', startTime: '14:45', endTime: '15:00' }
-      ]
+      stationChecklist: buildChecklist('williams', {
+        signingMinutes: 80,
+        prInterview: null,
+      }),
     }
   },
   {
@@ -1138,12 +1204,10 @@ export const players: Player[] = [
       date: 'Feb 6',
       startTime: '14:00',
       endTime: '15:30',
-      commitments: [
-        { id: 'hutchinson-1', type: 'LED Wall', station: 'LED Wall', startTime: '14:00', endTime: '14:15' },
-        { id: 'hutchinson-2', type: 'Signing', station: 'Signing', startTime: '14:15', endTime: '15:05' },
-        { id: 'hutchinson-3', type: 'Pack Rips', station: 'Pack Rips', startTime: '15:05', endTime: '15:15' },
-        { id: 'hutchinson-4', type: 'PR Hold', station: 'PR Interview', startTime: '15:15', endTime: '15:30', notes: 'Forbes (DJ Siddiqi) | Call-in: 561-281-6882' }
-      ]
+      stationChecklist: buildChecklist('hutchinson', {
+        signingMinutes: 50,
+        prInterview: { startTime: '15:15', endTime: '15:30', notes: 'Forbes (DJ Siddiqi) | Call-in: 561-281-6882' },
+      }),
     }
   },
   {
@@ -1188,12 +1252,10 @@ export const players: Player[] = [
       date: 'Feb 6',
       startTime: '14:30',
       endTime: '16:30',
-      commitments: [
-        { id: 'reed-1', type: 'LED Wall', station: 'LED Wall', startTime: '14:30', endTime: '14:45' },
-        { id: 'reed-2', type: 'Signing', station: 'Signing', startTime: '14:45', endTime: '16:05' },
-        { id: 'reed-3', type: 'Pack Rips', station: 'Pack Rips', startTime: '16:05', endTime: '16:15' },
-        { id: 'reed-4', type: 'PR Hold', station: 'PR Interview', startTime: '16:15', endTime: '16:30', notes: 'ESPN Radio LIVE (Amber Wilson / Ian Fitzsimmons) | Call-in: TBD' }
-      ]
+      stationChecklist: buildChecklist('reed', {
+        signingMinutes: 80,
+        prInterview: { startTime: '16:15', endTime: '16:30', notes: 'ESPN Radio LIVE (Amber Wilson / Ian Fitzsimmons) | Call-in: TBD' },
+      }),
     }
   },
   {
@@ -1238,12 +1300,10 @@ export const players: Player[] = [
       date: 'Feb 6',
       startTime: '16:30',
       endTime: '18:00',
-      commitments: [
-        { id: 'moore-1', type: 'LED Wall', station: 'LED Wall', startTime: '16:30', endTime: '16:45' },
-        { id: 'moore-2', type: 'Signing', station: 'Signing', startTime: '16:45', endTime: '17:35' },
-        { id: 'moore-3', type: 'Pack Rips', station: 'Pack Rips', startTime: '17:35', endTime: '17:45' },
-        { id: 'moore-4', type: 'PR Hold', station: 'PR Interview', startTime: '17:45', endTime: '18:00', notes: 'On3 (Nick Schultz) | Call-in: 815-685-1854' }
-      ]
+      stationChecklist: buildChecklist('moore', {
+        signingMinutes: 50,
+        prInterview: { startTime: '17:45', endTime: '18:00', notes: 'On3 (Nick Schultz) | Call-in: 815-685-1854' },
+      }),
     }
   },
 
@@ -1291,12 +1351,10 @@ export const players: Player[] = [
       date: 'Feb 7',
       startTime: '11:00',
       endTime: '13:00',
-      commitments: [
-        { id: 'henderson-1', type: 'LED Wall', station: 'LED Wall', startTime: '11:00', endTime: '11:15' },
-        { id: 'henderson-2', type: 'Signing', station: 'Signing', startTime: '11:15', endTime: '12:45' },
-        { id: 'henderson-3', type: 'Pack Rips', station: 'Pack Rips', startTime: '12:45', endTime: '12:55' },
-        { id: 'henderson-4', type: 'Free', station: 'Free', startTime: '12:55', endTime: '13:00' }
-      ]
+      stationChecklist: buildChecklist('henderson', {
+        signingMinutes: 90,
+        prInterview: null,
+      }),
     }
   },
   {
@@ -1341,9 +1399,10 @@ export const players: Player[] = [
       date: 'Feb 7',
       startTime: '14:00',
       endTime: '16:00',
-      commitments: [
-        { id: 'edelman-1', type: 'Signing', station: 'Signing', startTime: '14:00', endTime: '16:00', notes: 'Eli Manning Show' }
-      ]
+      stationChecklist: buildChecklist('edelman', {
+        signingMinutes: 120,
+        signingOnly: true,
+      }),
     }
   },
 

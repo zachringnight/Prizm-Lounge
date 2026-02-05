@@ -11,21 +11,14 @@ import {
   formatTime,
   getTimeUntil,
   Player,
+  STATION_ICONS,
 } from '@/types';
 import { useToast } from '@/components/Toast';
 import { ChevronDownIcon, ChevronUpIcon, ChevronRightIcon, ClockIcon, CheckIcon } from '@/components/Icons';
 import { getPlayerQuestions } from '@/data/players';
 import ClipMarkerButton from '@/components/ClipMarkerButton';
 
-const ALL_STATIONS: Station[] = ['LED Wall', 'Signing', 'PR Interview', 'Pack Rips', 'Free'];
-
-const STATION_ICONS: Record<Station, string> = {
-  'LED Wall': '📺',
-  'Signing': '✍️',
-  'PR Interview': '🎤',
-  'Pack Rips': '📦',
-  'Free': '☕'
-};
+const ALL_STATIONS: Station[] = ['LED Wall', 'Signing', 'PR Interview', 'Pack Rips', 'Kid Reporter', 'Custom Gifting', 'Free'];
 
 // Format elapsed time
 const formatElapsedTime = (minutes: number) => {
@@ -367,7 +360,18 @@ export default function StationsPage() {
     stations.forEach(s => map.set(s.station, []));
 
     players.forEach(player => {
-      if (player.schedule?.commitments) {
+      if (player.schedule?.stationChecklist) {
+        player.schedule.stationChecklist.forEach(item => {
+          const stationPlayers = map.get(item.station);
+          if (stationPlayers) {
+            stationPlayers.push({
+              player,
+              startTime: item.presetStartTime || player.schedule!.startTime,
+              endTime: item.presetEndTime || player.schedule!.endTime
+            });
+          }
+        });
+      } else if (player.schedule?.commitments) {
         player.schedule.commitments.forEach(commitment => {
           const stationPlayers = map.get(commitment.station);
           if (stationPlayers) {

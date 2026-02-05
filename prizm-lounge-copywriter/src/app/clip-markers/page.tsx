@@ -3,16 +3,8 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
-import { Station, ClipMarker, formatClipTimestamp } from '@/types';
+import { Station, ClipMarker, formatClipTimestamp, STATION_ICONS } from '@/types';
 import { useToast } from '@/components/Toast';
-
-const STATION_ICONS: Record<Station, string> = {
-  'LED Wall': '📺',
-  'Signing': '✍️',
-  'PR Interview': '🎤',
-  'Pack Rips': '📦',
-  'Free': '☕'
-};
 
 type ViewMode = 'timeline' | 'by-station' | 'by-athlete';
 
