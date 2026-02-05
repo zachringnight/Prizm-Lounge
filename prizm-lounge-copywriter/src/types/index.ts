@@ -350,3 +350,75 @@ export function formatClipTimestamp(timestamp: number): string {
   const displayHours = hours % 12 || 12;
   return `${displayHours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} ${period}`;
 }
+
+// ============================================
+// Issue/Note Logger Types
+// ============================================
+
+export type IssueCategory = 'general' | 'technical' | 'scheduling' | 'vip' | 'media' | 'urgent';
+export type IssuePriority = 'low' | 'medium' | 'high';
+export type IssueStatus = 'open' | 'in-progress' | 'resolved';
+
+export const ISSUE_CATEGORIES: IssueCategory[] = [
+  'general',
+  'technical',
+  'scheduling',
+  'vip',
+  'media',
+  'urgent'
+];
+
+export const ISSUE_CATEGORY_CONFIG: Record<IssueCategory, { label: string; icon: string; color: string }> = {
+  general: { label: 'General', icon: '📝', color: '#9CA3AF' },
+  technical: { label: 'Technical', icon: '🔧', color: '#3B82F6' },
+  scheduling: { label: 'Scheduling', icon: '📅', color: '#F59E0B' },
+  vip: { label: 'VIP', icon: '⭐', color: '#FFD100' },
+  media: { label: 'Media', icon: '📢', color: '#8B5CF6' },
+  urgent: { label: 'Urgent', icon: '⚡', color: '#EF4444' }
+};
+
+export const ISSUE_PRIORITY_CONFIG: Record<IssuePriority, { label: string; color: string }> = {
+  low: { label: 'Low', color: '#6B7280' },
+  medium: { label: 'Medium', color: '#F59E0B' },
+  high: { label: 'High', color: '#EF4444' }
+};
+
+export const ISSUE_STATUS_CONFIG: Record<IssueStatus, { label: string; color: string }> = {
+  open: { label: 'Open', color: '#3B82F6' },
+  'in-progress': { label: 'In Progress', color: '#F59E0B' },
+  resolved: { label: 'Resolved', color: '#22C55E' }
+};
+
+export interface IssueNote {
+  id: string;
+  content: string;
+  category: IssueCategory;
+  priority: IssuePriority;
+  status: IssueStatus;
+  stationId?: Station;
+  playerId?: string;
+  createdAt: number;
+  updatedAt: number;
+  resolvedAt?: number;
+  createdBy?: string;
+}
+
+// ============================================
+// Event Configuration
+// ============================================
+
+export type DayDate = '2026-02-05' | '2026-02-06' | '2026-02-07';
+
+export const EVENT_CONFIG = {
+  name: 'Prizm Lounge Super Bowl LX',
+  partner: 'Panini America',
+  dates: ['2026-02-05', '2026-02-06', '2026-02-07'] as DayDate[],
+  timezone: 'America/Los_Angeles',
+  startTime: '10:00',
+  endTime: '18:00',
+  lunchStart: '12:00',
+  lunchEnd: '13:00',
+};
+
+export const EVENT_DATES = EVENT_CONFIG.dates;
+export const EVENT_TIMEZONE = EVENT_CONFIG.timezone;
