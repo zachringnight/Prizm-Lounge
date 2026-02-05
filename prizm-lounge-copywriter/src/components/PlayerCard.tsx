@@ -77,17 +77,17 @@ export default function PlayerCard({
         className={`player-card-enhanced ${selected ? 'border-[var(--panini-yellow)]' : ''} w-full text-left`}
       >
         <div className="avatar">{getInitials(player.name)}</div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-3">
-            <span className="text-lg font-bold truncate">{player.name}</span>
+        <div className="flex-1 min-w-0 overflow-hidden">
+          <div className="flex items-center gap-2 md:gap-3">
+            <span className="text-base md:text-lg font-bold truncate">{player.name}</span>
             {getCategoryBadge()}
           </div>
-          <div className="text-base text-[var(--foreground-muted)]">
+          <div className="text-sm md:text-base text-[var(--foreground-muted)] truncate">
             {player.position} • {player.team}
           </div>
         </div>
         {showSchedule && getStatusIndicator()}
-        <ChevronRightIcon size={24} className="text-[var(--foreground-dim)]" />
+        <ChevronRightIcon size={20} className="text-[var(--foreground-dim)] flex-shrink-0" />
       </button>
     );
   }
@@ -97,18 +97,18 @@ export default function PlayerCard({
       onClick={onClick}
       className={`player-card-enhanced ${selected ? 'border-[var(--panini-yellow)]' : ''} w-full text-left flex-col items-start gap-4`}
     >
-      <div className="flex items-center gap-4 w-full">
+      <div className="flex items-center gap-3 md:gap-4 w-full">
         <div className="avatar">{getInitials(player.name)}</div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-3 flex-wrap mb-1">
-            <span className="text-lg font-bold">{player.name}</span>
+        <div className="flex-1 min-w-0 overflow-hidden">
+          <div className="flex items-center gap-2 md:gap-3 flex-wrap mb-1">
+            <span className="text-base md:text-lg font-bold truncate max-w-[50vw] sm:max-w-none">{player.name}</span>
             {getCategoryBadge()}
           </div>
-          <div className="text-base text-[var(--foreground-muted)]">
+          <div className="text-sm md:text-base text-[var(--foreground-muted)] truncate">
             {player.position} • {player.team}
           </div>
         </div>
-        <ChevronRightIcon size={24} className="text-[var(--foreground-dim)]" />
+        <ChevronRightIcon size={20} className="text-[var(--foreground-dim)] flex-shrink-0" />
       </div>
 
       {showSchedule && player.schedule && (

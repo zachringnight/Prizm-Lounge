@@ -226,7 +226,7 @@ export default function ClipMarkersPage() {
         {/* Header */}
         <div className="clip-markers-header">
           <div>
-            <h1>Clip Markers</h1>
+            <h1 className="hidden md:block">Clip Markers</h1>
             <p className="clip-markers-count">
               <strong>{allMarkers.length}</strong> markers saved
             </p>
@@ -235,16 +235,16 @@ export default function ClipMarkersPage() {
             {allMarkers.length > 0 && (
               <>
                 <button onClick={handleExportJSON} className="clip-markers-export-btn">
-                  📤 JSON
+                  📤 <span className="hidden sm:inline">JSON</span>
                 </button>
                 <button onClick={handleExportCSV} className="clip-markers-export-btn">
-                  📊 CSV
+                  📊 <span className="hidden sm:inline">CSV</span>
                 </button>
                 <button
                   onClick={() => setShowClearConfirm(true)}
                   className="clip-markers-clear-btn"
                 >
-                  🗑️ Clear All
+                  🗑️ <span className="hidden sm:inline">Clear All</span>
                 </button>
               </>
             )}

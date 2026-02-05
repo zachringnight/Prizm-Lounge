@@ -38,7 +38,20 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
   const [signingExpanded, setSigningExpanded] = useState(true);
   const [packRipsExpanded, setPackRipsExpanded] = useState(true);
   const [selectedStation, setSelectedStation] = useState<Station>('Signing');
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['stats']));
   const { showToast, ToastComponent } = useToast();
+
+  const toggleSection = (section: string) => {
+    setExpandedSections(prev => {
+      const next = new Set(prev);
+      if (next.has(section)) {
+        next.delete(section);
+      } else {
+        next.add(section);
+      }
+      return next;
+    });
+  };
 
   // Get station-specific questions for this player
   const stationQuestions = id ? getPlayerQuestions(id) : null;
@@ -102,15 +115,15 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Header */}
-      <header className="flex items-start gap-4">
-        <div className="avatar text-xl w-16 h-16 md:w-20 md:h-20 md:text-2xl">
+      <header className="flex items-start gap-3 md:gap-4">
+        <div className="avatar text-lg w-12 h-12 md:w-20 md:h-20 md:text-2xl flex-shrink-0">
           {player.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
         </div>
-        <div className="flex-1">
-          <h1 className="text-2xl md:text-3xl font-bold">{player.name}</h1>
-          <div className="text-[var(--foreground-muted)] md:text-lg">
+        <div className="flex-1 min-w-0">
+          <h1 className="text-xl md:text-3xl font-bold truncate">{player.name}</h1>
+          <div className="text-sm md:text-lg text-[var(--foreground-muted)]">
             {player.position} • {player.team}
           </div>
           <div className="flex items-center gap-2 mt-2">
@@ -193,54 +206,90 @@ export default function PlayerDetailPage({ params }: { params: Promise<{ id: str
 
       {/* Tab Content */}
       {activeTab === 'info' && (
-        <div className="space-y-6">
+        <div className="space-y-3 md:space-y-6">
           {/* Key Stats */}
-          <div>
-            <h3 className="section-title mb-3">Key Stats</h3>
-            <ul className="space-y-2">
+          <div className="info-section-mobile">
+            <button
+              onClick={() => toggleSection('stats')}
+              className="info-section-toggle md:hidden"
+            >
+              <h3 className="section-title">Key Stats</h3>
+              <span className="text-xs text-[var(--foreground-dim)]">
+                {expandedSections.has('stats') ? '▼' : '▶'} {player.keyStats.length} items
+              </span>
+            </button>
+            <h3 className="section-title mb-3 hidden md:block">Key Stats</h3>
+            <ul className={`space-y-2 ${expandedSections.has('stats') ? '' : 'hidden md:block'}`}>
               {player.keyStats.map((stat, i) => (
                 <li key={i} className="text-sm md:text-base text-[var(--foreground-muted)] flex items-start gap-2">
-                  <span className="text-[var(--panini-yellow)]">•</span>
-                  {stat}
+                  <span className="text-[var(--panini-yellow)] flex-shrink-0">•</span>
+                  <span>{stat}</span>
                 </li>
               ))}
             </ul>
           </div>
 
           {/* Defining Moments */}
-          <div>
-            <h3 className="section-title mb-3">Defining Moments</h3>
-            <ul className="space-y-2">
+          <div className="info-section-mobile">
+            <button
+              onClick={() => toggleSection('moments')}
+              className="info-section-toggle md:hidden"
+            >
+              <h3 className="section-title">Defining Moments</h3>
+              <span className="text-xs text-[var(--foreground-dim)]">
+                {expandedSections.has('moments') ? '▼' : '▶'} {player.definingMoments.length} items
+              </span>
+            </button>
+            <h3 className="section-title mb-3 hidden md:block">Defining Moments</h3>
+            <ul className={`space-y-2 ${expandedSections.has('moments') ? '' : 'hidden md:block'}`}>
               {player.definingMoments.map((moment, i) => (
                 <li key={i} className="text-sm md:text-base text-[var(--foreground-muted)] flex items-start gap-2">
-                  <span className="text-[var(--panini-red)]">•</span>
-                  {moment}
+                  <span className="text-[var(--panini-red)] flex-shrink-0">•</span>
+                  <span>{moment}</span>
                 </li>
               ))}
             </ul>
           </div>
 
           {/* Card History */}
-          <div>
-            <h3 className="section-title mb-3">Card History</h3>
-            <ul className="space-y-2">
+          <div className="info-section-mobile">
+            <button
+              onClick={() => toggleSection('cards')}
+              className="info-section-toggle md:hidden"
+            >
+              <h3 className="section-title">Card History</h3>
+              <span className="text-xs text-[var(--foreground-dim)]">
+                {expandedSections.has('cards') ? '▼' : '▶'} {player.cardHistory.length} items
+              </span>
+            </button>
+            <h3 className="section-title mb-3 hidden md:block">Card History</h3>
+            <ul className={`space-y-2 ${expandedSections.has('cards') ? '' : 'hidden md:block'}`}>
               {player.cardHistory.map((card, i) => (
                 <li key={i} className="text-sm md:text-base text-[var(--foreground-muted)] flex items-start gap-2">
-                  <span className="text-[var(--foreground-dim)]">•</span>
-                  {card}
+                  <span className="text-[var(--foreground-dim)] flex-shrink-0">•</span>
+                  <span>{card}</span>
                 </li>
               ))}
             </ul>
           </div>
 
           {/* Personal Details */}
-          <div>
-            <h3 className="section-title mb-3">Personal Details</h3>
-            <ul className="space-y-2">
+          <div className="info-section-mobile">
+            <button
+              onClick={() => toggleSection('personal')}
+              className="info-section-toggle md:hidden"
+            >
+              <h3 className="section-title">Personal Details</h3>
+              <span className="text-xs text-[var(--foreground-dim)]">
+                {expandedSections.has('personal') ? '▼' : '▶'} {player.personalDetails.length} items
+              </span>
+            </button>
+            <h3 className="section-title mb-3 hidden md:block">Personal Details</h3>
+            <ul className={`space-y-2 ${expandedSections.has('personal') ? '' : 'hidden md:block'}`}>
               {player.personalDetails.map((detail, i) => (
                 <li key={i} className="text-sm md:text-base text-[var(--foreground-muted)] flex items-start gap-2">
-                  <span className="text-[var(--foreground-dim)]">•</span>
-                  {detail}
+                  <span className="text-[var(--foreground-dim)] flex-shrink-0">•</span>
+                  <span>{detail}</span>
                 </li>
               ))}
             </ul>

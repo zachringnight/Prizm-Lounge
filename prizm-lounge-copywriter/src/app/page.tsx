@@ -86,8 +86,8 @@ export default function Home() {
 
   return (
     <div className="dashboard-container">
-      {/* Header */}
-      <div className="dashboard-header">
+      {/* Header - hidden on mobile since MobileHeader shows "Home" */}
+      <div className="dashboard-header hidden md:flex">
         <div>
           <h1 className="dashboard-title">
             <span className="text-[var(--panini-red)]">Prizm</span>{' '}

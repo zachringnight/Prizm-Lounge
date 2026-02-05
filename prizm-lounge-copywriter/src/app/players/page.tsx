@@ -35,8 +35,8 @@ export default function PlayersPage() {
   const categories: (PlayerCategory | 'All')[] = ['All', 'Current', 'Legend', 'Prospect'];
 
   return (
-    <div className="space-y-8">
-      <header className="page-header">
+    <div className="space-y-4 md:space-y-8">
+      <header className="page-header hidden md:block">
         <h1>Players</h1>
         <p>{players.length} confirmed appearances</p>
       </header>

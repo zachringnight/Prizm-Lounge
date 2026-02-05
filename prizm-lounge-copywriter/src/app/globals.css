@@ -5297,3 +5297,239 @@ main {
 .admin-danger-btn:hover {
   background: color-mix(in srgb, var(--error) 80%, black);
 }
+
+/* ============================================
+   MOBILE LAYOUT FIXES - Text overlap, spacing,
+   readability improvements
+   ============================================ */
+
+/* Info section collapsible toggle (player detail page) */
+.info-section-mobile {
+  background: var(--background-secondary);
+  border: 1px solid var(--background-tertiary);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .info-section-mobile {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+  }
+}
+
+.info-section-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--foreground);
+}
+
+.info-section-toggle .section-title {
+  margin-bottom: 0;
+}
+
+.info-section-mobile ul {
+  padding: 0 16px 14px;
+}
+
+@media (min-width: 768px) {
+  .info-section-mobile ul {
+    padding: 0;
+  }
+}
+
+/* Notes filters - horizontal scroll on mobile */
+@media (max-width: 767px) {
+  .notes-filters-scroll {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+
+  .notes-filters-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .notes-filters-scroll .notes-filter-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+}
+
+/* Admin settings - prevent text/toggle overlap on mobile */
+@media (max-width: 767px) {
+  .admin-setting {
+    gap: 12px;
+  }
+
+  .admin-setting-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .admin-setting-title {
+    font-size: 13px;
+  }
+
+  .admin-setting-desc {
+    font-size: 11px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .toggle-switch {
+    flex-shrink: 0;
+  }
+
+  .admin-section {
+    padding: 14px;
+  }
+
+  .admin-tabs {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+  }
+
+  .admin-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .admin-tab {
+    flex-shrink: 0;
+  }
+}
+
+/* Global text overflow protection */
+@media (max-width: 767px) {
+  /* Prevent any text from breaking out of containers */
+  .card,
+  .station-card,
+  .note-card,
+  .clip-marker-item,
+  .schedule-card,
+  .arrival-item,
+  .player-card-enhanced {
+    overflow: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Reduce player card enhanced padding on mobile */
+  .player-card-enhanced {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .player-card-enhanced .avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 16px;
+  }
+
+  /* Notes page compact layout */
+  .notes-header {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .notes-stats {
+    gap: 8px;
+  }
+
+  .notes-stat {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  /* Note card mobile fixes */
+  .note-card-header {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .note-card-left {
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .note-card-badges {
+    flex-shrink: 0;
+  }
+
+  .note-card-body {
+    padding: 12px;
+  }
+
+  .note-content {
+    font-size: 14px;
+  }
+
+  .note-card-actions {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .note-action-btn {
+    font-size: 12px;
+    padding: 8px;
+    min-width: 0;
+  }
+
+  /* Clip markers mobile */
+  .clip-markers-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .clip-markers-controls {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .clip-markers-view-toggle {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .clip-markers-view-toggle::-webkit-scrollbar {
+    display: none;
+  }
+
+  .clip-markers-view-btn {
+    flex-shrink: 0;
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  /* Schedule page mobile tweaks */
+  .schedule-card {
+    overflow: hidden;
+  }
+
+  .schedule-card .player-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Ensure page-header empty state doesn't leave gap */
+  .page-header:empty {
+    display: none;
+    margin: 0;
+  }
+}
