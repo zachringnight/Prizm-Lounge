@@ -9,6 +9,8 @@ export const StationIdSchema = z.enum([
   'Signing',
   'PR Interview',
   'Pack Rips',
+  'Kid Reporter',
+  'Custom Gifting',
   'Free'
 ]);
 
@@ -17,6 +19,8 @@ export const CommitmentTypeSchema = z.enum([
   'Signing',
   'PR Hold',
   'Pack Rips',
+  'Kid Reporter',
+  'Custom Gifting',
   'Free'
 ]);
 

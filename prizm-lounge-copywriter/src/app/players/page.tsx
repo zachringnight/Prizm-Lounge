@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
 import PlayerCard from '@/components/PlayerCard';
@@ -13,7 +13,7 @@ export default function PlayersPage() {
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<PlayerCategory | 'All'>('All');
 
-  const filteredPlayers = players.filter(player => {
+  const filteredPlayers = useMemo(() => players.filter(player => {
     if (categoryFilter !== 'All' && player.category !== categoryFilter) {
       return false;
     }
@@ -26,11 +26,11 @@ export default function PlayersPage() {
       );
     }
     return true;
-  });
+  }), [players, search, categoryFilter]);
 
-  const handlePlayerClick = (playerId: string) => {
+  const handlePlayerClick = useCallback((playerId: string) => {
     router.push(`/players/${playerId}`);
-  };
+  }, [router]);
 
   const categories: (PlayerCategory | 'All')[] = ['All', 'Current', 'Legend', 'Prospect'];
 

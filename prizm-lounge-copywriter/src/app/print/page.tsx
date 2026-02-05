@@ -107,6 +107,8 @@ export default function PrintPage() {
               <option value="Signing">Signing</option>
               <option value="PR Interview">PR Interview</option>
               <option value="Pack Rips">Pack Rips</option>
+              <option value="Kid Reporter">Kid Reporter</option>
+              <option value="Custom Gifting">Custom Gifting</option>
             </select>
           </div>
         )}
