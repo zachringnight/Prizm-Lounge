@@ -88,8 +88,7 @@ export default function ClipMarkersPage() {
     clipMarkers,
     deleteClipMarker,
     updateClipMarkerNote,
-    clearAllClipMarkers,
-    getAllClipMarkers
+    clearAllClipMarkers
   } = useAppStore();
   const { showToast, ToastComponent } = useToast();
 
@@ -98,8 +97,10 @@ export default function ClipMarkersPage() {
   const [noteText, setNoteText] = useState('');
   const [showClearConfirm, setShowClearConfirm] = useState(false);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const allMarkers = useMemo(() => getAllClipMarkers(), [clipMarkers]);
+  const allMarkers = useMemo(
+    () => [...clipMarkers].sort((a, b) => b.timestamp - a.timestamp),
+    [clipMarkers]
+  );
 
   // Group markers by station
   const markersByStation = useMemo(() => {
@@ -221,8 +222,7 @@ export default function ClipMarkersPage() {
   );
 
   return (
-    <main className="flex-1 p-4 pb-24 md:pb-8">
-      <div className="clip-markers-page">
+    <div className="clip-markers-page">
         {/* Header */}
         <div className="clip-markers-header">
           <div>
@@ -419,6 +419,5 @@ export default function ClipMarkersPage() {
 
         {ToastComponent}
       </div>
-    </main>
   );
 }

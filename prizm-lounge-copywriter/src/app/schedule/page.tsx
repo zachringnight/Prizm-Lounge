@@ -7,36 +7,13 @@ import {
   getScheduleStatus,
   getTimeUntil,
   formatTime,
-  AppearanceSchedule,
+  isCountdownUrgent,
   StationChecklistItem,
   STATION_ICONS,
 } from '@/types';
 import { ClockIcon, ArrowDownIcon, CheckIcon, ChevronDownIcon, ChevronRightIcon } from '@/components/Icons';
 
 type DayFilter = 'All' | 'Thursday' | 'Friday' | 'Saturday';
-
-// Helper to check if countdown is urgent (< 5 minutes)
-function isCountdownUrgent(schedule: AppearanceSchedule | null): boolean {
-  if (!schedule) return false;
-
-  const eventDates: Record<string, string> = {
-    'Thursday': '2026-02-05',
-    'Friday': '2026-02-06',
-    'Saturday': '2026-02-07'
-  };
-
-  const dateStr = eventDates[schedule.day];
-  if (!dateStr) return false;
-
-  const startDateTime = new Date(`${dateStr}T${schedule.startTime}:00-08:00`);
-  const now = new Date();
-
-  if (now >= startDateTime) return false;
-
-  const diffMs = startDateTime.getTime() - now.getTime();
-  const diffMins = diffMs / (1000 * 60);
-  return diffMins > 0 && diffMins <= 5;
-}
 
 // Helper to get smart status message
 function getSmartStatus(): { type: 'pre-event' | 'lunch-break' | 'wrap' | 'active' | null; message: string; subMessage: string } {

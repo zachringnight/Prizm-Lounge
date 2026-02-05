@@ -3,26 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
-import { getScheduleStatus, getTimeUntil, formatTime, Player, AppearanceSchedule } from '@/types';
+import { getScheduleStatus, getTimeUntil, formatTime, isCountdownUrgent, Player } from '@/types';
 import { CalendarIcon, UsersIcon, LayersIcon, ChevronRightIcon, ClockIcon, CheckIcon } from '@/components/Icons';
-
-// Helper to check if countdown is urgent (< 5 minutes)
-function isCountdownUrgent(schedule: AppearanceSchedule | null): boolean {
-  if (!schedule) return false;
-  const eventDates: Record<string, string> = {
-    'Thursday': '2026-02-05',
-    'Friday': '2026-02-06',
-    'Saturday': '2026-02-07'
-  };
-  const dateStr = eventDates[schedule.day];
-  if (!dateStr) return false;
-  const startDateTime = new Date(`${dateStr}T${schedule.startTime}:00-08:00`);
-  const now = new Date();
-  if (now >= startDateTime) return false;
-  const diffMs = startDateTime.getTime() - now.getTime();
-  const diffMins = diffMs / (1000 * 60);
-  return diffMins > 0 && diffMins <= 5;
-}
 
 export default function Home() {
   const router = useRouter();

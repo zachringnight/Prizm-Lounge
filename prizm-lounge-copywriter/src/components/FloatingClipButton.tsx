@@ -26,7 +26,6 @@ export default function FloatingClipButton() {
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [showQuickAdd, setShowQuickAdd] = useState(false);
-  const [selectedStation, setSelectedStation] = useState<Station | null>(null);
   const [justMarked, setJustMarked] = useState(false);
   const [lastMarkedInfo, setLastMarkedInfo] = useState<{station: Station; playerName: string | null; time: string} | null>(null);
 
@@ -39,7 +38,6 @@ export default function FloatingClipButton() {
       if (!target.closest('.floating-clip-container')) {
         setIsExpanded(false);
         setShowQuickAdd(false);
-        setSelectedStation(null);
       }
     };
 

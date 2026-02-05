@@ -4,7 +4,6 @@ import { useState, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import { useAppStore } from '@/store';
 import {
-  IssueNote,
   IssueCategory,
   IssuePriority,
   IssueStatus,

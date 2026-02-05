@@ -36,7 +36,7 @@ export interface DbClipMarker {
 export function dbToAppMarker(db: DbClipMarker) {
   return {
     id: db.id,
-    station: db.station as 'LED Wall' | 'Signing' | 'PR Interview' | 'Pack Rips' | 'Free',
+    station: db.station as 'LED Wall' | 'Signing' | 'PR Interview' | 'Pack Rips' | 'Kid Reporter' | 'Custom Gifting' | 'Free',
     playerId: db.player_id,
     playerName: db.player_name,
     timestamp: db.timestamp,

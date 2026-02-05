@@ -23,7 +23,6 @@ import {
   STATIONS,
   IssueNote,
   IssueCategory,
-  IssuePriority,
   IssueStatus
 } from '@/types';
 import { players as initialPlayers } from '@/data/players';

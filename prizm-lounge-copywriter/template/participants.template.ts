@@ -9,9 +9,10 @@
  * - Schedule (if appearing)
  */
 
-import type { Player, AppearanceSchedule, PlayerQuestions } from '@/types';
+import type { Player } from '@/types';
 
 // Example participant structure
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const examplePlayer: Player = {
   id: 'player-slug',
   name: 'Player Name',
