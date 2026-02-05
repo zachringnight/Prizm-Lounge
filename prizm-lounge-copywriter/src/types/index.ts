@@ -7,6 +7,8 @@ export type Station =
   | 'Signing'          // Autograph station (unlimited capacity)
   | 'PR Interview'     // PR/Media interview area (capacity: 1)
   | 'Pack Rips'        // Pack rip content station (capacity: 1)
+  | 'Kid Reporter'     // Kid reporter interview station (capacity: 1)
+  | 'Custom Gifting'   // Custom gifting station (capacity: 1)
   | 'Free';            // Buffer/break time (no station)
 
 export const STATIONS: Station[] = [
@@ -14,6 +16,8 @@ export const STATIONS: Station[] = [
   'Signing',
   'PR Interview',
   'Pack Rips',
+  'Kid Reporter',
+  'Custom Gifting',
   'Free'
 ];
 
@@ -23,6 +27,8 @@ export type CommitmentType =
   | 'Signing'              // Autograph session
   | 'PR Hold'              // PR interview placeholder (may convert to Free)
   | 'Pack Rips'            // Pack rip content
+  | 'Kid Reporter'         // Kid reporter interview
+  | 'Custom Gifting'       // Custom gifting
   | 'Free';                // Buffer/break time
 
 export const COMMITMENT_TYPES: CommitmentType[] = [
@@ -30,6 +36,8 @@ export const COMMITMENT_TYPES: CommitmentType[] = [
   'Signing',
   'PR Hold',
   'Pack Rips',
+  'Kid Reporter',
+  'Custom Gifting',
   'Free'
 ];
 
@@ -109,12 +117,33 @@ export interface Commitment {
   notes?: string;    // "200 autos" or "ESPN interview"
 }
 
+// Station checklist item - what a player needs to complete
+export interface StationChecklistItem {
+  id: string;
+  station: Station;
+  type: CommitmentType;
+  durationMinutes: number;     // How long they should be at this station
+  isPresetTime: boolean;       // If true, has a fixed time (PR interviews)
+  presetStartTime?: string;    // "14:00" - only for preset items
+  presetEndTime?: string;      // "14:15" - only for preset items
+  notes?: string;              // "ESPN interview" etc.
+}
+
+// Runtime state for tracking checklist progress
+export interface StationChecklistProgress {
+  playerId: string;
+  stationId: string;           // matches StationChecklistItem.id
+  startedAt?: number;          // timestamp when started
+  completedAt?: number;        // timestamp when completed
+}
+
 export interface AppearanceSchedule {
   day: 'Thursday' | 'Friday' | 'Saturday';
   date: string; // "Feb 6", "Feb 7", "Feb 8"
   startTime: string; // "14:00" - overall start
   endTime: string; // "15:00" - overall end
-  commitments?: Commitment[]; // Detailed breakdown
+  commitments?: Commitment[]; // Detailed breakdown (legacy)
+  stationChecklist?: StationChecklistItem[]; // New checklist-based system
 }
 
 export interface Player {
@@ -259,6 +288,28 @@ export const PLATFORM_LIMITS: Record<Platform, number> = {
   'X': 280,
   'TikTok': 150,
   'Facebook': 63206
+};
+
+// Default station durations in minutes
+export const STATION_DURATIONS: Record<string, number> = {
+  'LED Wall': 15,
+  'Signing': 70,
+  'Pack Rips': 10,
+  'Kid Reporter': 5,
+  'Custom Gifting': 5,
+  'PR Interview': 15,
+  'Free': 10,
+};
+
+// Station icons
+export const STATION_ICONS: Record<Station, string> = {
+  'LED Wall': '📺',
+  'Signing': '✍️',
+  'PR Interview': '🎤',
+  'Pack Rips': '📦',
+  'Kid Reporter': '🎙️',
+  'Custom Gifting': '🎁',
+  'Free': '☕',
 };
 
 // Helper to get schedule status

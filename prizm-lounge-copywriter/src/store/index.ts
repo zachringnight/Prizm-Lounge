@@ -17,6 +17,7 @@ import {
   DeliverableStatus,
   Station,
   StationStatus,
+  StationChecklistProgress,
   PlayerArrival,
   ClipMarker,
   STATIONS,
@@ -180,6 +181,15 @@ interface AppState {
   getOpenIssueCount: () => number;
   getUrgentIssueCount: () => number;
   clearResolvedIssues: () => void;
+
+  // Station Checklist Progress
+  stationChecklistProgress: StationChecklistProgress[];
+  startStationChecklist: (playerId: string, stationId: string) => void;
+  completeStationChecklist: (playerId: string, stationId: string) => void;
+  resetStationChecklist: (playerId: string, stationId: string) => void;
+  resetAllPlayerChecklist: (playerId: string) => void;
+  getChecklistProgress: (playerId: string, stationId: string) => StationChecklistProgress | undefined;
+  getPlayerChecklistProgress: (playerId: string) => StationChecklistProgress[];
 
   // Notification preferences
   notificationsEnabled: boolean;
@@ -620,6 +630,57 @@ export const useAppStore = create<AppState>()(
         }));
       },
 
+      // Station Checklist Progress
+      stationChecklistProgress: [],
+      startStationChecklist: (playerId, stationId) => {
+        set(state => {
+          const existing = state.stationChecklistProgress.find(
+            p => p.playerId === playerId && p.stationId === stationId
+          );
+          if (existing?.startedAt) return {};
+          const filtered = state.stationChecklistProgress.filter(
+            p => !(p.playerId === playerId && p.stationId === stationId)
+          );
+          return {
+            stationChecklistProgress: [
+              ...filtered,
+              { playerId, stationId, startedAt: Date.now() }
+            ]
+          };
+        });
+      },
+      completeStationChecklist: (playerId, stationId) => {
+        set(state => ({
+          stationChecklistProgress: state.stationChecklistProgress.map(p =>
+            p.playerId === playerId && p.stationId === stationId
+              ? { ...p, completedAt: Date.now() }
+              : p
+          )
+        }));
+      },
+      resetStationChecklist: (playerId, stationId) => {
+        set(state => ({
+          stationChecklistProgress: state.stationChecklistProgress.filter(
+            p => !(p.playerId === playerId && p.stationId === stationId)
+          )
+        }));
+      },
+      resetAllPlayerChecklist: (playerId) => {
+        set(state => ({
+          stationChecklistProgress: state.stationChecklistProgress.filter(
+            p => p.playerId !== playerId
+          )
+        }));
+      },
+      getChecklistProgress: (playerId, stationId) => {
+        return get().stationChecklistProgress.find(
+          p => p.playerId === playerId && p.stationId === stationId
+        );
+      },
+      getPlayerChecklistProgress: (playerId) => {
+        return get().stationChecklistProgress.filter(p => p.playerId === playerId);
+      },
+
       // Notification preferences
       notificationsEnabled: true,
       setNotificationsEnabled: (enabled) => set({ notificationsEnabled: enabled }),
@@ -657,6 +718,7 @@ export const useAppStore = create<AppState>()(
         playerArrivals: state.playerArrivals,
         clipMarkers: state.clipMarkers,
         issueNotes: state.issueNotes,
+        stationChecklistProgress: state.stationChecklistProgress,
         largeTextMode: state.largeTextMode,
         notificationsEnabled: state.notificationsEnabled,
         notificationSound: state.notificationSound

@@ -3,21 +3,15 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/store';
-import { Station, STATIONS, formatClipTimestamp } from '@/types';
-
-const STATION_ICONS: Record<Station, string> = {
-  'LED Wall': '📺',
-  'Signing': '✍️',
-  'PR Interview': '🎤',
-  'Pack Rips': '📦',
-  'Free': '☕'
-};
+import { Station, STATIONS, formatClipTimestamp, STATION_ICONS } from '@/types';
 
 const STATION_COLORS: Record<Station, string> = {
   'LED Wall': '#3B82F6',
   'Signing': '#22C55E',
   'PR Interview': '#8B5CF6',
   'Pack Rips': '#F59E0B',
+  'Kid Reporter': '#EC4899',
+  'Custom Gifting': '#F97316',
   'Free': '#6B7280'
 };
 
