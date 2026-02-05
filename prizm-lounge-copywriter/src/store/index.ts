@@ -19,7 +19,11 @@ import {
   StationStatus,
   PlayerArrival,
   ClipMarker,
-  STATIONS
+  STATIONS,
+  IssueNote,
+  IssueCategory,
+  IssuePriority,
+  IssueStatus
 } from '@/types';
 import { players as initialPlayers } from '@/data/players';
 import { defaultChecklist, defaultDeliverables } from '@/data/checklist';
@@ -163,6 +167,25 @@ interface AppState {
   clearAllClipMarkers: () => void;
   setClipMarkers: (markers: ClipMarker[]) => void;
   initializeClipMarkers: () => Promise<void>;
+
+  // Issue Notes (for production crew)
+  issueNotes: IssueNote[];
+  addIssueNote: (note: Omit<IssueNote, 'id' | 'createdAt' | 'updatedAt'>) => string;
+  updateIssueNote: (id: string, updates: Partial<IssueNote>) => void;
+  deleteIssueNote: (id: string) => void;
+  resolveIssueNote: (id: string) => void;
+  setIssueNoteStatus: (id: string, status: IssueStatus) => void;
+  getIssueNotesByStatus: (status: IssueStatus) => IssueNote[];
+  getIssueNotesByCategory: (category: IssueCategory) => IssueNote[];
+  getOpenIssueCount: () => number;
+  getUrgentIssueCount: () => number;
+  clearResolvedIssues: () => void;
+
+  // Notification preferences
+  notificationsEnabled: boolean;
+  setNotificationsEnabled: (enabled: boolean) => void;
+  notificationSound: boolean;
+  setNotificationSound: (enabled: boolean) => void;
 
   // Reset
   resetUIState: () => void;
@@ -530,6 +553,79 @@ export const useAppStore = create<AppState>()(
         }
       },
 
+      // Issue Notes
+      issueNotes: [],
+      addIssueNote: (noteData) => {
+        const id = uuidv4();
+        const now = Date.now();
+        const note: IssueNote = {
+          ...noteData,
+          id,
+          createdAt: now,
+          updatedAt: now,
+        };
+        set(state => ({
+          issueNotes: [note, ...state.issueNotes]
+        }));
+        return id;
+      },
+      updateIssueNote: (id, updates) => {
+        set(state => ({
+          issueNotes: state.issueNotes.map(note =>
+            note.id === id
+              ? { ...note, ...updates, updatedAt: Date.now() }
+              : note
+          )
+        }));
+      },
+      deleteIssueNote: (id) => {
+        set(state => ({
+          issueNotes: state.issueNotes.filter(n => n.id !== id)
+        }));
+      },
+      resolveIssueNote: (id) => {
+        const now = Date.now();
+        set(state => ({
+          issueNotes: state.issueNotes.map(note =>
+            note.id === id
+              ? { ...note, status: 'resolved' as IssueStatus, resolvedAt: now, updatedAt: now }
+              : note
+          )
+        }));
+      },
+      setIssueNoteStatus: (id, status) => {
+        set(state => ({
+          issueNotes: state.issueNotes.map(note =>
+            note.id === id
+              ? { ...note, status, updatedAt: Date.now() }
+              : note
+          )
+        }));
+      },
+      getIssueNotesByStatus: (status) => {
+        return get().issueNotes.filter(n => n.status === status);
+      },
+      getIssueNotesByCategory: (category) => {
+        return get().issueNotes.filter(n => n.category === category);
+      },
+      getOpenIssueCount: () => {
+        return get().issueNotes.filter(n => n.status !== 'resolved').length;
+      },
+      getUrgentIssueCount: () => {
+        return get().issueNotes.filter(n => n.category === 'urgent' && n.status !== 'resolved').length;
+      },
+      clearResolvedIssues: () => {
+        set(state => ({
+          issueNotes: state.issueNotes.filter(n => n.status !== 'resolved')
+        }));
+      },
+
+      // Notification preferences
+      notificationsEnabled: true,
+      setNotificationsEnabled: (enabled) => set({ notificationsEnabled: enabled }),
+      notificationSound: true,
+      setNotificationSound: (enabled) => set({ notificationSound: enabled }),
+
       // Reset
       resetUIState: () => set({
         selectedPlayerId: null,
@@ -560,7 +656,10 @@ export const useAppStore = create<AppState>()(
         stations: state.stations,
         playerArrivals: state.playerArrivals,
         clipMarkers: state.clipMarkers,
-        largeTextMode: state.largeTextMode
+        issueNotes: state.issueNotes,
+        largeTextMode: state.largeTextMode,
+        notificationsEnabled: state.notificationsEnabled,
+        notificationSound: state.notificationSound
       })
     }
   )
